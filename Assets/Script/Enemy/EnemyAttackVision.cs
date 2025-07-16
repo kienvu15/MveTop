@@ -4,8 +4,10 @@ public class EnemyAttackVision : MonoBehaviour
 {
     [HideInInspector] public EnemyVision EnemyVision;
 
-    public bool debugDrawRays = false; // Biến để bật tắt vẽ raycast trong editor
+    [Header("Debug Settings")]
+    public bool debugDrawRays = false;
 
+    [Header("Attack Vision Settings")]
     public float attackVision = 1f;
     public Transform attackPoint;
     public float attackRange = 0.5f; // Khoảng cách tấn công
@@ -17,7 +19,7 @@ public class EnemyAttackVision : MonoBehaviour
     public LayerMask playerLayer;
     public Transform playerDetected;
 
-    public bool isPlayerInAttackRange = false;
+    public bool isPlayerInAttackRange  = false;
     public bool isAttackLocked = false;
     public bool isSpecial = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created

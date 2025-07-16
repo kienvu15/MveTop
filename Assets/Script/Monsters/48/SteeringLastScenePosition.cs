@@ -20,7 +20,7 @@ public class SteeringLastScenePosition : MonoBehaviour
         //if(EnemyVision.hasSeenPlayer && !EnemyVision.CanSeePlayer && EnemyVision.lastSeenPosition.HasValue)
         //{
         //    GoToLastSeenPosition();
-        //}
+        //} 
     }
 
     public void GoToLastSeenPosition()
