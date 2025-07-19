@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class RoomInstance
 {
-    public GameObject roomObject;                  // Phòng thật trong scene
+    public GameObject roomObject;                  
     public List<DoorNode> doors = new List<DoorNode>();
 
     public RoomInstance(GameObject roomGO)

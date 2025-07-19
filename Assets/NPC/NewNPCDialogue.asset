@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 322494eb5f94fd34bbd379fb6d6053e8, type: 3}
+  m_Name: NewNPCDialogue
+  m_EditorClassIdentifier: 
+  npcName: NPC_24
+  npcPortrait: {fileID: 8086551292566691165, guid: 8a62fb4284e5a9c449af0e5845fc7e6f, type: 3}
+  dialogueLines:
+  - Hello!
+  - Run for your life!!!!
+  autoProgressLines: 0100
+  autoProgressDelay: 1.5
+  typingSpeed: 0.05
+  voiceSound: {fileID: 8300000, guid: cc931a60aa05a2c429e0b721c66a95af, type: 3}
+  voicePitch: 1

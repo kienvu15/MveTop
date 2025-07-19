@@ -4,45 +4,95 @@ using UnityEngine;
 public class SimpleDungeonGenerator : MonoBehaviour
 {
     [Header("Cài đặt Dungeon")]
-    public List<RoomPrefabData> roomPrefabs;
+    public List<RoomPrefabData> starterRooms;
+    public List<RoomPrefabData> normalRooms;
+    public List<RoomPrefabData> shopRooms;
+    public List<RoomPrefabData> blessingRooms;
+    public List<RoomPrefabData> specialRooms;
+    public List<RoomPrefabData> miniBossRooms;
+    public List<RoomPrefabData> bossRooms;
+
     public GameObject roadPrefab;
     public GameObject doorBlockerPrefab;
-    public int maxRooms = 7;
+
+    public int maxRooms = 10;
 
     private int roomsSpawned = 0;
     private List<Transform> openDoorPoints = new List<Transform>();
     private List<GameObject> spawnedObjects = new List<GameObject>();
+    private List<Vector3> occupiedPositions = new List<Vector3>();
+
+    private bool shopSpawned = false;
+    private bool blessingSpawned = false;
+    private bool specialSpawned = false;
+    private bool miniBossSpawned = false;
+    private bool bossSpawned = false;
+
+    private bool generationComplete = false;
+    private List<Transform> blockedDoorPoints = new List<Transform>();
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.P))
         {
+            StartCoroutine(GenerateUntilBossRoom());
+        }
+    }
+
+    System.Collections.IEnumerator GenerateUntilBossRoom()
+    {
+        while (true)
+        {
             ResetDungeon();
             GenerateDungeon();
+
+            // Chờ 1 frame để đảm bảo hệ thống spawn xong
+            yield return null;
+
+            if (bossSpawned)
+            {
+                Debug.Log("<color=green>✔️ Đã có BossRoom, kết thúc gen.</color>");
+                break;
+            }
+            else
+            {
+                Debug.LogWarning("❌ Không có BossRoom. Reset toàn bộ và gen lại...");
+            }
         }
     }
 
     void ResetDungeon()
     {
         foreach (var obj in spawnedObjects)
-        {
             Destroy(obj);
-        }
 
         spawnedObjects.Clear();
         openDoorPoints.Clear();
+        occupiedPositions.Clear();
+        blockedDoorPoints.Clear();
+
         roomsSpawned = 0;
+
+        shopSpawned = false;
+        blessingSpawned = false;
+        specialSpawned = false;
+        miniBossSpawned = false;
+        bossSpawned = false;
+
+        generationComplete = false;
 
         Debug.Log("<color=yellow>Đã reset dungeon.</color>");
     }
 
     void GenerateDungeon()
     {
-        RoomPrefabData startRoomData = roomPrefabs[Random.Range(0, roomPrefabs.Count)];
+        RoomPrefabData startRoomData = starterRooms[Random.Range(0, starterRooms.Count)];
         GameObject startRoom = Instantiate(startRoomData.prefab, Vector3.zero, Quaternion.identity);
-        spawnedObjects.Add(startRoom);
 
-        Debug.Log($"<color=green>Spawned Start Room: {startRoomData.type}</color>");
+        spawnedObjects.Add(startRoom);
+        occupiedPositions.Add(Vector3.zero);
+
+        Debug.Log($"<color=green>Spawned Starter Room: {startRoomData.type}</color>");
 
         foreach (Transform child in startRoom.GetComponentsInChildren<Transform>())
         {
@@ -51,8 +101,8 @@ public class SimpleDungeonGenerator : MonoBehaviour
         }
 
         roomsSpawned++;
-
         TryExpandFromOpenPoints();
+        generationComplete = true;
     }
 
     void TryExpandFromOpenPoints()
@@ -68,10 +118,8 @@ public class SimpleDungeonGenerator : MonoBehaviour
             Transform startPoint = null, endPoint = null;
             foreach (Transform t in road.GetComponentsInChildren<Transform>())
             {
-                if (t.CompareTag("StartPoint"))
-                    startPoint = t;
-                if (t.CompareTag("EndPoint"))
-                    endPoint = t;
+                if (t.CompareTag("StartPoint")) startPoint = t;
+                if (t.CompareTag("EndPoint")) endPoint = t;
             }
 
             if (startPoint == null || endPoint == null)
@@ -83,97 +131,190 @@ public class SimpleDungeonGenerator : MonoBehaviour
             Vector3 offset = startPoint.position - road.transform.position;
             road.transform.position -= offset;
 
-            SpawnRoomAtEndPoint(endPoint);
+            TrySpawnRoomAt(endPoint);
         }
 
-        // Sau khi sinh đủ phòng, chặn toàn bộ cửa còn lại
+        // Nếu chưa có BossRoom, cố ép spawn tại các cửa bị chặn:
+        if (!bossSpawned)
+            ForceSpawnBossRoomFromBlockedDoors();
+
+        // Cuối cùng, chặn các cửa chưa dùng:
         foreach (var doorPoint in openDoorPoints)
-        {
             BlockUnusedDoor(doorPoint);
-        }
 
         openDoorPoints.Clear();
     }
 
-    void SpawnRoomAtEndPoint(Transform endPoint)
+    void TrySpawnRoomAt(Transform endPoint)
     {
         if (roomsSpawned >= maxRooms)
             return;
 
-        List<(RoomPrefabData, Transform)> validRooms = new List<(RoomPrefabData, Transform)>();
+        List<RoomPrefabData> roomList = ChooseRoomType();
+        if (roomList == null || roomList.Count == 0)
+            return;
 
-        foreach (var roomData in roomPrefabs)
+        TrySpawnFromRoomList(roomList, endPoint);
+    }
+
+    bool TrySpawnFromRoomList(List<RoomPrefabData> roomList, Transform endPoint)
+    {
+        List<RoomPrefabData> shuffledList = new List<RoomPrefabData>(roomList);
+        ShuffleList(shuffledList);
+
+        foreach (var roomData in shuffledList)
         {
             GameObject preview = Instantiate(roomData.prefab);
             preview.SetActive(false);
 
+            Transform matchedDoor = null;
             foreach (Transform doorPoint in preview.GetComponentsInChildren<Transform>())
             {
-                if (!doorPoint.CompareTag("DoorPoint"))
-                    continue;
-
-                Vector3 doorDir = doorPoint.right.normalized;
-                Vector3 endDir = endPoint.right.normalized;
-
-                if (Vector3.Dot(doorDir, -endDir) > 0.95f)
+                if (doorPoint.CompareTag("DoorPoint") &&
+                    Vector3.Dot(doorPoint.right.normalized, -endPoint.right.normalized) > 0.95f)
                 {
-                    validRooms.Add((roomData, doorPoint));
+                    matchedDoor = doorPoint;
+                    break;
                 }
             }
-
             Destroy(preview);
-        }
 
-        if (validRooms.Count == 0)
-        {
-            Debug.LogWarning("❌ Không tìm được phòng phù hợp với EndPoint.");
-            return;
-        }
+            if (matchedDoor == null)
+                continue;
 
-        var selected = validRooms[Random.Range(0, validRooms.Count)];
-        RoomPrefabData selectedRoomData = selected.Item1;
+            GameObject newRoom = Instantiate(roomData.prefab);
+            Transform actualDoor = null;
 
-        GameObject newRoom = Instantiate(selectedRoomData.prefab);
-        spawnedObjects.Add(newRoom);
-
-        Transform selectedDoorPoint = null;
-
-        foreach (Transform t in newRoom.GetComponentsInChildren<Transform>())
-        {
-            if (t.CompareTag("DoorPoint") &&
-                Vector3.Dot(t.right.normalized, -endPoint.right.normalized) > 0.95f)
+            foreach (Transform t in newRoom.GetComponentsInChildren<Transform>())
             {
-                selectedDoorPoint = t;
-                break;
+                if (t.CompareTag("DoorPoint") &&
+                    Vector3.Dot(t.right.normalized, -endPoint.right.normalized) > 0.95f)
+                {
+                    actualDoor = t;
+                    break;
+                }
+            }
+
+            if (actualDoor == null)
+            {
+                Destroy(newRoom);
+                continue;
+            }
+
+            Vector3 offset = actualDoor.position - newRoom.transform.position;
+            Vector3 targetPos = endPoint.position - offset;
+
+            if (IsPositionOccupied(targetPos))
+            {
+                Destroy(newRoom);
+                continue;
+            }
+
+            newRoom.transform.position = targetPos;
+
+            spawnedObjects.Add(newRoom);
+            occupiedPositions.Add(newRoom.transform.position);
+
+            roomsSpawned++;
+
+            Debug.Log($"<color=cyan>Spawned Room {roomsSpawned}/{maxRooms}: {newRoom.name}</color>");
+
+            if (roomList == bossRooms)
+            {
+                bossSpawned = true;
+                Debug.Log("<color=red>⚔️ Đã spawn BossRoom!</color>");
+            }
+
+            foreach (Transform child in newRoom.GetComponentsInChildren<Transform>())
+            {
+                if (child.CompareTag("DoorPoint") && child != actualDoor)
+                {
+                    if (roomsSpawned >= maxRooms)
+                        BlockUnusedDoor(child);
+                    else
+                        openDoorPoints.Add(child);
+                }
+            }
+
+            return true;  // Thành công
+        }
+
+        return false;  // Không spawn được phòng nào
+    }
+
+    void ForceSpawnBossRoomFromBlockedDoors()
+    {
+        if (bossSpawned || blockedDoorPoints.Count == 0)
+            return;
+
+        Debug.LogWarning("⚠️ Đang cố gắng ép spawn BossRoom từ các cửa bị chặn.");
+
+        foreach (Transform blockedDoor in blockedDoorPoints.ToArray())
+        {
+            foreach (Transform child in blockedDoor)
+                Destroy(child.gameObject);
+
+            blockedDoorPoints.Remove(blockedDoor);
+
+            GameObject road = Instantiate(roadPrefab, blockedDoor.position, blockedDoor.rotation);
+            spawnedObjects.Add(road);
+
+            Transform startPoint = null, endPoint = null;
+            foreach (Transform t in road.GetComponentsInChildren<Transform>())
+            {
+                if (t.CompareTag("StartPoint")) startPoint = t;
+                if (t.CompareTag("EndPoint")) endPoint = t;
+            }
+
+            if (startPoint != null && endPoint != null)
+            {
+                Vector3 offset = startPoint.position - road.transform.position;
+                road.transform.position -= offset;
+
+                if (TrySpawnFromRoomList(bossRooms, endPoint))
+                {
+                    bossSpawned = true;
+                    return;
+                }
             }
         }
 
-        if (selectedDoorPoint == null)
+        Debug.LogError("❌ Không thể ép spawn BossRoom từ bất kỳ cửa bị chặn nào!");
+    }
+
+    List<RoomPrefabData> ChooseRoomType()
+    {
+        float bossRoomThreshold = 0.6f;
+        int minRoomsBeforeBoss = Mathf.FloorToInt(maxRooms * bossRoomThreshold);
+
+        if (!bossSpawned && roomsSpawned >= minRoomsBeforeBoss)
+            return bossRooms;
+
+        if (!shopSpawned && Random.value < 0.1f)
         {
-            Debug.LogError("Không tìm được đúng DoorPoint trong phòng đã spawn.");
-            return;
+            shopSpawned = true;
+            return shopRooms;
         }
 
-        Vector3 offset = selectedDoorPoint.position - newRoom.transform.position;
-        newRoom.transform.position = endPoint.position - offset;
-
-        roomsSpawned++;
-        Debug.Log($"<color=cyan>Spawned Room {roomsSpawned}/{maxRooms}: {selectedRoomData.type}</color>");
-
-        foreach (Transform child in newRoom.GetComponentsInChildren<Transform>())
+        if (!blessingSpawned && Random.value < 0.1f)
         {
-            if (child.CompareTag("DoorPoint") && child != selectedDoorPoint)
-            {
-                if (roomsSpawned >= maxRooms)
-                {
-                    BlockUnusedDoor(child);
-                }
-                else
-                {
-                    openDoorPoints.Add(child);
-                }
-            }
+            blessingSpawned = true;
+            return blessingRooms;
         }
+
+        if (!specialSpawned && Random.value < 0.05f)
+        {
+            specialSpawned = true;
+            return specialRooms;
+        }
+
+        if (!miniBossSpawned && Random.value < 0.05f)
+        {
+            miniBossSpawned = true;
+            return miniBossRooms;
+        }
+
+        return normalRooms;
     }
 
     void BlockUnusedDoor(Transform doorPoint)
@@ -181,5 +322,28 @@ public class SimpleDungeonGenerator : MonoBehaviour
         GameObject blocker = Instantiate(doorBlockerPrefab, doorPoint.position, doorPoint.rotation);
         blocker.transform.SetParent(doorPoint);
         spawnedObjects.Add(blocker);
+
+        blockedDoorPoints.Add(doorPoint);
+    }
+
+    bool IsPositionOccupied(Vector3 pos)
+    {
+        foreach (var p in occupiedPositions)
+        {
+            if (Vector3.Distance(p, pos) < 0.5f)
+                return true;
+        }
+        return false;
+    }
+
+    void ShuffleList<T>(List<T> list)
+    {
+        for (int i = 0; i < list.Count; i++)
+        {
+            T temp = list[i];
+            int randomIndex = Random.Range(i, list.Count);
+            list[i] = list[randomIndex];
+            list[randomIndex] = temp;
+        }
     }
 }

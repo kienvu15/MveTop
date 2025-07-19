@@ -6,11 +6,34 @@ public class PlayerStats : MonoBehaviour
     [Header("Health")]
     public int maxHealth = 6;
     public int currentHealth;
+
     [Header("Armor")]
     public int maxArmor = 4;
     public int currentArmor;
 
+    [Header("MoveSpeed")]
+    public float moveSpeed = 5f;
 
+    [Header("Dash")]
+    [SerializeField] public float dashSpeed = 15f;
+    [SerializeField] public float dashDuration = 0.2f;
+    [SerializeField] public float dashCooldown = 0.5f;
+
+    [Header("Attack Settings")]
+    public float attackRange = 1f;
+    public float attackRadius = 0.5f;
+    public int damage = 2;
+
+    [Header("Recoil")]
+    [SerializeField] public float recoilForce = 5f;
+
+    [Header("ComboSetting")]
+    public int comboStep = 0;
+    public float dashOnHitSpeed = 2f;
+    public float finalDashSpeed = 10f;
+    public float attackdashDuration = 0.2f;
+
+    [Space(20)]
     public Slider healthBar;
     public Slider armorBar;
 

@@ -14,16 +14,20 @@ public class PlayerFlip : MonoBehaviour
 
     public Transform playerSprite;
     private PlayerInputHandler playerInputHandler;
-
+    private PlayerStateController playerStateController;
     public LookDirection lookDirection { get; private set; }
 
     private void Awake()
     {
         playerInputHandler = FindFirstObjectByType<PlayerInputHandler>();
+        playerStateController = FindFirstObjectByType<PlayerStateController>();
     }
     void Update()
     {
-        Flip();
+        if (playerStateController.canFlip) 
+            {
+                Flip(); 
+            } 
     }
 
     public void Flip()

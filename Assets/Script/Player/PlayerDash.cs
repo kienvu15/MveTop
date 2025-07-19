@@ -3,16 +3,15 @@ using UnityEngine;
 
 public class PlayerDash : MonoBehaviour
 {
-    [Header("Dash")]
-    [SerializeField] private float dashSpeed = 15f;
-    [SerializeField] private float dashDuration = 0.2f;
-    [SerializeField] private float dashCooldown = 0.5f;
-    [SerializeField] private TrailRenderer trailRenderer;
+    
 
+    [SerializeField] private TrailRenderer trailRenderer;
     private Vector2 lastMoveDirection = Vector2.down; // Default to right direction
+
     private PlayerInputHandler input;
     private Rigidbody2D rb;
     private PlayerStateController StateController;
+    private PlayerStats PlayerStats;
 
     void Awake()
     {
@@ -20,6 +19,7 @@ public class PlayerDash : MonoBehaviour
         input = GetComponent<PlayerInputHandler>();
         rb = GetComponent<Rigidbody2D>();
         StateController = GetComponent<PlayerStateController>();
+        PlayerStats = GetComponent<PlayerStats>();
 
         // Đảm bảo trailRenderer được thiết lập nếu có
         if (trailRenderer != null)
@@ -60,9 +60,9 @@ public class PlayerDash : MonoBehaviour
 
         // Áp dụng lực dash
         // Normalize để đảm bảo tốc độ dash không đổi
-        rb.linearVelocity = dashDirection.normalized * dashSpeed;
+        rb.linearVelocity = dashDirection.normalized * PlayerStats.dashSpeed;
 
-        yield return new WaitForSeconds(dashDuration);
+        yield return new WaitForSeconds(PlayerStats.dashDuration);
 
         // Kết thúc dash
         rb.linearVelocity = Vector2.zero;
@@ -72,7 +72,7 @@ public class PlayerDash : MonoBehaviour
             trailRenderer.emitting = false;
 
         // Bắt đầu thời gian hồi chiêu
-        yield return new WaitForSeconds(dashCooldown);
+        yield return new WaitForSeconds(PlayerStats.dashCooldown);
         StateController.canDash = true;
     }
 }

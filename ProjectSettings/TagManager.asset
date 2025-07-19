@@ -10,6 +10,8 @@ TagManager:
   - ConnectPoint
   - StartPoint
   - EndPoint
+  - BossRoom
+  - Item
   layers:
   - Default
   - TransparentFX
@@ -44,8 +46,23 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: BackGround_02
+    uniqueID: 1062158943
+    locked: 0
+  - name: BackGround
+    uniqueID: 3712078855
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Player
+    uniqueID: 3452091631
+    locked: 0
+  - name: Font-Back
+    uniqueID: 2826592615
+    locked: 0
+  - name: FontGround
+    uniqueID: 2503664975
     locked: 0
   m_RenderingLayers:
   - Default

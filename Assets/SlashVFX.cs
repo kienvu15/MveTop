@@ -3,13 +3,7 @@
 public class SlashVFX : MonoBehaviour
 {
 
-    public Transform playerSprite;
- 
-
-    void Start()
-    {
-        gameObject.SetActive(false); // VFX ban đầu không hiển thị
-    }
+    
 
     void Disable()
     {

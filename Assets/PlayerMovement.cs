@@ -4,26 +4,30 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     public Vector2 Movement { get; private set; }
-    public float moveSpeed = 5f;
 
     private PlayerStateController StateController;
     private Rigidbody2D rb;
     private PlayerInputHandler input;
+    private PlayerStats playerStats;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         input = GetComponent<PlayerInputHandler>();
         StateController = GetComponent<PlayerStateController>();
+        playerStats = GetComponent<PlayerStats>();
     }
 
     void FixedUpdate()
     {
-        if (!StateController.isDashing && !StateController.isRecoiling)
+        if (!StateController.canMove)
+            return;
+
+        if (!StateController.isDashing && !StateController.isRecoiling && StateController.canMove)
         {
             Movement = input.MoveInput;
             Movement.Normalize();
-            rb.linearVelocity = Movement * moveSpeed;
+            rb.linearVelocity = Movement * playerStats.moveSpeed;
         } 
     }
 
