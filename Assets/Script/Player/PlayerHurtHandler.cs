@@ -23,7 +23,7 @@ public class PlayerHurtHandler : MonoBehaviour
     {
         if (isInvincible == true) return;
 
-        stats.TakeDamage(damage);
+        //stats.TakeDamage(damage);
 
         StartCoroutine(InvincibleCoroutine());
     }

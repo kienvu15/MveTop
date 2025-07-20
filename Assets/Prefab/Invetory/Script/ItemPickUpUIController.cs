@@ -12,7 +12,7 @@ public class ItemPickUpUIController : MonoBehaviour
     public float popupDuration = 3f;
 
     private readonly Queue<GameObject> activePopups = new();
-    public GameObject equipPanel;
+    
 
     void Awake()
     {

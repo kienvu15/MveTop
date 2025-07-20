@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class PlayerStats : MonoBehaviour
@@ -26,6 +27,7 @@ public class PlayerStats : MonoBehaviour
 
     [Header("Recoil")]
     [SerializeField] public float recoilForce = 5f;
+    [SerializeField] public float recoilHitForce = 9f;
 
     [Header("ComboSetting")]
     public int comboStep = 0;
@@ -33,32 +35,76 @@ public class PlayerStats : MonoBehaviour
     public float finalDashSpeed = 10f;
     public float attackdashDuration = 0.2f;
 
+    [Header("Invincibility")]
+    public float invincibilityDuration = 1f;   // 1 đến 2 giây
+    private bool isInvincible = false;
+    private float invincibilityTimer = 0f;
+
+
     [Space(20)]
-    public Slider healthBar;
-    public Slider armorBar;
+    public PlayerUI playerUI;
+    public SpriteRenderer spriteRenderer;  // Gán Sprite Renderer vào đây
+    public PlayerRecoil playerRecoil;
 
     void Start()
     {
+
+        playerUI = FindFirstObjectByType<PlayerUI>();
+        playerRecoil = GetComponent<PlayerRecoil>();
+
         currentHealth = maxHealth;
         currentArmor = maxArmor;
+
+        UpdateUI();
+
+    }
+
+    private void Update()
+    {
+        if (isInvincible)
+        {
+            invincibilityTimer -= Time.deltaTime;
+            if (invincibilityTimer <= 0f)
+            {
+                isInvincible = false;
+            }
+        }
     }
 
     public void UpdateUI()
     {
-        if (healthBar != null)
+        if (playerUI != null)
         {
-            healthBar.maxValue = maxHealth;
-            healthBar.value = currentHealth;
-        }
-
-        if (armorBar != null)
-        {
-            armorBar.maxValue = maxArmor;
-            armorBar.value = currentArmor;
+            playerUI.SetHealth(currentHealth, maxHealth);
+            playerUI.SetAmmo(currentArmor, maxArmor);
         }
     }
-    public void TakeDamage(int damage)
+
+    private Coroutine flashCoroutine;
+
+    private IEnumerator FlashWhileInvincible()
     {
+        float flashInterval = 0.1f;  // Thời gian giữa mỗi lần nhấp nháy
+
+        while (isInvincible)
+        {
+            spriteRenderer.enabled = false;
+            yield return new WaitForSeconds(flashInterval);
+            spriteRenderer.enabled = true;
+            yield return new WaitForSeconds(flashInterval);
+        }
+
+        spriteRenderer.enabled = true;  // Đảm bảo bật sáng trở lại khi hết bất tử
+    }
+
+    public void TakeDamage(int damage, Vector2 attackPointPosition)
+    {
+        if (isInvincible)
+        {
+            Debug.Log("Player is invincible! No damage taken.");
+            return;
+        }
+
         int remainingDamage = damage;
 
         if (currentArmor > 0)
@@ -74,8 +120,27 @@ public class PlayerStats : MonoBehaviour
         }
 
         Debug.Log($"Armor: {currentArmor}, Health: {currentHealth}");
+
         UpdateUI();
+
+        if (playerRecoil != null)
+        {
+            playerRecoil.ApplyHitedRecoil(attackPointPosition);
+        }
+
+        // Bắt đầu bất tử
+        isInvincible = true;
+        invincibilityTimer = invincibilityDuration;
+        if (flashCoroutine != null)
+            StopCoroutine(flashCoroutine);
+        flashCoroutine = StartCoroutine(FlashWhileInvincible());
+
+        
+        
     }
+
+
+
 
     public void Heal(int amount)
     {

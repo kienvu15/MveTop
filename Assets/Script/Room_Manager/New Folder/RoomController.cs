@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class RoomController : MonoBehaviour
 {
+    [Header("WaveEnemy")]
+    public List<EnemyWaveConfig> waves;
+
     [Header("Room Components")]
     public PolygonCollider2D confinerAreaSoft;   // Vùng rộng hơn
     public PolygonCollider2D confinerAreaHard;   // Vùng phòng thật sự
