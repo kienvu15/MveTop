@@ -16,6 +16,8 @@ public class EnemyBrain : MonoBehaviour
 
     private void Awake()
     {
+        playerTransform = GameObject.FindGameObjectWithTag("Player")?.transform;
+
         rb = GetComponent<Rigidbody2D>();
         EnemyVision = GetComponent<EnemyVision>();
         EnemySteering = GetComponent<EnemySteering>();

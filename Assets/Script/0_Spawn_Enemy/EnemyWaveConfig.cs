@@ -1,16 +1,9 @@
-using UnityEngine;
+﻿using System.Collections.Generic;
 
-public class EnemyWaveConfig : MonoBehaviour
+[System.Serializable]
+public class EnemyWaveConfig
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public string waveName;                 // Tên wave (tùy, để debug)
+    public float delayBeforeWave = 0.5f;    // Đợi bao lâu trước khi spawn wave
+    public List<EnemySpawnInfo> enemiesToSpawn;  // Danh sách loại + số lượng enemy
 }

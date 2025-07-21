@@ -13,7 +13,7 @@ public class PlayerAttack : MonoBehaviour
     private PlayerRecoil playerRecoil;
     private PlayerFlip playerFlip;
     private PlayerInputHandler playerInputHandler;
-    private PlayerStats playerStats;
+    public PlayerStats playerStats;
 
     void Awake()
     {

@@ -3,6 +3,7 @@ using UnityEngine;
 public class EntryTrigger : MonoBehaviour
 {
     public RoomController roomController;
+    public RoomSpawnerController spawner;
 
     private void Awake()
     {
@@ -16,11 +17,25 @@ public class EntryTrigger : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        if (spawner == null)
+        {
+            spawner = FindFirstObjectByType<RoomSpawnerController>();
+        }
+        if (spawner == null)
+        {
+            Debug.LogError("RoomSpawnerController not found in the scene.");
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
         {
             roomController.PlayerEntered();
+            spawner.StartRoom();
+            Destroy(gameObject);
         }
     }
 }

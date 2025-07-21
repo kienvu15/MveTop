@@ -45,6 +45,7 @@ public class EnemySteering : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        vision = GetComponent<EnemyVision>();
     }
 
     public void MoveTo(Vector2 targetPosition, float customSpeed)

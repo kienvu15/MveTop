@@ -62,6 +62,7 @@ public class RangedEnemyController : MonoBehaviour
     void Start()
     {
         steering.useFlip = false;
+        player = GameObject.FindGameObjectWithTag("Player")?.transform;
     }
 
     void Update()
