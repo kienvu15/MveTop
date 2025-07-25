@@ -23,7 +23,7 @@ public class EnemyCombat : MonoBehaviour
 
     private void Update()
     {
-        
+        PickNewWanderTarget();
     }
 
     public void PickNewWanderTarget()

@@ -51,6 +51,9 @@ public class RangedEnemyController : MonoBehaviour
 
     public bool isRetreating = false;
     public bool isDirting = false;
+    public bool isOrbitingPlayer = true;
+    public bool moveFinished = false;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -72,6 +75,59 @@ public class RangedEnemyController : MonoBehaviour
         //    ArcAroundPlayer();
         //}
     }
+
+
+    public void MoveRandomDirection(float distance, float speed)
+    {
+        moveFinished = false;
+        Vector2 randomDir = Random.insideUnitCircle.normalized;
+        StartCoroutine(MoveDistanceInDirection(randomDir, distance, speed));
+    }
+
+    public void MoveMultipleCondition()
+    {
+        StartCoroutine(MoveRandomDirectionMultipleTimes(2, 1.5f, 2f, 0.2f));
+    }
+
+    public IEnumerator MoveRandomDirectionMultipleTimes(int times, float distance, float speed, float delayBetween = 0.1f)
+    {
+        moveFinished = false;
+
+        for (int i = 0; i < times; i++)
+        {
+            Vector2 randomDir = Random.insideUnitCircle.normalized;
+            yield return StartCoroutine(MoveDistanceInDirection(randomDir, distance, speed));
+            yield return new WaitForSeconds(delayBetween);
+        }
+
+        moveFinished = true;
+    }
+
+    public IEnumerator MoveDistanceInDirection(Vector2 direction, float distance, float speed, float timeout = 2f)
+    {
+        moveFinished = false;
+
+        direction.Normalize();
+        Vector2 startPos = transform.position;
+        Vector2 targetPos = startPos + direction * distance;
+
+        float elapsedTime = 0f;
+
+        while (Vector2.Distance(transform.position, targetPos) > 0.05f && elapsedTime < timeout)
+        {
+            Vector2 moveDir = (targetPos - (Vector2)transform.position).normalized;
+            steering.MoveInDirection(moveDir, speed);
+
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        steering.StopMoving();
+        moveFinished = true;
+    }
+
+
+
 
     public void DritDec()
     {
@@ -147,7 +203,12 @@ public class RangedEnemyController : MonoBehaviour
             StopCoroutine(currentDriftCoroutine);
             currentDriftCoroutine = null;
         }
+        rb.linearVelocity = Vector2.zero;
+        isDirting = false;
+
+
     }
+
 
 
     public IEnumerator MoveZigZagGrouped(
@@ -245,6 +306,7 @@ public class RangedEnemyController : MonoBehaviour
 
     public void ArcAroundPlayer()
     {
+        if (isOrbitingPlayer == false) return;
         float orbitSpeed = 30f;
         Vector3 dir = transform.position - player.position;
         dir = Quaternion.Euler(0, 0, orbitSpeed * Time.deltaTime) * dir;

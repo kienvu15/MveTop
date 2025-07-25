@@ -71,6 +71,7 @@ public class EnemyAttackVision : MonoBehaviour
             isPlayerInAttackRange = false;
         }
     }
+
     public void MoveAttackPointToPlayer()
     {
         if (EnemyVision.targetDetected == null || attackPoint == null)

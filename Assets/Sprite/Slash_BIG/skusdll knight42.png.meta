@@ -197,7 +197,10 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      skusdll knight42_0: -7846747745375565180
+      skusdll knight42_1: 368701864258473471
+      skusdll knight42_2: 8519995510699774293
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -1,48 +1,52 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class EnemyStats : MonoBehaviour
 {
-    [Header("Health")]
-    public int maxHealth = 6;
-    public int currentHealth;
+    [Header("Health Settings")]
+    public float maxHealth = 5f;
 
-    [Header("Armor")]
-    public int maxArmor = 4;
-    public int currentArmor;
+    [Header("Damage")]
+    public int damage = 1; // Số
 
-    void Start()
+    [SerializeField] private float currentHealth; // <-- hiện trong Inspector
+
+    public System.Action OnDeath;
+    public System.Action<float> OnDamaged;
+    public System.Action<float> OnHealed;
+
+    private void Awake()
     {
         currentHealth = maxHealth;
-        currentArmor = maxArmor;
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(float damage)
     {
-        int remainingDamage = damage;
+        currentHealth -= damage;
+        currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
+        OnDamaged?.Invoke(damage);
 
-        if (currentArmor > 0)
+        if (currentHealth <= 0f)
         {
-            int absorbed = Mathf.Min(currentArmor, remainingDamage);
-            currentArmor -= absorbed;
-            remainingDamage -= absorbed;
+            Die();
         }
-
-        if (remainingDamage > 0)
-        {
-            currentHealth = Mathf.Max(currentHealth - remainingDamage, 0);
-        }
-
-        Debug.Log($"Armor: {currentArmor}, Health: {currentHealth}");
-        
     }
 
-    public void Heal(int amount)
+    public void Heal(float amount)
     {
-        currentHealth = Mathf.Min(currentHealth + amount, maxHealth);       
+        currentHealth += amount;
+        currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
+        OnHealed?.Invoke(amount);
     }
 
-    public void RestoreArmor(int amount)
+    public float GetCurrentHealth()
     {
-        currentArmor = Mathf.Min(currentArmor + amount, maxArmor);
+        return currentHealth;
+    }
+
+    private void Die()
+    {
+        Debug.Log($"{gameObject.name} has died.");
+        OnDeath?.Invoke();
+        Destroy(gameObject); 
     }
 }

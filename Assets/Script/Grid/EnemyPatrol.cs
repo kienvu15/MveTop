@@ -16,8 +16,9 @@ public class EnemyPatrol : MonoBehaviour
 
     void Update()
     {
-        
+        PatrolRuntinr();
     }
+
     public void PatrolRuntinr()
     {
         if (currentTarget == null)

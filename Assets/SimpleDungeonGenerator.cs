@@ -12,6 +12,8 @@ public class SimpleDungeonGenerator : MonoBehaviour
     public List<RoomPrefabData> miniBossRooms;
     public List<RoomPrefabData> bossRooms;
 
+    [SerializeField] private Transform gridTransform;
+
     public GameObject roadPrefab;
     public GameObject doorBlockerPrefab;
 
@@ -46,7 +48,6 @@ public class SimpleDungeonGenerator : MonoBehaviour
             ResetDungeon();
             GenerateDungeon();
 
-            // Chờ 1 frame để đảm bảo hệ thống spawn xong
             yield return null;
 
             if (bossSpawned)
@@ -87,7 +88,7 @@ public class SimpleDungeonGenerator : MonoBehaviour
     void GenerateDungeon()
     {
         RoomPrefabData startRoomData = starterRooms[Random.Range(0, starterRooms.Count)];
-        GameObject startRoom = Instantiate(startRoomData.prefab, Vector3.zero, Quaternion.identity);
+        GameObject startRoom = Instantiate(startRoomData.prefab, Vector3.zero, Quaternion.identity, gridTransform);
 
         spawnedObjects.Add(startRoom);
         occupiedPositions.Add(Vector3.zero);
@@ -112,7 +113,8 @@ public class SimpleDungeonGenerator : MonoBehaviour
             Transform doorPoint = openDoorPoints[0];
             openDoorPoints.RemoveAt(0);
 
-            GameObject road = Instantiate(roadPrefab, doorPoint.position, doorPoint.rotation);
+            // ✅ SỬA: set gridTransform làm cha của road
+            GameObject road = Instantiate(roadPrefab, doorPoint.position, doorPoint.rotation, gridTransform);
             spawnedObjects.Add(road);
 
             Transform startPoint = null, endPoint = null;
@@ -134,11 +136,9 @@ public class SimpleDungeonGenerator : MonoBehaviour
             TrySpawnRoomAt(endPoint);
         }
 
-        // Nếu chưa có BossRoom, cố ép spawn tại các cửa bị chặn:
         if (!bossSpawned)
             ForceSpawnBossRoomFromBlockedDoors();
 
-        // Cuối cùng, chặn các cửa chưa dùng:
         foreach (var doorPoint in openDoorPoints)
             BlockUnusedDoor(doorPoint);
 
@@ -182,9 +182,9 @@ public class SimpleDungeonGenerator : MonoBehaviour
             if (matchedDoor == null)
                 continue;
 
-            GameObject newRoom = Instantiate(roomData.prefab);
-            Transform actualDoor = null;
+            GameObject newRoom = Instantiate(roomData.prefab, Vector3.zero, Quaternion.identity, gridTransform);
 
+            Transform actualDoor = null;
             foreach (Transform t in newRoom.GetComponentsInChildren<Transform>())
             {
                 if (t.CompareTag("DoorPoint") &&
@@ -236,10 +236,10 @@ public class SimpleDungeonGenerator : MonoBehaviour
                 }
             }
 
-            return true;  // Thành công
+            return true;
         }
 
-        return false;  // Không spawn được phòng nào
+        return false;
     }
 
     void ForceSpawnBossRoomFromBlockedDoors()
@@ -256,7 +256,8 @@ public class SimpleDungeonGenerator : MonoBehaviour
 
             blockedDoorPoints.Remove(blockedDoor);
 
-            GameObject road = Instantiate(roadPrefab, blockedDoor.position, blockedDoor.rotation);
+            // ✅ SỬA: set gridTransform làm cha của road
+            GameObject road = Instantiate(roadPrefab, blockedDoor.position, blockedDoor.rotation, gridTransform);
             spawnedObjects.Add(road);
 
             Transform startPoint = null, endPoint = null;

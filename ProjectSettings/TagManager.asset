@@ -12,6 +12,11 @@ TagManager:
   - EndPoint
   - BossRoom
   - Item
+  - Pl_Back
+  - Pl_Font
+  - Pl_Up
+  - Pl_Down
+  - Bullet
   layers:
   - Default
   - TransparentFX

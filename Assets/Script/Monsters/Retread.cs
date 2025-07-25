@@ -10,6 +10,8 @@ public class Retread : MonoBehaviour
     public Transform player;
     public bool isRetreating = false;
     public bool isDone = false;
+
+
     void Awake()
     {
         steering = GetComponent<EnemySteering>();
@@ -27,7 +29,7 @@ public class Retread : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        isDone = false;
+        
     }
 
     public void RetreatIfCloseTo(Transform player, float retreatThreshold = 3f, float retreatDistance = 2.5f, float retreatSpeed = 2f)
