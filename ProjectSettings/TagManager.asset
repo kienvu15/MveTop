@@ -17,6 +17,7 @@ TagManager:
   - Pl_Up
   - Pl_Down
   - Bullet
+  - Coin
   layers:
   - Default
   - TransparentFX

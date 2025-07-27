@@ -1206,7 +1206,7 @@ Transform:
   m_GameObject: {fileID: 2863681042562952381}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: -2.2, y: 23.51, z: 0}
+  m_LocalPosition: {x: -2.2, y: 22.6, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1701,6 +1701,9 @@ GameObject:
   m_Component:
   - component: {fileID: 6183552190593038771}
   - component: {fileID: 9081852945223736995}
+  - component: {fileID: 6007539066784898848}
+  - component: {fileID: -3946297275881268193}
+  - component: {fileID: -2525831776218477431}
   m_Layer: 0
   m_Name: 2TR-NormalRoom
   m_TagString: Untagged
@@ -1743,13 +1746,115 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aeeed90bba035f24c87d7c332a64895d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waves: []
+  spawner: {fileID: 0}
+  rewardSpawner: {fileID: 0}
   confinerAreaSoft: {fileID: 0}
   confinerAreaHard: {fileID: 0}
   doors:
   - {fileID: 0}
   - {fileID: 0}
   virtualCamera: {fileID: 0}
+--- !u!114 &6007539066784898848
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4269235995925865985}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee5ed9a765e71d447a6bf76be00fcfcb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rewardChestPrefab: {fileID: 3732429118546431383, guid: 6fdd85c6a82946d4bbf0a55ef180be8c, type: 3}
+  rewardSpawnPoint: {fileID: 4158745553826631659}
+--- !u!114 &-3946297275881268193
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4269235995925865985}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4191303c7caaeb4f888d5acdfda4a6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  waves:
+  - waveName: w1
+    delayBeforeWave: 1
+    enemiesToSpawn:
+    - enemyType: 0
+      quantity: 2
+    - enemyType: 1
+      quantity: 1
+    - enemyType: 2
+      quantity: 3
+  - waveName: w2
+    delayBeforeWave: 2
+    enemiesToSpawn:
+    - enemyType: 0
+      quantity: 1
+    - enemyType: 1
+      quantity: 2
+    - enemyType: 2
+      quantity: 1
+  spawnArea: {fileID: -2525831776218477431}
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 768
+  minDistanceFromOtherEnemies: 3
+  meleePrefab: {fileID: 6628358557250210070, guid: c0966477679a0f1418b25b712370671e, type: 3}
+  rangedPrefab: {fileID: 1916565998416573420, guid: e8e1c77f14809a64695d01976019ce9a, type: 3}
+  chargerPrefab: {fileID: 7418682233964073672, guid: 5dd47f6d04256874082fdc63cbbe4578, type: 3}
+  miniBossPrefab: {fileID: 0}
+  bossPrefab: {fileID: 0}
+--- !u!61 &-2525831776218477431
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4269235995925865985}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: -0.13219166, y: -0.416914}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 23.96079, y: 13.34473}
+  m_EdgeRadius: 0
 --- !u!1 &4776086386188101458
 GameObject:
   m_ObjectHideFlags: 0
@@ -1778,7 +1883,7 @@ Transform:
   m_GameObject: {fileID: 4776086386188101458}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 31.34, y: 0, z: 0}
+  m_LocalPosition: {x: 30.1, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

@@ -52,6 +52,7 @@ GameObject:
   - component: {fileID: 3842505825260989025}
   - component: {fileID: 3958148535198490432}
   - component: {fileID: 3142029455172493839}
+  - component: {fileID: 6880816863787650273}
   m_Layer: 7
   m_Name: monsters_0
   m_TagString: Enemy
@@ -262,7 +263,7 @@ MonoBehaviour:
   shootCooldown: 7
   bulletPrefab: {fileID: 774871183593523646, guid: f5587cd181dc70946a6b028ab1dd1168, type: 3}
   bulletPrefab2: {fileID: 514262645520702264, guid: f20b5da60cf4d5d4f8170c4290cd2338, type: 3}
-  coneAngle: 70
+  coneAngle: 100
   shootDelay: 0.08
   spreadAngle: 15
   isShooting: 0
@@ -387,3 +388,16 @@ MonoBehaviour:
   maxHealth: 5
   damage: 2
   currentHealth: 0
+--- !u!114 &6880816863787650273
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3636671089228705019}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d233b6096501aa4ebae20e64cb4331f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scoreValue: 100

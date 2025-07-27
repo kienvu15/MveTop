@@ -1,9 +1,11 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class EntryTrigger : MonoBehaviour
 {
     public RoomController roomController;
     public RoomSpawnerController spawner;
+
+    private bool triggered = false;
 
     private void Awake()
     {
@@ -11,21 +13,20 @@ public class EntryTrigger : MonoBehaviour
         {
             roomController = GetComponentInParent<RoomController>();
         }
+
+        if (spawner == null)
+        {
+            spawner = GetComponentInParent<RoomSpawnerController>();
+        }
+
         if (roomController == null)
         {
             Debug.LogError("RoomController not found in parent objects.");
         }
-    }
 
-    private void Start()
-    {
         if (spawner == null)
         {
-            spawner = FindFirstObjectByType<RoomSpawnerController>();
-        }
-        if (spawner == null)
-        {
-            Debug.LogError("RoomSpawnerController not found in the scene.");
+            Debug.LogError("RoomSpawnerController not found in parent objects.");
         }
     }
 
@@ -33,9 +34,9 @@ public class EntryTrigger : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            roomController.PlayerEntered();
-            spawner.StartRoom();
-            Destroy(gameObject);
+            roomController.PlayerEntered();  // Giao việc cho RoomController
+            Destroy(gameObject); // Mỗi trigger dùng 1 lần
         }
     }
+
 }

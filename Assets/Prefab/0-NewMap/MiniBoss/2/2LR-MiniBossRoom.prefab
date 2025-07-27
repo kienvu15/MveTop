@@ -45,7 +45,7 @@ GameObject:
   - component: {fileID: 8836045471978303339}
   - component: {fileID: 6840705891818041393}
   - component: {fileID: 6026609929548181668}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Door_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -714,7 +714,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1508665764471556092}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Doors
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -781,7 +781,7 @@ GameObject:
   - component: {fileID: 4127360970461653321}
   - component: {fileID: 3507462635358438014}
   - component: {fileID: 8691122452988659817}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Door_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1983,6 +1983,9 @@ GameObject:
   m_Component:
   - component: {fileID: 6580131512417063823}
   - component: {fileID: 2366776897243235512}
+  - component: {fileID: -3987512845368425900}
+  - component: {fileID: -4367978371969262824}
+  - component: {fileID: -7622825482690107699}
   m_Layer: 0
   m_Name: 2LR-MiniBossRoom
   m_TagString: Untagged
@@ -1998,7 +2001,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7101563234326142901}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2025,13 +2028,102 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aeeed90bba035f24c87d7c332a64895d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waves: []
+  spawner: {fileID: 0}
+  rewardSpawner: {fileID: 0}
   confinerAreaSoft: {fileID: 0}
   confinerAreaHard: {fileID: 0}
   doors:
   - {fileID: 0}
   - {fileID: 0}
   virtualCamera: {fileID: 0}
+--- !u!61 &-3987512845368425900
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7101563234326142901}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0.12554741, y: -0.53985405}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 23.899845, y: 13.178097}
+  m_EdgeRadius: 0
+--- !u!114 &-4367978371969262824
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7101563234326142901}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee5ed9a765e71d447a6bf76be00fcfcb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rewardChestPrefab: {fileID: 3732429118546431383, guid: 6fdd85c6a82946d4bbf0a55ef180be8c, type: 3}
+  rewardSpawnPoint: {fileID: 634048497266579983}
+--- !u!114 &-7622825482690107699
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7101563234326142901}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4191303c7caaeb4f888d5acdfda4a6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  waves:
+  - waveName: s1
+    delayBeforeWave: 1
+    enemiesToSpawn:
+    - enemyType: 0
+      quantity: 1
+  spawnArea: {fileID: 383436447297868148, guid: 250777e3d9b04a247ae15191bd9a6eee, type: 3}
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 768
+  minDistanceFromOtherEnemies: 1.5
+  meleePrefab: {fileID: 7418682233964073672, guid: 5dd47f6d04256874082fdc63cbbe4578, type: 3}
+  rangedPrefab: {fileID: 4887242744491471693, guid: 540be5532fff64444906a37b354a7c86, type: 3}
+  chargerPrefab: {fileID: 0}
+  miniBossPrefab: {fileID: 0}
+  bossPrefab: {fileID: 0}
 --- !u!1 &7104409279281163161
 GameObject:
   m_ObjectHideFlags: 0

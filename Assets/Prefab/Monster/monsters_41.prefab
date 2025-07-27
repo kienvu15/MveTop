@@ -206,6 +206,7 @@ GameObject:
   - component: {fileID: 5715120199791967575}
   - component: {fileID: 3840894627693024115}
   - component: {fileID: 4194578008846802861}
+  - component: {fileID: 1441952565103294086}
   m_Layer: 7
   m_Name: monsters_41
   m_TagString: Enemy
@@ -559,3 +560,15 @@ MonoBehaviour:
   maxHealth: 5
   damage: 1
   currentHealth: 0
+--- !u!114 &1441952565103294086
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7418682233964073672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d233b6096501aa4ebae20e64cb4331f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

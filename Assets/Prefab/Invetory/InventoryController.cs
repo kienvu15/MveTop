@@ -101,6 +101,9 @@ public class InventoryController : MonoBehaviour
                     Item itemScript = newItem.GetComponent<Item>();
                     itemScript.isEquipped = true;
 
+                    // ✅ GỌI EFFECT tại đây
+                    itemScript.ApplyEffect(GameObject.FindGameObjectWithTag("Player"));
+
                     return true;
                 }
             }
@@ -115,12 +118,16 @@ public class InventoryController : MonoBehaviour
                 Item itemScript = newItem.GetComponent<Item>();
                 itemScript.isEquipped = true;
 
+                // ✅ GỌI EFFECT tại đây
+                itemScript.ApplyEffect(GameObject.FindGameObjectWithTag("Player"));
+
                 return true;
             }
         }
 
         return false;  // Không còn slot trống
     }
+
 
 
     public bool AddItemToInventory(GameObject itemPrefab)

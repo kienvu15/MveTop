@@ -22,6 +22,8 @@ GameObject:
   - component: {fileID: 9150982427707811068}
   - component: {fileID: 3178057636037084678}
   - component: {fileID: 9174857641719076152}
+  - component: {fileID: 3754235936207718007}
+  - component: {fileID: -3468000255614203082}
   m_Layer: 7
   m_Name: monsters_48
   m_TagString: Enemy
@@ -458,6 +460,34 @@ TrailRenderer:
   m_Autodestruct: 0
   m_Emitting: 0
   m_ApplyActiveColorSpace: 1
+--- !u!114 &3754235936207718007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6628358557250210070}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c704a3a68fbacbb48b60c513b75f7764, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 5
+  damage: 1
+  currentHealth: 0
+--- !u!114 &-3468000255614203082
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6628358557250210070}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d233b6096501aa4ebae20e64cb4331f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scoreValue: 100
 --- !u!1 &6793193334402624992
 GameObject:
   m_ObjectHideFlags: 0

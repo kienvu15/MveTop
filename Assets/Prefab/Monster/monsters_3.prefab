@@ -57,6 +57,8 @@ GameObject:
   - component: {fileID: 1339009875472465698}
   - component: {fileID: 3347051672770756169}
   - component: {fileID: 7655226702500252138}
+  - component: {fileID: 3763640109551745280}
+  - component: {fileID: 1150039638869410004}
   m_Layer: 7
   m_Name: monsters_3
   m_TagString: Enemy
@@ -211,7 +213,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd8ae2f594a38224f91890ba44abd1e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 2
+  type: 3
 --- !u!114 &4705395369452647604
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -242,7 +244,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debugDrawRays: 1
-  visionRadius: 5
+  visionRadius: 7.05
   targetDetected: {fileID: 0}
   attackrange: 1
   playerLayer:
@@ -369,6 +371,8 @@ MonoBehaviour:
   test: 0
   isRetreating: 0
   isDirting: 0
+  isOrbitingPlayer: 1
+  moveFinished: 0
 --- !u!114 &3347051672770756169
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -386,7 +390,17 @@ MonoBehaviour:
   - {fileID: 5225784479611925003}
   - {fileID: 7383473089738955481}
   - {fileID: 4400541175692011747}
+  playerLayers:
+    serializedVersion: 2
+    m_Bits: 0
   attackCooldown: 4.95
+  dashSpeed: 5
+  dashDuration: 0.5
+  lockDelay: 3
+  dashEffect: {fileID: 0}
+  isLocking: 0
+  hasDashed: 0
+  isDashDone: 0
 --- !u!114 &7655226702500252138
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -402,6 +416,34 @@ MonoBehaviour:
   player: {fileID: 0}
   isRetreating: 0
   isDone: 0
+--- !u!114 &3763640109551745280
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4887242744491471693}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c704a3a68fbacbb48b60c513b75f7764, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 3
+  damage: 1
+  currentHealth: 0
+--- !u!114 &1150039638869410004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4887242744491471693}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d233b6096501aa4ebae20e64cb4331f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scoreValue: 100
 --- !u!1001 &377615558871835373
 PrefabInstance:
   m_ObjectHideFlags: 0

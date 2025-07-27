@@ -3860,7 +3860,7 @@ GameObject:
   - component: {fileID: 9208257838496323516}
   - component: {fileID: 3882510135919964709}
   - component: {fileID: 6761801264140888093}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Door_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4209,7 +4209,7 @@ GameObject:
   - component: {fileID: 610326707864997955}
   - component: {fileID: 1139539696336493257}
   - component: {fileID: 4405131503490665516}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Door_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5265,7 +5265,7 @@ GameObject:
   - component: {fileID: 631780809348040481}
   - component: {fileID: 7999751759631190862}
   - component: {fileID: 7511410890456602113}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Door_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5647,7 +5647,7 @@ GameObject:
   - component: {fileID: 520736551317189544}
   - component: {fileID: 3001776471246904271}
   - component: {fileID: 3465540820351363419}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Door_4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6214,6 +6214,9 @@ GameObject:
   m_Component:
   - component: {fileID: 618017549112752070}
   - component: {fileID: 6530131836181474764}
+  - component: {fileID: 58050171860767521}
+  - component: {fileID: 8001153098600904391}
+  - component: {fileID: 1928362294335034216}
   m_Layer: 0
   m_Name: 4-NormalRoom
   m_TagString: Untagged
@@ -6256,7 +6259,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aeeed90bba035f24c87d7c332a64895d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waves: []
+  spawner: {fileID: 0}
+  rewardSpawner: {fileID: 0}
   confinerAreaSoft: {fileID: 0}
   confinerAreaHard: {fileID: 0}
   doors:
@@ -6265,3 +6269,100 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   virtualCamera: {fileID: 0}
+--- !u!114 &58050171860767521
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8251659547016993310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4191303c7caaeb4f888d5acdfda4a6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  waves:
+  - waveName: Wave-01
+    delayBeforeWave: 2
+    enemiesToSpawn:
+    - enemyType: 0
+      quantity: 3
+    - enemyType: 1
+      quantity: 1
+  - waveName: w2
+    delayBeforeWave: 2
+    enemiesToSpawn:
+    - enemyType: 3
+      quantity: 2
+    - enemyType: 2
+      quantity: 3
+  spawnArea: {fileID: 8001153098600904391}
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 768
+  minDistanceFromOtherEnemies: 4
+  meleePrefab: {fileID: 7418682233964073672, guid: 5dd47f6d04256874082fdc63cbbe4578, type: 3}
+  rangedPrefab: {fileID: 3636671089228705019, guid: aa63c7e4ea0d33749b268b2af0fa0916, type: 3}
+  chargerPrefab: {fileID: 4887242744491471693, guid: 540be5532fff64444906a37b354a7c86, type: 3}
+  miniBossPrefab: {fileID: 3636671089228705019, guid: ec1185a5e33a0e44d85810b8f8ca8b4d, type: 3}
+  bossPrefab: {fileID: 0}
+--- !u!61 &8001153098600904391
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8251659547016993310}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: -0.11405277, y: -0.6462996}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 22.67, y: 11.720949}
+  m_EdgeRadius: 0
+--- !u!114 &1928362294335034216
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8251659547016993310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee5ed9a765e71d447a6bf76be00fcfcb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rewardChestPrefab: {fileID: 3732429118546431383, guid: 6fdd85c6a82946d4bbf0a55ef180be8c, type: 3}
+  rewardSpawnPoint: {fileID: 618017549112752070}

@@ -92,12 +92,25 @@ public class ItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                 if (itemInSlot != null)
                 {
                     itemInSlot.isEquipped = false;
+                    itemInSlot.RemoveEffect(GameObject.FindGameObjectWithTag("Player"));
                 }
             }
             else
             {
+                // Gỡ effect nếu originalSlot là EquipSlot và item đang được tháo ra
+                if (originalSlot.GetComponent<EquipSlot>() != null || originalSlot.GetComponent<SpecialEquipSlot>() != null)
+                {
+                    Item itemBeingRemoved = GetComponent<Item>();
+                    if (itemBeingRemoved != null && itemBeingRemoved.isEquipped)
+                    {
+                        itemBeingRemoved.isEquipped = false;
+                        itemBeingRemoved.RemoveEffect(GameObject.FindGameObjectWithTag("Player"));
+                    }
+                }
+
                 originalSlot.currentItem = null;
             }
+
 
             // Đưa item hiện tại vào slot đích
             transform.SetParent(dropSlot.transform);
@@ -109,6 +122,9 @@ public class ItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                 if (draggedItem != null)
                 {
                     draggedItem.isEquipped = true;
+
+                    // ✅ GỌI ApplyEffect khi trang bị qua kéo thả
+                    draggedItem.ApplyEffect(GameObject.FindGameObjectWithTag("Player"));
                 }
             }
             else
@@ -118,6 +134,7 @@ public class ItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                     draggedItem.isEquipped = false;
                 }
             }
+
         }
         else
         {
@@ -144,9 +161,21 @@ public class ItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     void DropItems(Slot originalSlot)
     {
+        // ✅ Nếu đang ở EquipSlot thì cần RemoveEffect
+        if (originalSlot.GetComponent<EquipSlot>() != null || originalSlot.GetComponent<SpecialEquipSlot>() != null)
+        {
+            Item itemBeingDropped = GetComponent<Item>();
+            if (itemBeingDropped != null && itemBeingDropped.isEquipped)
+            {
+                itemBeingDropped.isEquipped = false;
+                itemBeingDropped.RemoveEffect(GameObject.FindGameObjectWithTag("Player"));
+            }
+        }
+
         originalSlot.currentItem = null;
+
         Transform playerTransform = GameObject.FindGameObjectWithTag("Player")?.transform;
-        if(playerTransform == null)
+        if (playerTransform == null)
         {
             Debug.LogError("Missing Player");
             return;
@@ -156,6 +185,8 @@ public class ItemDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         Vector2 dropPosition = (Vector2)playerTransform.position + dropOffset;
         GameObject dropItems = Instantiate(gameObject, dropPosition, Quaternion.identity);
         dropItems.GetComponent<BounceEffect>().StartBounce();
+
         Destroy(gameObject);
     }
+
 }

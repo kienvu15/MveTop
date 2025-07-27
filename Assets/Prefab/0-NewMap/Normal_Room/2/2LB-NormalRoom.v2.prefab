@@ -5358,6 +5358,9 @@ GameObject:
   m_Component:
   - component: {fileID: 2035953286914086358}
   - component: {fileID: 8139084019970817463}
+  - component: {fileID: 9183902637904692484}
+  - component: {fileID: 740846822708473835}
+  - component: {fileID: 7528934959417191785}
   m_Layer: 0
   m_Name: 2LB-NormalRoom.v2
   m_TagString: Untagged
@@ -5400,13 +5403,109 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aeeed90bba035f24c87d7c332a64895d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waves: []
+  spawner: {fileID: 0}
+  rewardSpawner: {fileID: 0}
   confinerAreaSoft: {fileID: 0}
   confinerAreaHard: {fileID: 0}
   doors:
   - {fileID: 0}
   - {fileID: 0}
   virtualCamera: {fileID: 0}
+--- !u!114 &9183902637904692484
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8214553269211199629}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee5ed9a765e71d447a6bf76be00fcfcb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rewardChestPrefab: {fileID: 3732429118546431383, guid: 6fdd85c6a82946d4bbf0a55ef180be8c, type: 3}
+  rewardSpawnPoint: {fileID: 5790055158787736686}
+--- !u!114 &740846822708473835
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8214553269211199629}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4191303c7caaeb4f888d5acdfda4a6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  waves:
+  - waveName: Wave-01
+    delayBeforeWave: 1
+    enemiesToSpawn:
+    - enemyType: 0
+      quantity: 3
+    - enemyType: 1
+      quantity: 2
+  - waveName: Wave-02
+    delayBeforeWave: 1
+    enemiesToSpawn:
+    - enemyType: 2
+      quantity: 4
+  spawnArea: {fileID: 7528934959417191785}
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 768
+  minDistanceFromOtherEnemies: 2.8
+  meleePrefab: {fileID: 7418682233964073672, guid: 5dd47f6d04256874082fdc63cbbe4578, type: 3}
+  rangedPrefab: {fileID: 4887242744491471693, guid: 540be5532fff64444906a37b354a7c86, type: 3}
+  chargerPrefab: {fileID: 3636671089228705019, guid: ec1185a5e33a0e44d85810b8f8ca8b4d, type: 3}
+  miniBossPrefab: {fileID: 0}
+  bossPrefab: {fileID: 0}
+--- !u!61 &7528934959417191785
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8214553269211199629}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0.07909012, y: -0.4251058}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 24.054546, y: 13.120443}
+  m_EdgeRadius: 0
 --- !u!1 &8369241844621572078
 GameObject:
   m_ObjectHideFlags: 0
@@ -5466,7 +5565,7 @@ Transform:
   m_GameObject: {fileID: 8610867781060368974}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: -2.45, y: 3.47, z: 0}
+  m_LocalPosition: {x: -2.45, y: 4.21, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5587,7 +5686,7 @@ Transform:
   m_GameObject: {fileID: 8632437280433415775}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -6.97, y: 0, z: 0}
+  m_LocalPosition: {x: -4.96, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

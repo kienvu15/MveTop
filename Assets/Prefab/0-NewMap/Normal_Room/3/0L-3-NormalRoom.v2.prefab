@@ -3295,7 +3295,7 @@ GameObject:
   - component: {fileID: 1342319280460231676}
   - component: {fileID: 1439665230411168901}
   - component: {fileID: 3140145662664113610}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Door_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3578,7 +3578,7 @@ GameObject:
   - component: {fileID: 9089897060211777853}
   - component: {fileID: 9116080921100985163}
   - component: {fileID: 2732722588416137918}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Door_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3952,6 +3952,9 @@ GameObject:
   m_Component:
   - component: {fileID: 7063733326814024125}
   - component: {fileID: 4141282772943459804}
+  - component: {fileID: 9087970053902713346}
+  - component: {fileID: 2140423424135336546}
+  - component: {fileID: 2370227657042996921}
   m_Layer: 0
   m_Name: 0L-3-NormalRoom.v2
   m_TagString: Untagged
@@ -3994,7 +3997,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aeeed90bba035f24c87d7c332a64895d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waves: []
+  spawner: {fileID: 0}
+  rewardSpawner: {fileID: 0}
   confinerAreaSoft: {fileID: 0}
   confinerAreaHard: {fileID: 0}
   doors:
@@ -4002,6 +4006,96 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   virtualCamera: {fileID: 0}
+--- !u!61 &9087970053902713346
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3463970159452365821}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: -0.16965866, y: -0.410007}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 24.639042, y: 13.696088}
+  m_EdgeRadius: 0
+--- !u!114 &2140423424135336546
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3463970159452365821}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee5ed9a765e71d447a6bf76be00fcfcb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rewardChestPrefab: {fileID: 3732429118546431383, guid: 6fdd85c6a82946d4bbf0a55ef180be8c, type: 3}
+  rewardSpawnPoint: {fileID: 6633917162646816323}
+--- !u!114 &2370227657042996921
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3463970159452365821}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4191303c7caaeb4f888d5acdfda4a6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  waves:
+  - waveName: w1
+    delayBeforeWave: 2
+    enemiesToSpawn:
+    - enemyType: 0
+      quantity: 3
+    - enemyType: 3
+      quantity: 2
+  spawnArea: {fileID: 1020354573396257731, guid: d8a854ef43ef7ad4f9d23eabcaa4a737, type: 3}
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 768
+  minDistanceFromOtherEnemies: 3
+  meleePrefab: {fileID: 4887242744491471693, guid: 540be5532fff64444906a37b354a7c86, type: 3}
+  rangedPrefab: {fileID: 7418682233964073672, guid: 5dd47f6d04256874082fdc63cbbe4578, type: 3}
+  chargerPrefab: {fileID: 3636671089228705019, guid: ec1185a5e33a0e44d85810b8f8ca8b4d, type: 3}
+  miniBossPrefab: {fileID: 6628358557250210070, guid: c0966477679a0f1418b25b712370671e, type: 3}
+  bossPrefab: {fileID: 3636671089228705019, guid: aa63c7e4ea0d33749b268b2af0fa0916, type: 3}
 --- !u!1 &3968519889955153668
 GameObject:
   m_ObjectHideFlags: 0
@@ -5299,7 +5393,7 @@ GameObject:
   - component: {fileID: 336207815938857413}
   - component: {fileID: 442481075145027689}
   - component: {fileID: 5818281330052901672}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Door_4
   m_TagString: Untagged
   m_Icon: {fileID: 0}

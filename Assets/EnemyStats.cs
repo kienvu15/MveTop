@@ -9,6 +9,7 @@ public class EnemyStats : MonoBehaviour
     public int damage = 1; // Số
 
     [SerializeField] private float currentHealth; // <-- hiện trong Inspector
+    private EnemyDeath enemyDeath;
 
     public System.Action OnDeath;
     public System.Action<float> OnDamaged;
@@ -17,6 +18,7 @@ public class EnemyStats : MonoBehaviour
     private void Awake()
     {
         currentHealth = maxHealth;
+        enemyDeath = GetComponent<EnemyDeath>();
     }
 
     public void TakeDamage(float damage)
@@ -27,7 +29,7 @@ public class EnemyStats : MonoBehaviour
 
         if (currentHealth <= 0f)
         {
-            Die();
+            enemyDeath.Die();
         }
     }
 
@@ -43,10 +45,5 @@ public class EnemyStats : MonoBehaviour
         return currentHealth;
     }
 
-    private void Die()
-    {
-        Debug.Log($"{gameObject.name} has died.");
-        OnDeath?.Invoke();
-        Destroy(gameObject); 
-    }
+
 }

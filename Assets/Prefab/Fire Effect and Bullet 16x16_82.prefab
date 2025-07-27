@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 3333577803753685446}
   - component: {fileID: 1943902002486585295}
   - component: {fileID: 5146602194658926071}
+  - component: {fileID: -8091949018956328161}
   m_Layer: 0
   m_Name: Fire Effect and Bullet 16x16_82
   m_TagString: Bullet
@@ -207,3 +208,16 @@ MonoBehaviour:
   targetLayers:
     serializedVersion: 2
     m_Bits: 832
+--- !u!114 &-8091949018956328161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 514262645520702264}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 621fea66120e85442bd70b5f38a9e435, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerStats: {fileID: 0}

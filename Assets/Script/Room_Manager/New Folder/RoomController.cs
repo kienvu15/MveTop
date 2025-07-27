@@ -5,13 +5,15 @@ using UnityEngine;
 
 public class RoomController : MonoBehaviour
 {
-    [Header("WaveEnemy")]
-    public List<EnemyWaveConfig> waves;
+    [Header("Room Systems")]
+    public RoomSpawnerController spawner;
+    [SerializeField] private RoomRewardSpawner rewardSpawner;
 
     [Header("Room Components")]
     public PolygonCollider2D confinerAreaSoft;   // Vùng rộng hơn
     public PolygonCollider2D confinerAreaHard;   // Vùng phòng thật sự
     public List<GameObject> doors;  // Nhiều cửa
+
 
     [Header("Camera")]
     public CinemachineCamera virtualCamera;
@@ -20,6 +22,7 @@ public class RoomController : MonoBehaviour
 
     private void Awake()
     {
+        spawner = GetComponent<RoomSpawnerController>();
 
         if (virtualCamera == null)
         {
@@ -33,8 +36,8 @@ public class RoomController : MonoBehaviour
             doors.Add(child.gameObject);
             Debug.Log($"Đã thêm cửa: {child.name}");
         }
-  
 
+        rewardSpawner = GetComponent<RoomRewardSpawner>();
 
         // Tìm object cha chứa cả 2 confiner
         Transform confinerParent = transform.Find("ConfinerArea");
@@ -53,33 +56,33 @@ public class RoomController : MonoBehaviour
                 confinerAreaHard = hard.GetComponent<PolygonCollider2D>();
             }
         }
+
         OpenDoors();
     }
 
-    private void Start()
-    {
-
-        
-
-    }
-
-    public void Update()
-    {
-        //if(Input.GetKeyDown(KeyCode.C))
-        //{
-        //    OpenDoors();
-        //}
-    }
+    private bool roomStarted = false;
 
     public void PlayerEntered()
     {
-        if (roomActivated) return;
-        roomActivated = true;
+        if (roomStarted) return;
 
+        roomStarted = true;
+
+        // Đóng cửa nếu cần
         CloseDoors();
 
-        StartCoroutine(SoftConfinerTransition());
+        // Bắt đầu spawn
+        if (spawner != null)
+        {
+            spawner.StartRoom();
+        }
+        else
+        {
+            Debug.LogWarning("Spawner không được gán trong RoomController.");
+        }
     }
+
+
 
     private IEnumerator SoftConfinerTransition()
     {
@@ -101,7 +104,7 @@ public class RoomController : MonoBehaviour
     {
         foreach (var door in doors)
         {
-            door.SetActive(true);   // Đóng từng cửa (bật collider + sprite)
+            door.SetActive(true);  // Đóng từng cửa (bật collider + sprite)
         }
     }
 
@@ -116,5 +119,6 @@ public class RoomController : MonoBehaviour
     public void OnRoomCleared()
     {
         OpenDoors();
+        rewardSpawner?.SpawnReward();
     }
 }

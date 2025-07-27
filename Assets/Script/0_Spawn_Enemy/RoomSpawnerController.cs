@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RoomSpawnerController : MonoBehaviour
+public class RoomSpawnerController : MonoBehaviour, IEnemySpawner
+
 {
     [Header("Wave Config")]
     public List<EnemyWaveConfig> waves;
@@ -36,8 +37,14 @@ public class RoomSpawnerController : MonoBehaviour
         {
             Debug.Log("[RoomSpawner] Đã hoàn thành tất cả các wave.");
             roomCleared = true;
+
+            var room = GetComponentInParent<RoomController>();
+            if (room != null)
+                room.OnRoomCleared();
+
             return;
         }
+
 
         Debug.Log($"[RoomSpawner] Bắt đầu wave {currentWaveIndex + 1}.");
         StartCoroutine(SpawnWaveCoroutine(waves[currentWaveIndex]));
