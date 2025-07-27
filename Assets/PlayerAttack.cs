@@ -115,6 +115,8 @@ public class PlayerAttack : MonoBehaviour
             playerRecoil.ApplyRecoil(attackPoint.position);
     }
 
+
+
     void ActivateSlashVFX()
     {
         foreach (var vfx in slashVFXs)

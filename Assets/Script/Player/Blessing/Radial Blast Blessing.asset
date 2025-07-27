@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3dccc4fcb0393b4fa74f988badd63a2, type: 3}
   m_Name: Radial Blast Blessing
   m_EditorClassIdentifier: 
-  blastPrefab: {fileID: 2968505738577696993, guid: 54113829ac4641a4aa1d9b629807f256, type: 3}
+  blastPrefab: {fileID: 2012820922137439409, guid: 02b4799a2f49a9140ab77f6ce5d28abc, type: 3}
   blastSpeed: 5
