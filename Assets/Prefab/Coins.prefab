@@ -165,3 +165,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4925ff1440cd71745a04a3367168ee28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Player: {fileID: 0}
+  value: 1000
+  moveTriggerDistance: 3
+  collectDistance: 0.5
+  moveSpeed: 30
+  acceleration: 10

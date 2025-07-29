@@ -4,11 +4,17 @@ public class ShopItem : MonoBehaviour
 {
     public string itemName = "Kiếm Lửa";
     public int price = 10;
+    public bool isForSale = false;
 
     private bool playerInRange = false;
     private GameObject currentPlayer;
 
     private ShopItemWorldUI worldUI;
+
+    public void Awake()
+    {
+        
+    }
 
     private void Start()
     {
@@ -48,6 +54,7 @@ public class ShopItem : MonoBehaviour
     {
         Debug.Log($"Đã mua {itemName} với giá {price} xu.");
         // Có thể thêm hiệu ứng, âm thanh, v.v ở đây
+        isForSale = false; // Đánh dấu là đã bán
     }
 
 }

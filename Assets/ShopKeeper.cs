@@ -62,6 +62,13 @@ public class ShopKeeper : MonoBehaviour
             Transform spawnPoint = itemSpawnPoints[i];
             GameObject spawnedItem = Instantiate(randomPrefab, spawnPoint.position, Quaternion.identity);
             currentSpawnedItems.Add(spawnedItem);
+
+            ShopItem shopItem = spawnedItem.GetComponent<ShopItem>();
+            if (shopItem != null)
+            {
+                shopItem.isForSale = true;
+            }
+
         }
     }
 

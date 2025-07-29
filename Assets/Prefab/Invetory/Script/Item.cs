@@ -8,7 +8,7 @@ public class Item : MonoBehaviour
     public string Name;
     public bool isSpecialItem;
     public bool isEquipped = false;
-
+    public bool isFromShop = false;
 
     public virtual void Pickup()
     {

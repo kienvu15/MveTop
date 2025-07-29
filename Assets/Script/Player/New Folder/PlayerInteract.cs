@@ -52,19 +52,22 @@ public class PlayerInteract : MonoBehaviour
         if (closestItem != null)
         {
             Item item = closestItem.GetComponent<Item>();
-            if (item != null)
-            {
-                bool added = inventoryController.AddItem(closestItem.gameObject);
-                if (added)
+            
+                if (item != null && item.isFromShop == false) // Chỉ nhặt nếu KHÔNG phải item từ shop
                 {
-                    item.Pickup();
-                    Destroy(closestItem.gameObject);
+                    bool added = inventoryController.AddItem(closestItem.gameObject);
+                    if (added)
+                    {
+                        item.Pickup();
+                        Destroy(closestItem.gameObject);
+                    }
+                    else
+                    {
+                        Debug.Log("Inventory is full, cannot pick up item.");
+                    }
                 }
-                else
-                {
-                    Debug.Log("Inventory is full, cannot pick up item.");
-                }
-            }
+
+            
         }
         else
         {
@@ -86,9 +89,9 @@ public class PlayerInteract : MonoBehaviour
 
     private void TryBuyCurrentShopItem()
     {
-        if (currentNearbyShopItem == null)
+        if (currentNearbyShopItem == null || !currentNearbyShopItem.isForSale)
         {
-            Debug.Log("Không có item shop nào gần để mua.");
+            Debug.Log("Không có item shop hợp lệ để mua.");
             return;
         }
 
@@ -109,12 +112,16 @@ public class PlayerInteract : MonoBehaviour
             {
                 Debug.Log("Inventory đầy, không thể thêm item.");
             }
+
+            
+
         }
         else
         {
             Debug.Log("Không đủ xu để mua.");
         }
     }
+
 
     // Hiển thị phạm vi nhặt đồ trong Scene view
     private void OnDrawGizmosSelected()
