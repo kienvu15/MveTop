@@ -1,8 +1,13 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MenuController : MonoBehaviour
 {
     public GameObject menuCanvas;
+    public GameObject PlayerStatsUI;
+
+    public Button Pause;
+    public Button Resume;
 
     private void Awake()
     {
@@ -19,6 +24,17 @@ public class MenuController : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Tab))
         {
             menuCanvas.SetActive(!menuCanvas.activeSelf);
+            PlayerStatsUI.SetActive(!PlayerStatsUI.activeSelf);
+            Pause.gameObject.SetActive(!Pause.gameObject.activeSelf);
+            Resume.gameObject.SetActive(!Resume.gameObject.activeSelf);
         }
+    }
+
+    public void ToggleMenu()
+    {
+        menuCanvas.SetActive(!menuCanvas.activeSelf);
+        PlayerStatsUI.SetActive(!PlayerStatsUI.activeSelf);
+        Pause.gameObject.SetActive(!Pause.gameObject.activeSelf);
+        Resume.gameObject.SetActive(!Resume.gameObject.activeSelf);
     }
 }

@@ -3,9 +3,14 @@ using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class LoginManager : MonoBehaviour
 {
+    public Button btnLogin;
+    public Button btnRegister;
+    public Button btnLogout;
+
     [Header("Panel")]
     public GameObject panelLogin;
     public GameObject panelRegister;
@@ -28,14 +33,14 @@ public class LoginManager : MonoBehaviour
     void Start()
     {
         filePath = Application.dataPath + "/Resources/account.txt";
-        ShowLoginPanel();
+        
     }
 
     public void ShowLoginPanel()
     {
         panelLogin.SetActive(true);
         panelRegister.SetActive(false);
-
+        btnRegister.gameObject.SetActive(true);
         // Xóa nội dung input và thông báo lỗi
         loginUsername.text = "";
         loginPassword.text = "";
@@ -47,6 +52,18 @@ public class LoginManager : MonoBehaviour
     {
         panelLogin.SetActive(false);
         panelRegister.SetActive(true);
+        btnLogout.gameObject.SetActive(true);
+        // Xóa nội dung input và thông báo lỗi
+        registerUsername.text = "";
+        registerPassword.text = "";
+        registerEmail.text = "";
+        registerPhone.text = "";
+        registerMessage.text = "";
+    }
+    public void HideRegisterPanel()
+    {
+        btnLogin.gameObject.SetActive(true);
+        panelRegister.SetActive(false);
 
         // Xóa nội dung input và thông báo lỗi
         registerUsername.text = "";
@@ -55,7 +72,6 @@ public class LoginManager : MonoBehaviour
         registerPhone.text = "";
         registerMessage.text = "";
     }
-
 
     public void Register()
     {
