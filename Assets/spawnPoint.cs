@@ -2,19 +2,11 @@ using UnityEngine;
 
 public class spawnPoint : MonoBehaviour
 {
-    public GameObject Line;
-    public GameObject Square;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public bool hasSpawned = false;
+
+    private void OnDrawGizmos()
     {
-        
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawSphere(transform.position, 0.3f);
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-
 }

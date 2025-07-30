@@ -18,6 +18,8 @@ TagManager:
   - Pl_Down
   - Bullet
   - Coin
+  - Blocker
+  - Room
   layers:
   - Default
   - TransparentFX

@@ -130,6 +130,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1595752141235115582}
+  - component: {fileID: 8818909705261061147}
   m_Layer: 0
   m_Name: DoorPoint_01 (2)
   m_TagString: DoorPoint
@@ -152,6 +153,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1499062536506223549}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
+--- !u!114 &8818909705261061147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1212034147322386981}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2b594b440f4e504da106f887514e15c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hasSpawned: 0
 --- !u!1 &1387784889094814830
 GameObject:
   m_ObjectHideFlags: 0
@@ -4140,6 +4154,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7447657559759297892}
+  - component: {fileID: 8602691638277618401}
   m_Layer: 0
   m_Name: DoorPoint_01 (3)
   m_TagString: DoorPoint
@@ -4162,6 +4177,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1499062536506223549}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
+--- !u!114 &8602691638277618401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2820528194023779265}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2b594b440f4e504da106f887514e15c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hasSpawned: 0
 --- !u!1 &2891507207029868158
 GameObject:
   m_ObjectHideFlags: 0
@@ -5613,6 +5641,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3005965996823818698}
+  - component: {fileID: 2971982167781816185}
   m_Layer: 0
   m_Name: DoorPoint_01 (1)
   m_TagString: DoorPoint
@@ -5635,6 +5664,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1499062536506223549}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
+--- !u!114 &2971982167781816185
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6424558898731608640}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2b594b440f4e504da106f887514e15c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hasSpawned: 0
 --- !u!1 &6487163989117620572
 GameObject:
   m_ObjectHideFlags: 0
@@ -6061,6 +6103,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5395101466118310807}
+  - component: {fileID: 3142275956407365300}
   m_Layer: 0
   m_Name: DoorPoint_01
   m_TagString: DoorPoint
@@ -6083,6 +6126,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1499062536506223549}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3142275956407365300
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7895446223702763000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2b594b440f4e504da106f887514e15c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hasSpawned: 0
 --- !u!1 &7977097636468470564
 GameObject:
   m_ObjectHideFlags: 0
@@ -6217,9 +6273,10 @@ GameObject:
   - component: {fileID: 58050171860767521}
   - component: {fileID: 8001153098600904391}
   - component: {fileID: 1928362294335034216}
+  - component: {fileID: 1712309620153811385}
   m_Layer: 0
   m_Name: 4-NormalRoom
-  m_TagString: Untagged
+  m_TagString: Room
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6366,3 +6423,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rewardChestPrefab: {fileID: 3732429118546431383, guid: 6fdd85c6a82946d4bbf0a55ef180be8c, type: 3}
   rewardSpawnPoint: {fileID: 618017549112752070}
+--- !u!114 &1712309620153811385
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8251659547016993310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 517853f89fe0eac41b2863fb82422e66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawnPoints:
+  - {fileID: 3142275956407365300}
+  - {fileID: 8818909705261061147}
+  - {fileID: 8602691638277618401}
+  - {fileID: 2971982167781816185}

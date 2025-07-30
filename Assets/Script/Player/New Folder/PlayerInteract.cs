@@ -52,8 +52,9 @@ public class PlayerInteract : MonoBehaviour
         if (closestItem != null)
         {
             Item item = closestItem.GetComponent<Item>();
-            
-                if (item != null && item.isFromShop == false) // Chỉ nhặt nếu KHÔNG phải item từ shop
+            ShopItem items = closestItem.GetComponent<ShopItem>();
+
+                if (item != null && items.isForSale == false) // Chỉ nhặt nếu KHÔNG phải item từ shop
                 {
                     bool added = inventoryController.AddItem(closestItem.gameObject);
                     if (added)

@@ -1495,6 +1495,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9197086737834052049}
+  - component: {fileID: 4313355706511958143}
   m_Layer: 0
   m_Name: End
   m_TagString: EndPoint
@@ -1517,6 +1518,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4248842559387225583}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4313355706511958143
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6497720833556168915}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 686cf4a186defe145b1749348e051a61, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  checkLength: 16.1
 --- !u!1 &8014026142768993432
 GameObject:
   m_ObjectHideFlags: 0

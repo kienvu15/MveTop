@@ -1,8 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class SimpleDungeonGenerator : MonoBehaviour
+public class SimpleDungeonGenerator2 : MonoBehaviour
 {
     [Header("Cài đặt Dungeon")]
     public List<RoomPrefabData> starterRooms;
@@ -13,16 +12,13 @@ public class SimpleDungeonGenerator : MonoBehaviour
     public List<RoomPrefabData> miniBossRooms;
     public List<RoomPrefabData> bossRooms;
 
-    [SerializeField] private Transform gridTransform;
-
     public GameObject roadPrefab;
     public GameObject doorBlockerPrefab;
 
     public int maxRooms = 10;
 
     private int roomsSpawned = 0;
-    private Queue<Transform> doorQueue = new Queue<Transform>();
-
+    private List<Transform> openDoorPoints = new List<Transform>();
     private List<GameObject> spawnedObjects = new List<GameObject>();
     private List<Vector3> occupiedPositions = new List<Vector3>();
 
@@ -34,7 +30,6 @@ public class SimpleDungeonGenerator : MonoBehaviour
 
     private bool generationComplete = false;
     private List<Transform> blockedDoorPoints = new List<Transform>();
-    private HashSet<Vector3> reservedPositions = new HashSet<Vector3>();
 
     void Update()
     {
@@ -44,13 +39,14 @@ public class SimpleDungeonGenerator : MonoBehaviour
         }
     }
 
-    IEnumerator GenerateUntilBossRoom()
+    System.Collections.IEnumerator GenerateUntilBossRoom()
     {
         while (true)
         {
             ResetDungeon();
             GenerateDungeon();
 
+            // Chờ 1 frame để đảm bảo hệ thống spawn xong
             yield return null;
 
             if (bossSpawned)
@@ -71,7 +67,7 @@ public class SimpleDungeonGenerator : MonoBehaviour
             Destroy(obj);
 
         spawnedObjects.Clear();
-        doorQueue.Clear();
+        openDoorPoints.Clear();
         occupiedPositions.Clear();
         blockedDoorPoints.Clear();
 
@@ -82,7 +78,7 @@ public class SimpleDungeonGenerator : MonoBehaviour
         specialSpawned = false;
         miniBossSpawned = false;
         bossSpawned = false;
-        reservedPositions.Clear();
+
         generationComplete = false;
 
         Debug.Log("<color=yellow>Đã reset dungeon.</color>");
@@ -91,7 +87,7 @@ public class SimpleDungeonGenerator : MonoBehaviour
     void GenerateDungeon()
     {
         RoomPrefabData startRoomData = starterRooms[Random.Range(0, starterRooms.Count)];
-        GameObject startRoom = Instantiate(startRoomData.prefab, Vector3.zero, Quaternion.identity, gridTransform);
+        GameObject startRoom = Instantiate(startRoomData.prefab, Vector3.zero, Quaternion.identity);
 
         spawnedObjects.Add(startRoom);
         occupiedPositions.Add(Vector3.zero);
@@ -101,22 +97,22 @@ public class SimpleDungeonGenerator : MonoBehaviour
         foreach (Transform child in startRoom.GetComponentsInChildren<Transform>())
         {
             if (child.CompareTag("DoorPoint"))
-                doorQueue.Enqueue(child);
+                openDoorPoints.Add(child);
         }
 
         roomsSpawned++;
-        StartCoroutine(TryExpandFromDoorQueue());
-
+        TryExpandFromOpenPoints();
         generationComplete = true;
     }
 
-    IEnumerator TryExpandFromDoorQueue()
+    void TryExpandFromOpenPoints()
     {
-        while (doorQueue.Count > 0 && roomsSpawned < maxRooms)
+        while (openDoorPoints.Count > 0 && roomsSpawned < maxRooms)
         {
-            Transform doorPoint = doorQueue.Dequeue();
+            Transform doorPoint = openDoorPoints[0];
+            openDoorPoints.RemoveAt(0);
 
-            GameObject road = Instantiate(roadPrefab, doorPoint.position, doorPoint.rotation, gridTransform);
+            GameObject road = Instantiate(roadPrefab, doorPoint.position, doorPoint.rotation);
             spawnedObjects.Add(road);
 
             Transform startPoint = null, endPoint = null;
@@ -135,21 +131,18 @@ public class SimpleDungeonGenerator : MonoBehaviour
             Vector3 offset = startPoint.position - road.transform.position;
             road.transform.position -= offset;
 
-            // ❄️ Thêm: sau khi spawn road, validate endPoints
-            EndPointValidator.Instance?.Validate();
-
             TrySpawnRoomAt(endPoint);
-
-            yield return new WaitForSeconds(0.05f);
         }
 
+        // Nếu chưa có BossRoom, cố ép spawn tại các cửa bị chặn:
         if (!bossSpawned)
             ForceSpawnBossRoomFromBlockedDoors();
 
-        foreach (var door in doorQueue)
-            BlockUnusedDoor(door);
+        // Cuối cùng, chặn các cửa chưa dùng:
+        foreach (var doorPoint in openDoorPoints)
+            BlockUnusedDoor(doorPoint);
 
-        doorQueue.Clear();
+        openDoorPoints.Clear();
     }
 
     void TrySpawnRoomAt(Transform endPoint)
@@ -189,9 +182,9 @@ public class SimpleDungeonGenerator : MonoBehaviour
             if (matchedDoor == null)
                 continue;
 
-            GameObject newRoom = Instantiate(roomData.prefab, Vector3.zero, Quaternion.identity, gridTransform);
-
+            GameObject newRoom = Instantiate(roomData.prefab);
             Transform actualDoor = null;
+
             foreach (Transform t in newRoom.GetComponentsInChildren<Transform>())
             {
                 if (t.CompareTag("DoorPoint") &&
@@ -211,14 +204,13 @@ public class SimpleDungeonGenerator : MonoBehaviour
             Vector3 offset = actualDoor.position - newRoom.transform.position;
             Vector3 targetPos = endPoint.position - offset;
 
-            if (reservedPositions.Contains(targetPos) || IsPositionOccupied(targetPos))
+            if (IsPositionOccupied(targetPos))
             {
                 Destroy(newRoom);
                 continue;
             }
 
             newRoom.transform.position = targetPos;
-            reservedPositions.Add(targetPos);
 
             spawnedObjects.Add(newRoom);
             occupiedPositions.Add(newRoom.transform.position);
@@ -240,15 +232,14 @@ public class SimpleDungeonGenerator : MonoBehaviour
                     if (roomsSpawned >= maxRooms)
                         BlockUnusedDoor(child);
                     else
-                        doorQueue.Enqueue(child);
-
+                        openDoorPoints.Add(child);
                 }
             }
 
-            return true;
+            return true;  // Thành công
         }
 
-        return false;
+        return false;  // Không spawn được phòng nào
     }
 
     void ForceSpawnBossRoomFromBlockedDoors()
@@ -265,7 +256,7 @@ public class SimpleDungeonGenerator : MonoBehaviour
 
             blockedDoorPoints.Remove(blockedDoor);
 
-            GameObject road = Instantiate(roadPrefab, blockedDoor.position, blockedDoor.rotation, gridTransform);
+            GameObject road = Instantiate(roadPrefab, blockedDoor.position, blockedDoor.rotation);
             spawnedObjects.Add(road);
 
             Transform startPoint = null, endPoint = null;
@@ -279,8 +270,6 @@ public class SimpleDungeonGenerator : MonoBehaviour
             {
                 Vector3 offset = startPoint.position - road.transform.position;
                 road.transform.position -= offset;
-
-                EndPointValidator.Instance?.Validate();
 
                 if (TrySpawnFromRoomList(bossRooms, endPoint))
                 {
