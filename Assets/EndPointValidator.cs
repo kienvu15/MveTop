@@ -1,74 +1,61 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class EndPointValidator : MonoBehaviour
 {
-    public static EndPointValidator Instance { get; private set; }
-
-    public float checkDistance = 3f;
-
-    private void Awake()
+    void Update()
     {
-        if (Instance != null && Instance != this)
-        {
-            Debug.LogWarning("Đã tồn tại một EndPointValidator khác! Sẽ bị thay thế.");
-        }
-        Instance = this;
+        CheckIntersectionAndReturnInactiveMarkers();
     }
 
-    public void Validate()
+    public void CheckIntersectionAndReturnInactiveMarkers()
     {
-        List<EndPointMarker> markers = EndPointMarker.AllMarkers;
+        var markers = new List<EndPointMarker>(EndPointMarker.AllMarkers);
 
         for (int i = 0; i < markers.Count; i++)
         {
+            var m1 = markers[i];
+            if (m1 == null || !m1.gameObject.activeInHierarchy) continue;
+
             for (int j = i + 1; j < markers.Count; j++)
             {
-                var a = markers[i];
-                var b = markers[j];
+                var m2 = markers[j];
+                if (m2 == null || !m2.gameObject.activeInHierarchy) continue;
 
-                if (DoLinesIntersect(a.transform.position, a.transform.forward, b.transform.position, b.transform.forward, a.checkLength, b.checkLength))
+                if (LineSegmentsIntersect(m1.GetStart(), m1.GetEnd(), m2.GetStart(), m2.GetEnd()))
                 {
-                    Debug.LogWarning($"[EndPointValidator] Giao nhau giữa:\n- A: {a.gameObject.name}\n- B: {b.gameObject.name}");
+                    Debug.DrawLine(m1.GetStart(), m1.GetEnd(), Color.green, 0.2f);
+                    Debug.DrawLine(m2.GetStart(), m2.GetEnd(), Color.green, 0.2f);
+                    Debug.Log($"Intersection between {m1.name} and {m2.name}");
 
-                    if (b.gameObject.activeSelf)
-                    {
-                        Debug.Log($"--> Tắt {b.gameObject.name}");
-                        b.gameObject.SetActive(false);
-                    }
+                    if (m1.transform.GetSiblingIndex() > m2.transform.GetSiblingIndex())
+                        m1.isValid = false;
                     else
-                    {
-                        Debug.Log($"--> {b.gameObject.name} đã tắt sẵn");
-                    }
+                        m2.isValid = false;
                 }
             }
         }
     }
 
 
-    private bool DoLinesIntersect(Vector3 aStart, Vector3 aDir, Vector3 bStart, Vector3 bDir, float aLen, float bLen)
+    // Toán học kiểm tra giao nhau giữa 2 đoạn thẳng
+    bool LineSegmentsIntersect(Vector2 p1, Vector2 p2, Vector2 q1, Vector2 q2)
     {
-        Vector3 aEnd = aStart + aDir.normalized * aLen;
-        Vector3 bEnd = bStart + bDir.normalized * bLen;
+        float o1 = Orientation(p1, p2, q1);
+        float o2 = Orientation(p1, p2, q2);
+        float o3 = Orientation(q1, q2, p1);
+        float o4 = Orientation(q1, q2, p2);
 
-        // Giản lược về 2D nếu dùng trong game top-down (x,z) hoặc platformer (x,y)
-        Vector2 a1 = new Vector2(aStart.x, aStart.z);
-        Vector2 a2 = new Vector2(aEnd.x, aEnd.z);
-        Vector2 b1 = new Vector2(bStart.x, bStart.z);
-        Vector2 b2 = new Vector2(bEnd.x, bEnd.z);
+        if (o1 != o2 && o3 != o4)
+            return true;
 
-        return LinesIntersect(a1, a2, b1, b2);
+        return false;
     }
 
-    private bool LinesIntersect(Vector2 p1, Vector2 p2, Vector2 q1, Vector2 q2)
+    float Orientation(Vector2 a, Vector2 b, Vector2 c)
     {
-        // Check if two line segments (p1-p2 and q1-q2) intersect
-        float d = (p2.x - p1.x) * (q2.y - q1.y) - (p2.y - p1.y) * (q2.x - q1.x);
-        if (Mathf.Approximately(d, 0)) return false; // Parallel
-
-        float u = ((q1.x - p1.x) * (q2.y - q1.y) - (q1.y - p1.y) * (q2.x - q1.x)) / d;
-        float v = ((q1.x - p1.x) * (p2.y - p1.y) - (q1.y - p1.y) * (p2.x - p1.x)) / d;
-
-        return (u >= 0 && u <= 1) && (v >= 0 && v <= 1);
+        float val = (b.y - a.y) * (c.x - b.x) - (b.x - a.x) * (c.y - b.y);
+        if (Mathf.Abs(val) < 0.0001f) return 0;  // colinear
+        return (val > 0) ? 1 : 2; // clockwise or counterclockwise
     }
 }

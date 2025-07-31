@@ -20,6 +20,8 @@ TagManager:
   - Coin
   - Blocker
   - Room
+  - Ground
+  - Road
   layers:
   - Default
   - TransparentFX
@@ -32,8 +34,8 @@ TagManager:
   - Wall
   - Obstacle
   - Back
-  - 
-  - 
+  - EndPoint
+  - Ground
   - 
   - 
   - 

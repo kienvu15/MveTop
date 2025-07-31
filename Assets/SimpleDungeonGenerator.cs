@@ -36,6 +36,13 @@ public class SimpleDungeonGenerator : MonoBehaviour
     private List<Transform> blockedDoorPoints = new List<Transform>();
     private HashSet<Vector3> reservedPositions = new HashSet<Vector3>();
 
+    private EndPointValidator endpointValidator;
+
+    void Start()
+    {
+        endpointValidator = FindFirstObjectByType<EndPointValidator>();
+    }
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.P))
@@ -116,9 +123,11 @@ public class SimpleDungeonGenerator : MonoBehaviour
         {
             Transform doorPoint = doorQueue.Dequeue();
 
+            // 1. Instantiate road
             GameObject road = Instantiate(roadPrefab, doorPoint.position, doorPoint.rotation, gridTransform);
             spawnedObjects.Add(road);
 
+            // 2. Tìm Start & EndPoint
             Transform startPoint = null, endPoint = null;
             foreach (Transform t in road.GetComponentsInChildren<Transform>())
             {
@@ -126,6 +135,7 @@ public class SimpleDungeonGenerator : MonoBehaviour
                 if (t.CompareTag("EndPoint")) endPoint = t;
             }
 
+            // 3. Align road về đúng vị trí (bắt buộc trước validator)
             if (startPoint == null || endPoint == null)
             {
                 Debug.LogError("Road Prefab thiếu StartPoint hoặc EndPoint.");
@@ -135,10 +145,14 @@ public class SimpleDungeonGenerator : MonoBehaviour
             Vector3 offset = startPoint.position - road.transform.position;
             road.transform.position -= offset;
 
-            // ❄️ Thêm: sau khi spawn road, validate endPoints
-            EndPointValidator.Instance?.Validate();
+            // ✅ 4. Giờ mới gọi Validator — marker đã ở đúng chỗ!
+            if (endpointValidator != null)
+                endpointValidator.CheckIntersectionAndReturnInactiveMarkers();
 
+            // 5. Tiếp tục spawn
             TrySpawnRoomAt(endPoint);
+
+
 
             yield return new WaitForSeconds(0.05f);
         }
@@ -150,12 +164,125 @@ public class SimpleDungeonGenerator : MonoBehaviour
             BlockUnusedDoor(door);
 
         doorQueue.Clear();
+        StartCoroutine(WaitAndCleanUpAfterGeneration());
+
+
     }
+    IEnumerator WaitAndCleanUpAfterGeneration()
+    {
+        // Đợi tất cả các Road và Marker thực sự đã Update ít nhất 1 frame
+        yield return new WaitForEndOfFrame();
+        yield return new WaitForEndOfFrame(); // Đảm bảo collider & raycast ổn định
+
+        yield return new WaitForSeconds(0.5f); // Đợi thêm một chút nữa cho chắc chắn
+
+        Debug.Log("<color=orange>🧹 Đang kiểm tra & vô hiệu hóa các Road không dùng...</color>");
+        CleanUpUnusedRoads();
+    }
+
+
+
+    void CleanUpUnusedRoads()
+    {
+        // Sao chép danh sách để tránh lỗi sửa khi lặp
+        var objectsCopy = new List<GameObject>(spawnedObjects);
+
+        foreach (GameObject obj in objectsCopy)
+        {
+            if (obj == null || obj.tag != "Road") continue;
+
+            EndPointMarker marker = obj.GetComponentInChildren<EndPointMarker>(true);
+            if (marker != null)
+            {
+                marker.CheckIfInUse();
+                if (!marker.inUse)
+                {
+                    Debug.Log($"🧱 Vô hiệu hoá Road vì không dùng: {obj.name}");
+
+                    // 👉 Tìm DoorPoint gốc để đặt blocker
+                    Transform startPoint = null;
+                    foreach (Transform t in obj.GetComponentsInChildren<Transform>())
+                    {
+                        if (t.CompareTag("StartPoint"))
+                        {
+                            startPoint = t;
+                            break;
+                        }
+                    }
+
+                    if (startPoint != null)
+                    {
+                        RaycastHit2D[] hits = Physics2D.RaycastAll(startPoint.position, startPoint.right, 10f);
+                        Debug.DrawRay(startPoint.position, startPoint.right * 10f, Color.red, 2f); // Vẽ ray debug
+
+                        bool foundAny = false;
+                        foreach (var hit in hits)
+                        {
+                            if (hit.collider != null && hit.collider.CompareTag("DoorPoint"))
+                            {
+                                Transform doorPoint = hit.collider.transform;
+                                BlockUnusedDoor(doorPoint);
+                                Debug.Log($"🚧 Gắn blocker tại DoorPoint gốc: {doorPoint.name}");
+                                foundAny = true;
+                            }
+                        }
+
+                        if (!foundAny)
+                        {
+                            Debug.LogWarning("⚠️ Không tìm thấy DoorPoint gốc nào cho road: " + obj.name);
+                        }
+                    }
+
+                    // ❗ Tắt road sau khi dùng xong
+                    obj.SetActive(false); // <-- dòng này vẫn an toàn nhờ objectsCopy
+                }
+            }
+        }
+    }
+
+
+
 
     void TrySpawnRoomAt(Transform endPoint)
     {
         if (roomsSpawned >= maxRooms)
+        {
+            Debug.Log("🚫 Đã đạt maxRooms, huỷ road và thêm blocker tại: " + endPoint.name);
+
+            // Xử lý khi đã spawn road nhưng không được phép spawn room
+            if (doorBlockerPrefab != null)
+            {
+                Instantiate(doorBlockerPrefab, endPoint.position, endPoint.rotation, gridTransform);
+                Debug.Log("🚧 Đặt blocker tại: " + endPoint.position);
+            }
+            else
+            {
+                Debug.LogWarning("❌ Không có prefab blocker được gán trong Inspector!");
+            }
+
+
+            Transform road = endPoint.parent;
+            if (road != null)
+            {
+                Debug.Log("🧹 Xoá road: " + road.name);
+                Destroy(road.gameObject);
+            }
+            else
+            {
+                Debug.LogWarning("⚠️ Không tìm thấy parent (road) của endpoint: " + endPoint.name);
+            }
+
+
             return;
+        }
+
+
+        var marker = endPoint.GetComponent<EndPointMarker>();
+        if (marker != null && !marker.isValid)
+        {
+            Debug.LogWarning($"❌ Bỏ qua EndPoint không hợp lệ: {endPoint.name}");
+            return;
+        }
 
         List<RoomPrefabData> roomList = ChooseRoomType();
         if (roomList == null || roomList.Count == 0)
@@ -163,6 +290,7 @@ public class SimpleDungeonGenerator : MonoBehaviour
 
         TrySpawnFromRoomList(roomList, endPoint);
     }
+
 
     bool TrySpawnFromRoomList(List<RoomPrefabData> roomList, Transform endPoint)
     {
@@ -280,7 +408,7 @@ public class SimpleDungeonGenerator : MonoBehaviour
                 Vector3 offset = startPoint.position - road.transform.position;
                 road.transform.position -= offset;
 
-                EndPointValidator.Instance?.Validate();
+
 
                 if (TrySpawnFromRoomList(bossRooms, endPoint))
                 {
