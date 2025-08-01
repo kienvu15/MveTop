@@ -117,6 +117,19 @@ public class SimpleDungeonGenerator : MonoBehaviour
         generationComplete = true;
     }
 
+    void HandleBlockedInUseMarkers()
+    {
+        foreach (var marker in EndPointMarker.AllMarkers)
+        {
+            if (marker.isBlock && marker.inUse && marker.blockerCollider != null)
+            {
+                Debug.Log($"🚫 Tắt blocker: {marker.blockerCollider.name}");
+                marker.blockerCollider.gameObject.SetActive(false);
+            }
+        }
+    }
+
+
     IEnumerator TryExpandFromDoorQueue()
     {
         while (doorQueue.Count > 0 && roomsSpawned < maxRooms)
@@ -178,6 +191,7 @@ public class SimpleDungeonGenerator : MonoBehaviour
 
         Debug.Log("<color=orange>🧹 Đang kiểm tra & vô hiệu hóa các Road không dùng...</color>");
         CleanUpUnusedRoads();
+        HandleBlockedInUseMarkers();
     }
 
 

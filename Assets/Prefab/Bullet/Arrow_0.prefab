@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 304382641251861712}
   - component: {fileID: 489514049453333861}
   - component: {fileID: 8745959238389731881}
-  - component: {fileID: -7455711105225821520}
+  - component: {fileID: 3003287577859332638}
   m_Layer: 0
   m_Name: Arrow_0
   m_TagString: Untagged
@@ -170,7 +170,7 @@ PolygonCollider2D:
       - {x: 0.45714286, y: 0.042857144}
       - {x: 0.31428573, y: 0.114285715}
   m_UseDelaunayMesh: 0
---- !u!114 &-7455711105225821520
+--- !u!114 &3003287577859332638
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -179,7 +179,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 2968505738577696993}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 621fea66120e85442bd70b5f38a9e435, type: 3}
+  m_Script: {fileID: 11500000, guid: af939e79954e3bc47888d62b0290bacb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetLayers:
+    serializedVersion: 2
+    m_Bits: 832
   playerStats: {fileID: 0}
+  damage: 1

@@ -12,7 +12,7 @@ public class EnemyLaserBeam : MonoBehaviour
     public bool isShooting = false;
     public bool isLocked = false;
     public bool isInCooldown = false;
-    public bool isAiming = false; // 🔁 Theo dõi Player trong lúc nhắm
+    public bool isAiming = false; 
 
     public float lockTime = 1f;
     public float cooldownTimer = 0f;
@@ -28,13 +28,15 @@ public class EnemyLaserBeam : MonoBehaviour
     [SerializeField] private LineRenderer laserLine;
     [SerializeField] private float laserDuration = 3f;
     [SerializeField] private float laserWidth = 0.1f;
-    [SerializeField] private LayerMask hitLayers; // Player, tường, v.v.
+    [SerializeField] private LayerMask hitLayers; 
 
     private EnemySteering EnemySteering;
-    private PlayerStats PlayerStats;
-    private PlayerHurtHandler PlayerHurtHandler;
+    private PlayerStats playerStats;
+    private EnemyStats enemyStats;
+
     private Vector2 chargeMoveDir;
     private float preferredDistance = -1f;
+    private Vector2 chargeMoveTarget = Vector2.zero;
 
     private Rigidbody2D rb;
     public event System.Action OnShotLaserFinished;
@@ -46,16 +48,15 @@ public class EnemyLaserBeam : MonoBehaviour
         EnemyAttackVision = GetComponent<EnemyAttackVision>();
         EnemySteering = GetComponent<EnemySteering>();
 
-        PlayerStats = FindFirstObjectByType<PlayerStats>();
-        PlayerHurtHandler = FindFirstObjectByType<PlayerHurtHandler>();
+        playerStats = FindFirstObjectByType<PlayerStats>();
+        enemyStats = GetComponent<EnemyStats>();
 
         EnemyVision.isSpecialVision = true;
     }
 
     void Update()
     {
-       
-        HandleLockAndShoot();
+        
     }
 
    
@@ -66,7 +67,7 @@ public class EnemyLaserBeam : MonoBehaviour
         if (EnemyVision.CanSeePlayer)
         {
             visionTimer += Time.deltaTime;
-
+            MoveWhileCharging();
             if (visionTimer >= lockTime && !isLocked)
             {
                 if (EnemyVision.targetDetected != null)
@@ -82,75 +83,6 @@ public class EnemyLaserBeam : MonoBehaviour
         {
             visionTimer = 0f;
             isLocked = false;
-        }
-    }
-    private void MaintainRandomDistanceToPlayer()
-    {
-        if (!EnemyVision.CanSeePlayer || isLocked || isInCooldown || isShooting) return;
-
-        Transform target = EnemyVision.targetDetected;
-        if (target == null || EnemySteering == null) return;
-
-        Vector2 toPlayer = target.position - transform.position;
-        float dist = toPlayer.magnitude;
-
-        // Khởi tạo khoảng cách nếu chưa có
-        if (preferredDistance < 0f)
-        {
-            preferredDistance = Random.Range(5.6f, 6.8f);
-        }
-
-        float diff = dist - preferredDistance;
-
-        if (Mathf.Abs(diff) > 0.2f)
-        {
-            Vector2 moveDir = diff > 0f ? -toPlayer.normalized : toPlayer.normalized;
-            EnemySteering.MoveInDirection(moveDir, 1.2f);
-        }
-        else
-        {
-            EnemySteering.StopMoving();
-        }
-    }
-    private Vector2 chargeMoveTarget = Vector2.zero;
-
-    private void MoveWhileCharging()
-    {
-        if (EnemySteering == null || EnemyVision == null || !EnemyVision.CanSeePlayer) return;
-
-        Transform player = EnemyVision.targetDetected;
-        if (player == null) return;
-
-        // Nếu chưa có target → chọn node giữ LOS
-        if (chargeMoveTarget == Vector2.zero)
-        {
-            Node node = GridManager.Instance.GetAvoid2Node(
-                transform.position,
-                player.position,
-                avoidRadius: 2f,       // enemy sẽ không đứng quá gần
-                visionRadius: EnemyVision.visionRadius  // vẫn giữ trong tầm nhìn
-            );
-
-            if (node != null)
-            {
-                chargeMoveTarget = node.worldPosition;
-            }
-        }
-
-        // Nếu có target rồi thì move
-        if (chargeMoveTarget != Vector2.zero)
-        {
-            Vector2 toTarget = chargeMoveTarget - (Vector2)transform.position;
-
-            // Nếu gần đến nơi rồi thì ngừng
-            if (toTarget.magnitude < 0.1f)
-            {
-                EnemySteering.StopMoving();
-            }
-            else
-            {
-                EnemySteering.MoveInDirection(toTarget.normalized, 0.8f);
-            }
         }
     }
 
@@ -190,7 +122,7 @@ public class EnemyLaserBeam : MonoBehaviour
         EnemySteering?.StopMoving();
         EnemyAttackVision.isSpecial = true;
         StartCoroutine(FireLaserWithSharedLine(warningLine));
-        
+
     }
 
     private IEnumerator FireLaserWithSharedLine(LineRenderer line)
@@ -211,14 +143,15 @@ public class EnemyLaserBeam : MonoBehaviour
         {
             Vector2 firePos = EnemyAttackVision.attackPoint.position;
             Vector2 dir = EnemyAttackVision.attackPoint.right;
-            
+
             RaycastHit2D hit = Physics2D.Raycast(firePos, dir, 100f, hitLayers);
             Vector2 endPos = hit.collider ? hit.point : firePos + dir * 100f;
 
-            if (hit.collider.CompareTag("Player"))
+            if (hit.collider != null && hit.collider.CompareTag("Player"))
             {
-                PlayerHurtHandler.ReceiveDamage(laserDamage, transform.position);
+                playerStats.TakeDamage(enemyStats.damage, transform.position);
             }
+
 
             line.SetPosition(0, firePos);
             line.SetPosition(1, endPos);
@@ -228,12 +161,10 @@ public class EnemyLaserBeam : MonoBehaviour
         }
 
         line.enabled = false;
-
+        
         // 🔁 Reset lại width cho cảnh báo lần sau
         line.startWidth = 0.05f;
         line.endWidth = 0.05f;
-
-        yield return new WaitForSeconds(shotCoolDown);
 
         isShooting = false;
         isLocked = false;
@@ -241,10 +172,112 @@ public class EnemyLaserBeam : MonoBehaviour
 
         chargeMoveTarget = Vector2.zero;
 
+        yield return new WaitForSeconds(shotCoolDown);
+
         OnShotLaserFinished?.Invoke();
 
     }
 
+    public void MoveWhileChargingWithoutPlayer()
+    {
+        if (EnemySteering == null) return;
 
+        // Nếu chưa có target thì tìm một node ngẫu nhiên gần enemy
+        if (chargeMoveTarget == Vector2.zero)
+        {
+            Node node = GridManager.Instance.GetRandomWalkableNodeNear(transform.position, 4f);
+            if (node != null)
+            {
+                chargeMoveTarget = node.worldPosition;
+            }
+        }
+
+        // Nếu có target rồi thì di chuyển
+        if (chargeMoveTarget != Vector2.zero)
+        {
+            Vector2 toTarget = chargeMoveTarget - (Vector2)transform.position;
+
+            if (toTarget.magnitude < 0.1f)
+            {
+                // ✅ Reset để chọn lại node mới ở lần gọi tiếp theo
+                chargeMoveTarget = Vector2.zero;
+            }
+            else
+            {
+                EnemySteering.MoveInDirection(toTarget.normalized, 0.8f);
+            }
+        }
+    }
+
+
+
+    public void MoveWhileCharging()
+    {
+        if (EnemySteering == null || EnemyVision == null || !EnemyVision.CanSeePlayer) return;
+
+        Transform player = EnemyVision.targetDetected;
+        if (player == null) return;
+
+        // Nếu chưa có target → chọn node giữ LOS
+        if (chargeMoveTarget == Vector2.zero)
+        {
+            Node node = GridManager.Instance.GetAvoid2Node(
+                transform.position,
+                player.position,
+                avoidRadius: 2f,       // enemy sẽ không đứng quá gần
+                visionRadius: EnemyVision.visionRadius  // vẫn giữ trong tầm nhìn
+            );
+
+            if (node != null)
+            {
+                chargeMoveTarget = node.worldPosition;
+            }
+        }
+
+        // Nếu có target rồi thì move
+        if (chargeMoveTarget != Vector2.zero)
+        {
+            Vector2 toTarget = chargeMoveTarget - (Vector2)transform.position;
+
+            // Nếu gần đến nơi rồi thì ngừng
+            if (toTarget.magnitude < 0.1f)
+            {
+                EnemySteering.StopMoving();
+            }
+            else
+            {
+                EnemySteering.MoveInDirection(toTarget.normalized, 0.8f);
+            }
+        }
+    }
+
+    private void MaintainRandomDistanceToPlayer()
+    {
+        if (!EnemyVision.CanSeePlayer || isLocked || isInCooldown || isShooting) return;
+
+        Transform target = EnemyVision.targetDetected;
+        if (target == null || EnemySteering == null) return;
+
+        Vector2 toPlayer = target.position - transform.position;
+        float dist = toPlayer.magnitude;
+
+        // Khởi tạo khoảng cách nếu chưa có
+        if (preferredDistance < 0f)
+        {
+            preferredDistance = Random.Range(5.6f, 6.8f);
+        }
+
+        float diff = dist - preferredDistance;
+
+        if (Mathf.Abs(diff) > 0.2f)
+        {
+            Vector2 moveDir = diff > 0f ? -toPlayer.normalized : toPlayer.normalized;
+            EnemySteering.MoveInDirection(moveDir, 1.2f);
+        }
+        else
+        {
+            EnemySteering.StopMoving();
+        }
+    }
 
 }

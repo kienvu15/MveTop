@@ -23,7 +23,7 @@ public class EnganeStage_03 : EnemyState
     public override void Update()
     {
         brain.EnemySteering.MoveTo(brain.EnemyVision.targetDetected.position, 1.5f);
-        if(brain.EnemyVision.distance < 1.6f)
+        if(brain.EnemyVision.distance < 2f)
         {
             brain.EnemySteering.StopMoving();
             enemyAttackController.TryPerformAttack();

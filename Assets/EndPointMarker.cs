@@ -6,15 +6,17 @@ public class EndPointMarker : MonoBehaviour
     public static List<EndPointMarker> AllMarkers = new List<EndPointMarker>();
 
     public float checkLength = 3f;
-    public bool isValid = true; 
+    public bool isValid = true;
     public bool inUse = false;
+    public bool isBlock = false; // ✅ Mới thêm
+    public Collider2D blockerCollider; // ✅ Nếu có va chạm với blocker thì giữ lại tham chiếu
 
     public LayerMask groundLayer;
 
     void Awake()
     {
         AllMarkers.Add(this);
-        Physics2D.queriesHitTriggers = true; // Cho phép raycast chạm trigger
+        Physics2D.queriesHitTriggers = true;
     }
 
     void OnEnable()
@@ -28,7 +30,16 @@ public class EndPointMarker : MonoBehaviour
         AllMarkers.Remove(this);
     }
 
-    
+    // ✅ Kiểm tra va chạm với Blocker
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Blocker"))
+        {
+            isBlock = true;
+            blockerCollider = other; // lưu lại collider để tắt sau
+            Debug.Log($"🧱 EndPoint bị Blocker chặn: {other.name}");
+        }
+    }
 
     public void CheckIfInUse()
     {
@@ -56,10 +67,8 @@ public class EndPointMarker : MonoBehaviour
         }
     }
 
-
     void OnDrawGizmos()
     {
-        // Thay đổi màu theo isValid
         Gizmos.color = isValid ? Color.green : Color.red;
         Vector3 worldDir = transform.TransformDirection(Vector2.right) * checkLength;
         Gizmos.DrawLine(transform.position, transform.position + worldDir);

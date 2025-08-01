@@ -29,17 +29,17 @@ public class ArcAround_41 : EnemyState
             if (canCurvedMove)
             {
                 Debug.Log("Move to player");
-                brain.EnemySteering.MoveToWithBendSmart(brain.EnemyVision.targetDetected.position, brain.EnemySteering.chosenCurveMode, 2f);
+                brain.EnemySteering.MoveToWithBendSmart(brain.EnemyVision.targetDetected.position, brain.EnemySteering.chosenCurveMode, 4f);
             }
         }
 
         if(brain.EnemyVision.lastSeenPosition.HasValue && !brain.EnemyVision.CanSeePlayer)
         {
             Debug.Log("Move to last seen position");
-            brain.EnemySteering.MoveTo(brain.EnemyVision.lastSeenPosition.Value, 1.2f);
+            brain.EnemySteering.MoveTo(brain.EnemyVision.lastSeenPosition.Value, 3.8f);
         }
 
-        if (brain.EnemyVision.distance < 3.5f)
+        if (brain.EnemyVision.distance < 4f)
         {
             brain.EnemySteering.StopMoving();
             brain.ChangeState(new AttackStage_41(brain));

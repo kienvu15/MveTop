@@ -14,9 +14,6 @@ public class AttackStage_03 : EnemyState
     private float stateDuration;
     private float stateDuration02;
 
-    private bool approachingPlayer = false;
-    private bool isStioping = false;
-
     private bool GoingToAttack = false;
     public override void Enter()
     {
@@ -30,8 +27,8 @@ public class AttackStage_03 : EnemyState
 
         stateTimer = 0f;
         stateTimer02 = 0f;
-        stateDuration = Random.Range(1f, 1.2f); 
-        stateDuration02 = Random.Range(0.7f, 2f);
+        stateDuration = Random.Range(0.8f, 1.2f); 
+        stateDuration02 = Random.Range(0.7f, 1.5f);
     }
 
     public override void Update()
@@ -63,15 +60,7 @@ public class AttackStage_03 : EnemyState
             brain.ChangeState(new EnganeStage_03(brain));
         }
 
-        //if(isStioping == true)
-        //{
-        //    brain.EnemySteering.MoveTo(brain.EnemyVision.targetDetected.position, 1.5f);
-        //    if(brain.EnemyVision.distance < 1.6f)
-        //    {
-        //        brain.EnemySteering.StopMoving();
-        //        enemyAttackController.TryPerformAttack();
-        //    }
-        //}
+        
     }
 
     public override void Exit()

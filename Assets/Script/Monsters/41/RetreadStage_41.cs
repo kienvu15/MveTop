@@ -40,7 +40,7 @@ public class RetreadStage_41 : EnemyState
         {
             if(ranChoice > 0.5f)
             {
-                retread.RetreatIfCloseTo(brain.EnemyVision.targetDetected, retreatThreshold: 3f, retreatDistance: retreadDistance, retreatSpeed: 2f);
+                retread.RetreatIfCloseTo(brain.EnemyVision.targetDetected, retreatThreshold: 3f, retreatDistance: retreadDistance, retreatSpeed: 2.8f);
 
                 stateTimer += Time.deltaTime;
                 if (stateTimer >= stateDuration)

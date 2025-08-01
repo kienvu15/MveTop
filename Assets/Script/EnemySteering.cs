@@ -10,6 +10,8 @@ public class EnemySteering : MonoBehaviour
     [Header("Vision")]
     public EnemyVision vision;
     public float stopDistanceToLastSeen = 0.2f;
+    public bool isFacingRight = true;
+    public Transform spriteHolder; // Drag SpriteHolder vào Inspector
 
     [Header("Movement")]
     public float moveSpeed = 2f;
@@ -46,6 +48,7 @@ public class EnemySteering : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         vision = GetComponent<EnemyVision>();
+        spriteHolder = GetComponentInChildren<SpriteRenderer>().transform;
     }
 
     public void MoveTo(Vector2 targetPosition, float customSpeed)
@@ -297,8 +300,27 @@ public class EnemySteering : MonoBehaviour
         }
     }
 
+    public void FlipToTarget()
+    {
+        if (useFlip) return;
+        if (vision == null || vision.targetDetected == null) return;
+
+        float directionToTarget = vision.targetDetected.position.x - transform.position.x;
+        if (Mathf.Abs(directionToTarget) < 0.01f) return;
+
+        Vector3 scale = spriteHolder.localScale;
+        scale.x = Mathf.Sign(directionToTarget) * (isFacingRight ? 1f : -1f);
+        spriteHolder.localScale = scale;
+    }
+
+
     private void Update()
     {
+        if (!useFlip)
+        {
+            FlipToTarget();
+        }
+
         if (rb.linearVelocity.magnitude < 0.05f && desiredlinearVelocity.magnitude > 0.5f)
         {
             Debug.LogWarning("Enemy might be stuck!");

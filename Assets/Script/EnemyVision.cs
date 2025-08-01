@@ -53,11 +53,11 @@ public class EnemyVision : MonoBehaviour
             {
                 // Thấy rõ Player
                 hasSeenPlayer = true; // Đánh dấu đã thấy Player
+                targetDetected = hit.transform;
                 CanSeePlayer = true;
 
                 Debug.Log("Can see Player");
 
-                targetDetected = hit.transform;
                 lastSeenPosition = hit.transform.position; // Ghi lại vị trí cuối cùng thấy Player
 
                 distance = Vector2.Distance(hit.transform.position, transform.position);
@@ -91,9 +91,10 @@ public class EnemyVision : MonoBehaviour
 
             // Thấy rõ Player
             hasSeenPlayer = true; // Đánh dấu đã thấy Player
+            targetDetected = hit.transform;
             CanSeePlayer = true;
             Debug.Log("Can see Player");
-            targetDetected = hit.transform;
+            
             lastSeenPosition = hit.transform.position; // Ghi lại vị trí cuối cùng thấy Player
             Debug.DrawLine(transform.position, targetDetected.position, Color.green);
         }
@@ -103,6 +104,7 @@ public class EnemyVision : MonoBehaviour
             targetDetected = null;
         }
     }
+
     public void Vision3()
     {
         Collider2D hit = Physics2D.OverlapCircle(transform.position, visionRadius, playerLayer);
@@ -111,6 +113,7 @@ public class EnemyVision : MonoBehaviour
             Debug.Log("Player in Range");
         }
     }
+
     public void ClearLastSeenPosition()
     {
         lastSeenPosition = null;

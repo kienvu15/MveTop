@@ -135,7 +135,7 @@ public class RangedEnemyController : MonoBehaviour
         {
             currentDriftCoroutine = StartCoroutine(DriftRaw(
             totalDuration: 20f,
-            driftSpeed: 1f,
+            driftSpeed: 1.5f,
             directionChangeTime: 1f,
             maxOffset: 0.6f));
         }

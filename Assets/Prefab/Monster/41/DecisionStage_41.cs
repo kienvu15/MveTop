@@ -5,12 +5,15 @@ public class DecisionStage_41 : EnemyState
     public DecisionStage_41(EnemyBrain brain) : base(brain) { }
 
     private EnemyRandomPatrolSteering enemyRandomPatrolSteering;
+    public float stateTimer = 0f;
+    public float stateDuration = Random.Range(1f, 2f); // Duration for the decision stage
     public override void Enter()
     {
         base.Enter();
         Debug.Log("DecisionStage_41: Entering decision stage");
         // Here you can add any initialization code for the decision stage
-
+        stateTimer = 0f;
+        stateDuration = Random.Range(1f, 2f);
         enemyRandomPatrolSteering = brain.GetComponent<EnemyRandomPatrolSteering>();
     }
 
@@ -19,9 +22,13 @@ public class DecisionStage_41 : EnemyState
         enemyRandomPatrolSteering.PatrolCondition();
         if (brain.EnemyVision.CanSeePlayer)
         {
-            Debug.Log("PatrolStage_03: Player detected, transitioning to DecisionStage_03");
-            enemyRandomPatrolSteering.StopPatrol();
-            brain.ChangeState(new ArcAround_41(brain));
+            stateTimer += Time.deltaTime;
+            if(stateTimer >= stateDuration)
+            {
+                Debug.Log("DecisionStage_41: Time elapsed, transitioning to ArcAround_41");
+                enemyRandomPatrolSteering.StopPatrol();
+                brain.ChangeState(new ArcAround_41(brain));
+            }
         }
     }
 
