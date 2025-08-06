@@ -35,7 +35,10 @@ public class AttackStage_03 : EnemyState
     {
         if (brain.EnemyAttackVision.isPlayerInAttackRange == true)
         {
-            rangedEnemyController.DritDec();
+            if (brain.EnemyStateController.canMove)
+            {
+                rangedEnemyController.DritDec();
+            }
             stateTimer02 += Time.deltaTime;
             if (stateTimer02 > stateDuration02)
             {

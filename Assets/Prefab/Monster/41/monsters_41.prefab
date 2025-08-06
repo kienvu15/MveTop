@@ -109,7 +109,7 @@ SpriteRenderer:
   m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: -3858735583668851331, guid: 946d1b1ee1fa7f843b2941386da6ae9e, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.935849, g: 0.935849, b: 0.935849, a: 1}
   m_FlipX: 1
   m_FlipY: 0
   m_DrawMode: 0
@@ -293,6 +293,7 @@ GameObject:
   - component: {fileID: 3840894627693024115}
   - component: {fileID: 4194578008846802861}
   - component: {fileID: 1441952565103294086}
+  - component: {fileID: 6925335893308871981}
   m_Layer: 7
   m_Name: monsters_41
   m_TagString: Enemy
@@ -397,6 +398,7 @@ MonoBehaviour:
   EnemyVision: {fileID: 0}
   EnemyAttackVision: {fileID: 0}
   EnemySteering: {fileID: 0}
+  EnemyStateController: {fileID: 0}
   playerTransform: {fileID: 0}
 --- !u!114 &3048349662977410428
 MonoBehaviour:
@@ -410,7 +412,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd8ae2f594a38224f91890ba44abd1e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 5
+  type: 6
 --- !u!114 &8831043927962794548
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -591,9 +593,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c704a3a68fbacbb48b60c513b75f7764, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 5
+  maxHealth: 300
   damage: 1
+  recoilHitForce: 5
+  spriteRenderer: {fileID: 8639222399859179191}
   currentHealth: 0
+  playerStats: {fileID: 0}
+  enemyStateController: {fileID: 6925335893308871981}
 --- !u!114 &1441952565103294086
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -607,3 +613,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scoreValue: 100
+--- !u!114 &6925335893308871981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7418682233964073672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e111e5a372d93e045a01b30a3827a741, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isRecoiling: 0
+  canMove: 1
+  canAttack: 1

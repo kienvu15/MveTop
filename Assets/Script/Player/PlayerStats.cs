@@ -12,6 +12,10 @@ public class PlayerStats : MonoBehaviour
     public int maxArmor = 4;
     public int currentArmor;
 
+    [Header("Auto Armor Regen")]
+    public float armorRegenInterval = 10f;  // thời gian giữa mỗi lần hồi
+    private float armorRegenTimer = 0f;
+
     [Header("MoveSpeed")]
     public float moveSpeed = 5f;
 
@@ -28,6 +32,7 @@ public class PlayerStats : MonoBehaviour
     [Header("Recoil")]
     [SerializeField] public float recoilForce = 5f;
     [SerializeField] public float recoilHitForce = 9f;
+    [SerializeField] public float recoilApply = 5f;
 
     [Header("ComboSetting")]
     public int comboStep = 0;
@@ -45,10 +50,11 @@ public class PlayerStats : MonoBehaviour
     public PlayerUI playerUI;
     public SpriteRenderer spriteRenderer;  // Gán Sprite Renderer vào đây
     public PlayerRecoil playerRecoil;
+    public PlayerStateController playerStateController;
 
     void Start()
     {
-
+        playerStateController = GetComponent<PlayerStateController>();
         playerUI = FindFirstObjectByType<PlayerUI>();
         playerRecoil = GetComponent<PlayerRecoil>();
 
@@ -69,6 +75,8 @@ public class PlayerStats : MonoBehaviour
                 isInvincible = false;
             }
         }
+
+        HandleArmorRegen();
     }
 
     public void UpdateUI()
@@ -93,9 +101,30 @@ public class PlayerStats : MonoBehaviour
             spriteRenderer.enabled = true;
             yield return new WaitForSeconds(flashInterval);
         }
-
+        playerStateController.hurt = false;  // Đặt trạng thái hurt về false khi hết bất tử
         spriteRenderer.enabled = true;  // Đảm bảo bật sáng trở lại khi hết bất tử
     }
+
+    private void HandleArmorRegen()
+    {
+        if (playerStateController != null && !playerStateController.hurt && currentArmor < maxArmor)
+        {
+            armorRegenTimer += Time.deltaTime;
+
+            if (armorRegenTimer >= armorRegenInterval)
+            {
+                currentArmor += 1;
+                currentArmor = Mathf.Min(currentArmor, maxArmor);
+                UpdateUI();
+                armorRegenTimer = 0f;
+            }
+        }
+        else
+        {
+            armorRegenTimer = 0f;  // Reset nếu đang hurt hoặc đã full
+        }
+    }
+
 
     public void TakeDamage(int damage, Vector2 attackPointPosition)
     {
@@ -106,7 +135,7 @@ public class PlayerStats : MonoBehaviour
         }
 
         int remainingDamage = damage;
-
+        playerStateController.hurt = true;
         if (currentArmor > 0)
         {
             int absorbed = Mathf.Min(currentArmor, remainingDamage);
@@ -126,6 +155,7 @@ public class PlayerStats : MonoBehaviour
         if (playerRecoil != null)
         {
             playerRecoil.ApplyHitedRecoil(attackPointPosition);
+            
         }
 
         // Bắt đầu bất tử
@@ -134,13 +164,7 @@ public class PlayerStats : MonoBehaviour
         if (flashCoroutine != null)
             StopCoroutine(flashCoroutine);
         flashCoroutine = StartCoroutine(FlashWhileInvincible());
-
-        
-        
     }
-
-
-
 
     public void Heal(int amount)
     {

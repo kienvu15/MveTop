@@ -482,6 +482,14 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: -6556086720143981034, guid: 0bd61f778d7d8ac44a998bea567f580c, type: 3}
+    - target: {fileID: 580268431551745241, guid: e102a0a8ff01b7544842e56cebde8df5, type: 3}
+      propertyPath: m_SortingLayer
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 580268431551745241, guid: e102a0a8ff01b7544842e56cebde8df5, type: 3}
+      propertyPath: m_SortingLayerID
+      value: -1468374681
+      objectReference: {fileID: 0}
     - target: {fileID: 2637370694477368339, guid: e102a0a8ff01b7544842e56cebde8df5, type: 3}
       propertyPath: m_Name
       value: KnightGuard

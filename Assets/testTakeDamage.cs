@@ -3,7 +3,7 @@ using UnityEngine;
 public class testTakeDamage : MonoBehaviour
 {
     public PlayerStats playerStats;
-    private EnemyStats enemyStats;
+    public EnemyStats enemyStats;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {

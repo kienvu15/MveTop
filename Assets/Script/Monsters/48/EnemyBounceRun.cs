@@ -3,6 +3,7 @@
 [RequireComponent(typeof(Rigidbody2D))]
 public class EnemyBounceRun : MonoBehaviour
 {
+    public GameObject damageObject;
     public float chargeTime = 1f;
     public float runTime = 4f;
     public float runSpeed = 3f;
@@ -41,20 +42,7 @@ public class EnemyBounceRun : MonoBehaviour
 
     public void Update()
     {
-        //if (!EnemyBounceRun.isRunning && !EnemyBounceRun.isCharging && brain.EnemyVision.hasSeenPlayer && !brain.EnemyVision.CanSeePlayer && brain.EnemyVision.lastSeenPosition.HasValue)
-        //{
-        //    float distance = Vector2.Distance(brain.transform.position, brain.EnemyVision.lastSeenPosition.Value);
-        //    if (distance > brain.EnemySteering.stopDistanceToLastSeen)
-        //    {
-        //        brain.EnemySteering.MoveTo(brain.EnemyVision.lastSeenPosition.Value, EnemyBounceRun.customSpeed);
-        //    }
-        //    else
-        //    {
-        //        brain.EnemySteering.StopMoving();
-        //        // Optional: brain.EnemyVision.ClearLastSeenPosition();
-        //    }
-        //    return; // Dừng ở đây
-        //}
+
     }
 
     public void HandelConditionRun()
@@ -85,35 +73,6 @@ public class EnemyBounceRun : MonoBehaviour
         }
     }
 
-    public void ConditionRun()
-    {
-        if (EnemyVision.CanSeePlayer)
-        {
-            visionTimer += Time.deltaTime;
-
-            if (visionTimer >= lockTime && !EnemyAttackVision.isAttackLocked)
-            {
-                // Bắt buộc cập nhật trước khi Lock
-                EnemyAttackVision.PlayerInAttackRange();
-
-                if (EnemyVision.targetDetected != null)
-                {
-                    EnemyAttackVision.MoveAttackPointToPlayer();
-                    EnemyAttackVision.isAttackLocked = true;
-                    if (EnemyAttackVision.isAttackLocked == true)
-                    {
-                        StartBounceRun(EnemyAttackVision.playerDetected);
-                    }
-                }
-            }
-        }
-        else
-        {
-            visionTimer = 0f;
-        }
-    }
-
-
     public void StartBounceRun(Transform playerTransform)
     {
         if (isCharging || isRunning) return;
@@ -143,7 +102,7 @@ public class EnemyBounceRun : MonoBehaviour
         {
             rb.linearVelocity = runDirection * runSpeed;
             timer += Time.fixedDeltaTime;
-
+            damageObject.SetActive(true);
             // Check collision
             RaycastHit2D hit = Physics2D.CircleCast(transform.position, 0.3f, runDirection, 0.3f, obstacleMask);
             if (hit.collider != null)
@@ -173,6 +132,7 @@ public class EnemyBounceRun : MonoBehaviour
     {
         isRunning = false;
         rb.linearVelocity = Vector2.zero;
+        damageObject.SetActive(false);
     }
 
     public bool IsRunning => isRunning || isCharging;

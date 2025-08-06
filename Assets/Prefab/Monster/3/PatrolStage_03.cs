@@ -12,14 +12,16 @@ public class PatrolStage_03 : EnemyState
         base.Enter();
         enemyRandomPatrolSteering = brain.GetComponent<EnemyRandomPatrolSteering>();
         stateTimer = 0f;
-        stateDuration = Random.Range(0.8f, 1.5f);
+        stateDuration = Random.Range(0.8f, 1f);
     }
 
     public override void Update()
     {
+        if (brain.EnemyStateController.canMove)
+        {
+            enemyRandomPatrolSteering.PatrolCondition();
+        }
         
-        enemyRandomPatrolSteering.PatrolCondition();
-
         if (brain.EnemyVision.CanSeePlayer)
         {
             stateTimer += Time.deltaTime;

@@ -7,7 +7,7 @@ public class BulletSwapm : MonoBehaviour
     [SerializeField] public int bulletCount = 15;
     [SerializeField] public float bulletSpeed = 5f;
     [SerializeField] public float shootCooldown = 5f;
-
+    public Transform playerTransform;
 
     [Header("Round")]
     [SerializeField] public GameObject bulletPrefab;
@@ -20,19 +20,39 @@ public class BulletSwapm : MonoBehaviour
     [SerializeField] private float shootDelay = 0.08f; // Delay giữa các viên
     [SerializeField] private float spreadAngle = 10f; // Độ tán xạ ± góc
 
+    [Header("Missile")]
+    [SerializeField] private GameObject missilePrefab;
+    public EnemyStats enemyStats;
+
     public bool isShooting = false;
-    private bool isOnCooldown = false;
+    public bool isOnCooldown = false;
     private EnemyAttackVision enemyAttackVision;
     public event System.Action OnShotBulletFinished;
+
+    public float time;
+    public float duration = 2f;
 
     private void Awake()
     {
         enemyAttackVision = GetComponent<EnemyAttackVision>();
+        enemyStats = GetComponent<EnemyStats>();
     }
 
+    public void Start()
+    {
+        playerTransform = FindFirstObjectByType<PlayerStats>().transform;
+        if (playerTransform == null)
+        {
+            Debug.LogError("PlayerStats not found in the scene.");
+        }
+    }
     public void Update()
     {
-        
+        //time += Time.deltaTime;
+        //if (time >= duration)
+        //{
+        //    ShotMissileCondition();
+        //}
     }
 
     public void ShotCondition()
@@ -63,7 +83,11 @@ public class BulletSwapm : MonoBehaviour
             Vector2 dir = new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad), Mathf.Sin(angle * Mathf.Deg2Rad));
 
             GameObject bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
-
+            Bullet bulletComponent = bullet.GetComponent<Bullet>();
+            if (bulletComponent != null)
+            {
+                bulletComponent.enemyStats = this.enemyStats;
+            }
             // Xoay bullet sao cho trục X hướng về dir
             float angleDeg = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
             bullet.transform.rotation = Quaternion.Euler(0, 0, angleDeg);
@@ -104,7 +128,11 @@ public class BulletSwapm : MonoBehaviour
             Vector2 dir = new Vector2(Mathf.Cos(currentAngle * Mathf.Deg2Rad), Mathf.Sin(currentAngle * Mathf.Deg2Rad));
 
             GameObject bullet = Instantiate(bulletPrefab2, transform.position, Quaternion.identity);
-
+            Bullet bulletComponent = bullet.GetComponent<Bullet>();
+            if (bulletComponent != null)
+            {
+                bulletComponent.enemyStats = this.enemyStats;
+            }
             bullet.transform.rotation = Quaternion.Euler(0, 0, currentAngle);
 
             bullet.GetComponent<Rigidbody2D>().linearVelocity = dir.normalized * bulletSpeed;
@@ -150,8 +178,53 @@ public class BulletSwapm : MonoBehaviour
 
             GameObject bullet = Instantiate(bulletPrefab, transform.position, Quaternion.Euler(0, 0, shotAngle));
             bullet.GetComponent<Rigidbody2D>().linearVelocity = finalDir.normalized * bulletSpeed;
-
+            Bullet bulletComponent = bullet.GetComponent<Bullet>();
+            if (bulletComponent != null)
+            {
+                bulletComponent.enemyStats = this.enemyStats;
+            }
             yield return new WaitForSeconds(shootDelay); // Delay nhỏ giữa các viên
         }
     }
+
+    /// <summary>
+    /// Missile condition to check if the missile can be fired.
+    /// </summary>
+
+    public void ShotMissileCondition()
+    {
+        if (!isOnCooldown)
+        {
+            StartCoroutine(ShotMissileRoutine(enemyAttackVision.attackPoint.right));
+        }
+    }
+
+    private IEnumerator ShotMissileRoutine(Vector2 direction)
+    {
+        isShooting = true;
+        isOnCooldown = true;
+
+        ShootMissile();
+        OnShotBulletFinished?.Invoke();
+
+        yield return new WaitForSeconds(shootCooldown);
+        isShooting = false;
+        isOnCooldown = false;
+    }
+
+    public void ShootMissile()
+    {
+        GameObject bullet = Instantiate(missilePrefab, enemyAttackVision.attackPoint.position, enemyAttackVision.attackPoint.rotation);
+
+        HomingBullet homing = bullet.GetComponent<HomingBullet>();
+        if (homing != null)
+            homing.target = playerTransform;
+
+        Missile missile = bullet.GetComponent<Missile>();
+        if (missile != null)
+        {
+            missile.enemyStats = this.enemyStats;
+        }
+    }
+
 }

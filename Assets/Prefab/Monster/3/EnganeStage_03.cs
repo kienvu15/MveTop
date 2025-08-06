@@ -9,6 +9,8 @@ public class EnganeStage_03 : EnemyState
 
     private float stateTimer;
     private float stateDuration;
+
+    private bool canAttack = false;
     public override void Enter()
     {
         base.Enter();
@@ -22,11 +24,14 @@ public class EnganeStage_03 : EnemyState
 
     public override void Update()
     {
-        brain.EnemySteering.MoveTo(brain.EnemyVision.targetDetected.position, 1.5f);
-        if(brain.EnemyVision.distance < 2f)
+        if (brain.EnemyStateController.canMove && brain.EnemyVision.targetDetected != null)
         {
-            brain.EnemySteering.StopMoving();
-            enemyAttackController.TryPerformAttack();
+            brain.EnemySteering.MoveTo(brain.EnemyVision.targetDetected.position, 1.5f);
+        }
+
+        if (brain.EnemyVision.distance < 2.3f)
+        {
+            canAttack = true;
         }
 
         if(enemyAttackController.hasAttacked == true)
@@ -42,6 +47,11 @@ public class EnganeStage_03 : EnemyState
             }
         }
 
+        if(canAttack == true)
+        {
+            brain.EnemySteering.StopMoving();
+            enemyAttackController.TryPerformAttack();
+        }
     }
 
     public override void Exit()

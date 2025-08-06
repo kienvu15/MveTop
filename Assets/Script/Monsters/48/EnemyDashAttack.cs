@@ -31,7 +31,8 @@ public class EnemyDashAttack : MonoBehaviour
 
     void Update()
     {
-        
+        Lock();
+        ConditionDash();
     }
 
     public void ConditionDash()

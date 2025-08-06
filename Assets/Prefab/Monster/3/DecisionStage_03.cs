@@ -29,7 +29,7 @@ public class DecisionStage_03 : EnemyState
     public override void Update()
     {
 
-        if (brain.EnemyVision.CanSeePlayer == true)
+        if (brain.EnemyVision.CanSeePlayer == true && brain.EnemyStateController.canMove)
         {
             stateTimer += Time.deltaTime;
             if (stateTimer >= stateDuration)

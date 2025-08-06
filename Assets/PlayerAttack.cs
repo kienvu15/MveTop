@@ -104,15 +104,7 @@ public class PlayerAttack : MonoBehaviour
         ActivateSlashVFX();
         playerCombo.TryDashAttack();
 
-        Collider2D[] hits = Physics2D.OverlapCircleAll(attackPoint.position, playerStats.attackRadius, enemyLayers);
 
-        foreach (Collider2D hit in hits)
-        {
-            hit.GetComponent<EnemyStats>()?.TakeDamage(playerStats.damage);
-        }
-
-        if (hits.Length > 0)
-            playerRecoil.ApplyRecoil(attackPoint.position);
     }
 
 

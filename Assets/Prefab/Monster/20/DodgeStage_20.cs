@@ -23,7 +23,11 @@ public class DodgeStage_20 : EnemyState
             if (avoidPlayer.retreatNode != null)
             {
                 Vector2 dir = (avoidPlayer.retreatNode.worldPosition - (Vector2)avoidPlayer.transform.position).normalized;
-                brain.EnemySteering.MoveInDirection(dir);
+                if(brain.EnemyStateController.canMove)
+                {
+                    // Move towards the retreat node
+                    brain.EnemySteering.MoveInDirection(dir, 3f);
+                }
 
                 float dist = Vector2.Distance(avoidPlayer.transform.position, avoidPlayer.retreatNode.worldPosition);
                 if (dist < avoidPlayer.nodeStopDistance)

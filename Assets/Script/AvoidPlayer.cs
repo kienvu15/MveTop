@@ -18,6 +18,7 @@ public class AvoidPlayer : MonoBehaviour
     public Transform shootPoint;
     public float arrowSpeed = 10f;
 
+
     [Header("References")]
     public Transform player;
     private EnemySteering enemySteering;
@@ -46,88 +47,6 @@ public class AvoidPlayer : MonoBehaviour
         {
             hasShot = false;
         }
-
-        //
-
-        // === Ưu tiên né gấp ===
-        //if (!isDodging && distToPlayer <= avoidRadius && Time.time >= nextShootTime)
-        //{
-        //    isDodging = true;
-        //    waitingToShoot = false;
-        //    retreatNode = null;
-        //    ChooseCurvedRetreatDirection();
-        //    nextShootTime = Time.time + cooldownAfterDodge;
-        //}
-
-        // === Nếu đang retreat hoặc né gấp thì xử lý tránh ===
-        //if (isDodging || isRetreating)
-        //{
-        //    if (retreatNode != null)
-        //    {
-        //        if (stateChanged == true) return;
-        //        Vector2 dir = (retreatNode.worldPosition - (Vector2)transform.position).normalized;
-        //        enemySteering.MoveInDirection(dir);
-
-        //        float dist = Vector2.Distance(transform.position, retreatNode.worldPosition);
-        //        if (dist < nodeStopDistance)
-        //        {
-        //            if (!waitingToShoot)
-        //            {
-        //                waitingToShoot = true;
-        //                waitAtRetreatUntil = Time.time + cooldownBeforeNextShot;
-        //            }
-
-        //            if (Time.time >= waitAtRetreatUntil &&
-        //                enemyVision.CanSeePlayer &&
-        //                GridManager.Instance.HasLineOfSight(transform.position, player.position))
-        //            {
-        //                TryShoot();
-        //            }else if (Time.time >= waitAtRetreatUntil && enemyVision.lastSeenPosition.HasValue && !enemyVision.CanSeePlayer)
-        //            {
-        //                enemySteering.MoveTo(enemyVision.lastSeenPosition.Value, 3.8f);
-        //            }
-        //        }
-        //    }
-        //    return;
-        //}
-
-        //if (enemyVision.lastSeenPosition.HasValue && !enemyVision.CanSeePlayer)
-        //{
-        //    Debug.Log("Move to last seen position");
-        //    enemySteering.MoveTo(enemyVision.lastSeenPosition.Value, 3.8f);
-        //}
-
-        // === Nếu KHÔNG thấy player, nhưng còn lastSeenPosition thì di chuyển tới đó ===
-        //if (!enemyVision.CanSeePlayer && enemyVision.lastSeenPosition.HasValue)
-        //{
-        //    stateChanged = true;
-        //    Vector2 lastSeen = enemyVision.lastSeenPosition.Value;
-        //    enemySteering.MoveTo(lastSeen, 2f);
-
-        //    float dist = Vector2.Distance(transform.position, lastSeen);
-        //    if (dist < nodeStopDistance)
-        //    {
-        //        // Tới nơi thì dừng hoặc chuyển trạng thái
-        //        isRetreating = false;
-        //    }
-        //    return;
-        //}
-        
-        //=== Trạng thái bình thường: thấy Player, bắn hoặc di chuyển gần hơn ===
-        //if (enemyVision.CanSeePlayer)
-        //{
-        //    
-        //    if (distToPlayer <= shotRadius &&
-        //    GridManager.Instance.HasLineOfSight(transform.position, player.position))
-        //    {
-        //        TryShoot();
-        //    }
-        //    else
-        //    {
-        //        MoveTowardPlayer();
-        //    }
-        //}
-
     }
 
     public void DodgeStage()
@@ -240,7 +159,7 @@ public class AvoidPlayer : MonoBehaviour
         Debug.Log("Shoot!");
     }
 
-
+    
 
     public void ChooseCurvedRetreatDirection()
     {
@@ -313,4 +232,5 @@ public class AvoidPlayer : MonoBehaviour
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireSphere(transform.position, shotRadius);
     }
+
 }

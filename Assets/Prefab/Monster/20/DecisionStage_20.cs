@@ -18,7 +18,11 @@ public class DecisionStage_20 : EnemyState
 
     public override void Update()
     {
-        eneemyLaserBeam.MoveWhileChargingWithoutPlayer();
+        if (brain.EnemyStateController.canMove) 
+        {
+            eneemyLaserBeam.MoveWhileChargingWithoutPlayer();
+        }
+            
         stateTimer += Time.deltaTime;
         if (stateTimer >= stateDuration)
         {

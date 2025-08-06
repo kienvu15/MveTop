@@ -133,14 +133,7 @@ public class EnemyAttackController : MonoBehaviour
         int index = Random.Range(0, slashVFXs.Length);
         var chosenVFX = slashVFXs[index];
 
-        // Flip nếu Player ở bên trái
-        if (enemyVision != null && enemyVision.targetDetected != null)
-        {
-            float dirToPlayer = enemyVision.targetDetected.position.x - transform.position.x;
-            Vector3 scale = chosenVFX.transform.localScale;
-            scale.x = Mathf.Sign(dirToPlayer) * Mathf.Abs(scale.x);  // Flip theo X
-            chosenVFX.transform.localScale = scale;
-        }
+        
 
         chosenVFX.SetActive(true);
     }

@@ -39,6 +39,7 @@ public class EnemyLaserBeam : MonoBehaviour
     private Vector2 chargeMoveTarget = Vector2.zero;
 
     private Rigidbody2D rb;
+    private EnemyAttackVision enemyAttackVision;
     public event System.Action OnShotLaserFinished;
 
     void Start()
@@ -177,6 +178,7 @@ public class EnemyLaserBeam : MonoBehaviour
         OnShotLaserFinished?.Invoke();
 
     }
+
 
     public void MoveWhileChargingWithoutPlayer()
     {

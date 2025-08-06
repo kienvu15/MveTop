@@ -14,7 +14,7 @@ public class ArcAround_41 : EnemyState
 
     public override void Update()
     {
-        if(brain.EnemyVision.CanSeePlayer)
+        if(brain.EnemyVision.CanSeePlayer && brain.EnemyStateController.canMove)
         {
             // Move To Player
             if (!brain.EnemySteering.hasChosenCurve)
@@ -33,7 +33,7 @@ public class ArcAround_41 : EnemyState
             }
         }
 
-        if(brain.EnemyVision.lastSeenPosition.HasValue && !brain.EnemyVision.CanSeePlayer)
+        if(brain.EnemyVision.lastSeenPosition.HasValue && !brain.EnemyVision.CanSeePlayer && brain.EnemyStateController.canMove)
         {
             Debug.Log("Move to last seen position");
             brain.EnemySteering.MoveTo(brain.EnemyVision.lastSeenPosition.Value, 3.8f);

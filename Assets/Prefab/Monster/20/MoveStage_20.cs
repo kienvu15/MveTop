@@ -24,7 +24,10 @@ public class MoveStage_20 : EnemyState
             }
             else
             {
-                avoidPlayer.MoveTowardPlayer();
+                if(brain.EnemyStateController.canMove)
+                {
+                    avoidPlayer.MoveTowardPlayer();
+                }
             }
         }
 
@@ -39,7 +42,10 @@ public class MoveStage_20 : EnemyState
             avoidPlayer.isDodging = true;
             avoidPlayer.waitingToShoot = false;
             avoidPlayer.retreatNode = null;
-            avoidPlayer.ChooseCurvedRetreatDirection();
+            if (brain.EnemyStateController.canMove)
+            {
+                avoidPlayer.ChooseCurvedRetreatDirection();
+            }
             avoidPlayer.nextShootTime = Time.time + avoidPlayer.cooldownAfterDodge;
         }
     }

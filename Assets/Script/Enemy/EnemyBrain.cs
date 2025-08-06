@@ -8,7 +8,7 @@ public class EnemyBrain : MonoBehaviour
     [HideInInspector] public EnemyVision EnemyVision;
     [HideInInspector] public EnemyAttackVision EnemyAttackVision;
     [HideInInspector] public EnemySteering EnemySteering;
-
+    [HideInInspector] public EnemyStateController EnemyStateController;
     public Transform PlayerTransform => playerTransform;
     [SerializeField] private Transform playerTransform;
 
@@ -22,6 +22,7 @@ public class EnemyBrain : MonoBehaviour
         EnemyVision = GetComponent<EnemyVision>();
         EnemySteering = GetComponent<EnemySteering>();
         EnemyAttackVision = GetComponent<EnemyAttackVision>();
+        EnemyStateController = GetComponent<EnemyStateController>();
     }
 
     void Start()

@@ -29,7 +29,11 @@ public class AttackStage_41 : EnemyState
 
        if(randChoice > 0.5f)
         {
-            rangedEnemyController.DritDec();
+            if (brain.EnemyStateController.canMove)
+            {
+                rangedEnemyController.DritDec();
+            }
+
             stateTimer += Time.deltaTime;
             
             if (stateTimer >= stateDuration)
@@ -43,7 +47,11 @@ public class AttackStage_41 : EnemyState
 
         else
         {
-            rangedEnemyController.ArcAroundPlayer();
+            if (brain.EnemyStateController.canMove)
+            {
+                rangedEnemyController.ArcAroundPlayer();
+            }
+            
             stateTimer += Time.deltaTime;
             if (stateTimer >= 2.5f)
             {

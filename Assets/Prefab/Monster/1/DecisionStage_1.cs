@@ -20,6 +20,7 @@ public class DecisionStage_1 : EnemyState
     public override void Update()
     {
         enemyRandomPatrolSteering.PatrolCondition();
+
         if (brain.EnemyVision.CanSeePlayer)
         {
             stateTimer += Time.deltaTime;
@@ -29,7 +30,6 @@ public class DecisionStage_1 : EnemyState
                 enemyRandomPatrolSteering.StopPatrol();
                 brain.ChangeState(new MoveStage_1(brain));
             }
-
         }
     }
 
