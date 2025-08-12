@@ -8,6 +8,7 @@ public class RoomBossController : MonoBehaviour
     [Header("Room Systems")]
     public BossRoomSpawnerController spawner;
     [SerializeField] private RoomRewardSpawner rewardSpawner;
+    public GridManager gridManager;
 
     [Header("Room Components")]
     public PolygonCollider2D confinerAreaSoft;   // Vùng rộng hơn
@@ -120,5 +121,10 @@ public class RoomBossController : MonoBehaviour
     {
         OpenDoors();
         rewardSpawner?.SpawnReward();
+        if (gridManager != null)
+        {
+            gridManager.enabled = false;
+            gridManager.gameObject.SetActive(false);
+        }
     }
 }

@@ -13,7 +13,7 @@ public class DecisionStage_41 : EnemyState
         Debug.Log("DecisionStage_41: Entering decision stage");
         // Here you can add any initialization code for the decision stage
         stateTimer = 0f;
-        stateDuration = Random.Range(0.5f, 1.4f);
+        stateDuration = Random.Range(0.5f, 1f);
         enemyRandomPatrolSteering = brain.GetComponent<EnemyRandomPatrolSteering>();
     }
 

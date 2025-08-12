@@ -9,6 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5970263441410801846}
+  - component: {fileID: 584006000376868542}
+  - component: {fileID: 4059043639244418102}
   m_Layer: 0
   m_Name: DoorPoint_01
   m_TagString: DoorPoint
@@ -25,12 +27,61 @@ Transform:
   m_GameObject: {fileID: 452208589383885840}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 13.26, y: 0.97, z: 0}
+  m_LocalPosition: {x: 12.51, y: 0.97, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5858538882580984552}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &584006000376868542
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 452208589383885840}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2b594b440f4e504da106f887514e15c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hasSpawned: 0
+--- !u!58 &4059043639244418102
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 452208589383885840}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_Radius: 3.26
 --- !u!1 &1708445909004429101
 GameObject:
   m_ObjectHideFlags: 0
@@ -42,9 +93,10 @@ GameObject:
   - component: {fileID: 5506017492706632849}
   - component: {fileID: 8117565654434490114}
   - component: {fileID: 4573415575327857518}
-  m_Layer: 0
+  - component: {fileID: 5897398690196397707}
+  m_Layer: 12
   m_Name: Ground
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3306,6 +3358,44 @@ TilemapRenderer:
   m_Mode: 0
   m_DetectChunkCullingBounds: 0
   m_MaskInteraction: 0
+--- !u!19719996 &5897398690196397707
+TilemapCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1708445909004429101}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_MaximumTileChangeCount: 1000
+  m_ExtrusionFactor: 0
+  m_UseDelaunayMesh: 0
 --- !u!1 &1759092913145022651
 GameObject:
   m_ObjectHideFlags: 0
@@ -3401,6 +3491,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5549389546812732566}
+  - component: {fileID: 1875342149192240479}
+  - component: {fileID: 6217309888812584388}
   m_Layer: 0
   m_Name: DoorPoint_01 (1)
   m_TagString: DoorPoint
@@ -3423,6 +3515,55 @@ Transform:
   m_Children: []
   m_Father: {fileID: 5858538882580984552}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
+--- !u!114 &1875342149192240479
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2087510582544399543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2b594b440f4e504da106f887514e15c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hasSpawned: 0
+--- !u!58 &6217309888812584388
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2087510582544399543}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_Radius: 3.26
 --- !u!1 &2274669733879842434
 GameObject:
   m_ObjectHideFlags: 0
@@ -3544,6 +3685,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   roomController: {fileID: 0}
   spawner: {fileID: 0}
+  gridManager: {fileID: 1559930284538312047}
 --- !u!1 &2677560713509298162
 GameObject:
   m_ObjectHideFlags: 0
@@ -4849,6 +4991,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   roomController: {fileID: 0}
   spawner: {fileID: 0}
+  gridManager: {fileID: 1559930284538312047}
 --- !u!1 &5015080471880460144
 GameObject:
   m_ObjectHideFlags: 0
@@ -4962,7 +5105,7 @@ GameObject:
   - component: {fileID: 2911790915829306558}
   - component: {fileID: 2342013921510987257}
   - component: {fileID: 2646846984309120898}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Door_4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5367,6 +5510,58 @@ TilemapRenderer:
   m_Mode: 0
   m_DetectChunkCullingBounds: 0
   m_MaskInteraction: 0
+--- !u!1 &6046826320372150279
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2108850827676189709}
+  - component: {fileID: 1559930284538312047}
+  m_Layer: 0
+  m_Name: Grid
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &2108850827676189709
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6046826320372150279}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 986389885487473925}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1559930284538312047
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6046826320372150279}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bf19cec78c3bc543bbec56733fabea2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  groundTilemap: {fileID: 8117565654434490114}
+  wallTilemaps:
+  - {fileID: 3822268278344259875}
+  - {fileID: 5445168677678424672}
+  cellSize: 1
+  wallLayers:
+    serializedVersion: 2
+    m_Bits: 768
 --- !u!1 &6084340144800566795
 GameObject:
   m_ObjectHideFlags: 0
@@ -5380,6 +5575,7 @@ GameObject:
   - component: {fileID: 1020354573396257731}
   - component: {fileID: -6935868569996387589}
   - component: {fileID: 6443346708609127592}
+  - component: {fileID: 8343584191023395974}
   m_Layer: 0
   m_Name: 0B-3-NormalRoom
   m_TagString: Untagged
@@ -5400,6 +5596,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 2108850827676189709}
   - {fileID: 3581230620620513720}
   - {fileID: 7471484063765326672}
   - {fileID: 5858538882580984552}
@@ -5424,6 +5621,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawner: {fileID: 0}
   rewardSpawner: {fileID: 0}
+  gridManager: {fileID: 1559930284538312047}
   confinerAreaSoft: {fileID: 0}
   confinerAreaHard: {fileID: 0}
   doors:
@@ -5528,6 +5726,22 @@ MonoBehaviour:
   chargerPrefab: {fileID: 3636671089228705019, guid: ec1185a5e33a0e44d85810b8f8ca8b4d, type: 3}
   miniBossPrefab: {fileID: 6628358557250210070, guid: c0966477679a0f1418b25b712370671e, type: 3}
   bossPrefab: {fileID: 3636671089228705019, guid: aa63c7e4ea0d33749b268b2af0fa0916, type: 3}
+--- !u!114 &8343584191023395974
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6084340144800566795}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 517853f89fe0eac41b2863fb82422e66, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawnPoints:
+  - {fileID: 584006000376868542}
+  - {fileID: 5572618858955592539}
+  - {fileID: 1875342149192240479}
 --- !u!1 &6563593967424734573
 GameObject:
   m_ObjectHideFlags: 0
@@ -5649,6 +5863,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   roomController: {fileID: 0}
   spawner: {fileID: 0}
+  gridManager: {fileID: 1559930284538312047}
 --- !u!1 &7532238391314013967
 GameObject:
   m_ObjectHideFlags: 0
@@ -5661,7 +5876,7 @@ GameObject:
   - component: {fileID: 6647212903029552325}
   - component: {fileID: 9014292445609854395}
   - component: {fileID: 1380898537885216603}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Door_2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5820,6 +6035,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6408772107579243678}
+  - component: {fileID: 5572618858955592539}
+  - component: {fileID: 3989127501505170544}
   m_Layer: 0
   m_Name: DoorPoint_01 (2)
   m_TagString: DoorPoint
@@ -5842,6 +6059,55 @@ Transform:
   m_Children: []
   m_Father: {fileID: 5858538882580984552}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
+--- !u!114 &5572618858955592539
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7652749289834824796}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2b594b440f4e504da106f887514e15c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hasSpawned: 0
+--- !u!58 &3989127501505170544
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7652749289834824796}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_Radius: 3.26
 --- !u!1 &8388810178026747635
 GameObject:
   m_ObjectHideFlags: 0
@@ -5854,7 +6120,7 @@ GameObject:
   - component: {fileID: 8312254500066787163}
   - component: {fileID: 1953824995323109025}
   - component: {fileID: 1479465856346971702}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Door_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}

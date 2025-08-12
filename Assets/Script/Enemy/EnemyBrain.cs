@@ -9,6 +9,7 @@ public class EnemyBrain : MonoBehaviour
     [HideInInspector] public EnemyAttackVision EnemyAttackVision;
     [HideInInspector] public EnemySteering EnemySteering;
     [HideInInspector] public EnemyStateController EnemyStateController;
+    [HideInInspector] public GridManager gridManager;
     public Transform PlayerTransform => playerTransform;
     [SerializeField] private Transform playerTransform;
 
@@ -27,11 +28,22 @@ public class EnemyBrain : MonoBehaviour
 
     void Start()
     {
+        if (GridManager.Current != null)
+        {
+            gridManager = GridManager.Current;
+        }
+        else
+        {
+            Debug.LogWarning("No active GridManager found!");
+        }
+
         playerTransform = GameObject.FindGameObjectWithTag("Player")?.transform;
 
         if (GetDecisionStageFunc != null)
             ChangeState(GetDecisionStageFunc.Invoke());
     }
+
+
 
     void Update()
     {

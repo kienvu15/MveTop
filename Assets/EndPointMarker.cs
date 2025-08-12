@@ -12,6 +12,9 @@ public class EndPointMarker : MonoBehaviour
     public Collider2D blockerCollider; // ✅ Nếu có va chạm với blocker thì giữ lại tham chiếu
 
     public LayerMask groundLayer;
+    public GameObject Road;
+    public bool isWall = false;
+    public StartPointMaker startPointMaker;
 
     void Awake()
     {
@@ -30,14 +33,46 @@ public class EndPointMarker : MonoBehaviour
         AllMarkers.Remove(this);
     }
 
+    [SerializeField] private LayerMask targetLayers;
+
     // ✅ Kiểm tra va chạm với Blocker
-    void OnTriggerEnter2D(Collider2D other)
+    public void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Blocker"))
         {
             isBlock = true;
             blockerCollider = other; // lưu lại collider để tắt sau
             Debug.Log($"🧱 EndPoint bị Blocker chặn: {other.name}");
+        }
+
+        bool isTargetLayer = ((1 << other.gameObject.layer) & targetLayers) != 0;
+        if (isTargetLayer == true)
+        {
+            isWall = true;
+
+            if(startPointMaker.isDone == true)
+            {
+                // Destroy(Road);
+                Road.SetActive(false);
+            }
+            
+            Debug.Log($"🚫 EndPointMarker {name} bị chặn bởi layer {other.gameObject.layer}");
+        }
+    }
+
+    public void OnTriggerStay2D(Collider2D collision)
+    {
+        bool isTargetLayer = ((1 << collision.gameObject.layer) & targetLayers) != 0;
+        if (isTargetLayer == true)
+        {
+            isWall = true;
+
+            if (startPointMaker.isDone == true)
+            {
+                Destroy(Road);
+            }
+
+            Debug.Log($"🚫 EndPointMarker {name} bị chặn bởi layer {collision.gameObject.layer}");
         }
     }
 

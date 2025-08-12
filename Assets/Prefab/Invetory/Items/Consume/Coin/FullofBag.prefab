@@ -13,9 +13,10 @@ GameObject:
   - component: {fileID: 1530836715811210398}
   - component: {fileID: 8178134427303785539}
   - component: {fileID: 8752166636287407083}
+  - component: {fileID: -8478630184449536033}
   m_Layer: 0
   m_Name: FullofBag
-  m_TagString: Untagged
+  m_TagString: Items
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -76,8 +77,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -842875665
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: 2992740897147028129, guid: 0bd61f778d7d8ac44a998bea567f580c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -171,3 +172,18 @@ MonoBehaviour:
   moveSpeed: 2
   acceleration: 5
   Player: {fileID: 0}
+--- !u!114 &-8478630184449536033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2374380462367351371}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af6c19e2483cad94795bb660bc29ddd6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bounceHeight: 0.4
+  bounceDuration: 0.4
+  bounceCount: 2

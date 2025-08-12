@@ -53,7 +53,7 @@ public class AttackStage_41 : EnemyState
             }
             
             stateTimer += Time.deltaTime;
-            if (stateTimer >= 2.5f)
+            if (stateTimer >= 1.5f)
             {
                 rangedEnemyController.isOrbitingPlayer = false;
                 enemyAttackController.isLocking = true;

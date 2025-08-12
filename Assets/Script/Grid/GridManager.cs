@@ -6,7 +6,8 @@ using UnityEditor;
 [ExecuteInEditMode]
 public class GridManager : MonoBehaviour
 {
-    public static GridManager Instance;
+    [Header("Setting")]
+    public static GridManager Current;
 
     public Tilemap groundTilemap; // Tilemap nền (bắt buộc có tile để coi là node hợp lệ)
     public List<Tilemap> wallTilemaps;   // Tilemap tường
@@ -18,43 +19,55 @@ public class GridManager : MonoBehaviour
 
     private void Awake()
     {
-        Instance = this;
+        if (!Application.isPlaying) return;
+        if (groundTilemap == null)
+        {
+            Debug.LogError("[GridManager] Chưa gán groundTilemap!");
+            return;
+        }
         GenerateGrid();
+    }
+
+    private void OnEnable()
+    {
+        Current = this; // Khi grid được bật, đặt làm grid hiện tại
+    }
+
+    private void OnDisable()
+    {
+        if (Current == this)
+            Current = null; // Khi tắt, bỏ tham chiếu
     }
 
     void GenerateGrid()
     {
         grid.Clear();
-
-        BoundsInt bounds = groundTilemap.cellBounds; // Quét đúng vùng có tile thật
+        BoundsInt bounds = groundTilemap.cellBounds;
 
         for (int x = bounds.xMin; x < bounds.xMax; x++)
         {
             for (int y = bounds.yMin; y < bounds.yMax; y++)
             {
                 Vector3Int tilePos = new Vector3Int(x, y, 0);
-                Vector2Int gridPos = new Vector2Int(x, y);
-                Vector3 worldPos = groundTilemap.CellToWorld(tilePos) + new Vector3(cellSize / 2, cellSize / 2, 0);
+                if (!groundTilemap.HasTile(tilePos)) continue;
 
-                bool hasGround = groundTilemap.HasTile(tilePos); // kiểm tra có nền không
                 bool isWall = false;
                 foreach (var tilemap in wallTilemaps)
                 {
-                    if (tilemap.HasTile(tilePos))
+                    if (tilemap != null && tilemap.HasTile(tilePos))
                     {
                         isWall = true;
                         break;
                     }
                 }
-                // kiểm tra có tường không
 
-                if (!hasGround) continue; // bỏ qua node không có nền
-
-                Node node = new Node(gridPos, worldPos, !isWall); // chỉ là walkable nếu không phải tường
-                grid[gridPos] = node;
+                Vector3 worldPos = groundTilemap.GetCellCenterWorld(tilePos);
+                Node node = new Node(new Vector2Int(x, y), worldPos, !isWall);
+                grid[new Vector2Int(x, y)] = node;
             }
         }
     }
+
 
     public Node GetAvoidNode(Vector2 enemyPos, Vector2 playerPos, float avoidRadius, float shotRadius)
     {

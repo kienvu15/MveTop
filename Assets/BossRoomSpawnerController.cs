@@ -5,6 +5,9 @@ using UnityEngine;
 public class BossRoomSpawnerController : MonoBehaviour, IEnemySpawner
 
 {
+    [Header("Core")]
+    public bool isFinished = false;
+
     [Header("Boss Wave Config")]
     public List<EnemyWaveConfig> waves;
 
@@ -84,10 +87,24 @@ public class BossRoomSpawnerController : MonoBehaviour, IEnemySpawner
         enemy.name = $"{type} (Boss Wave {currentWaveIndex})";
         activeEnemies.Add(enemy);
 
+        // 🔹 Gán GridManager của phòng Boss này cho enemy
+        GridManager roomGrid = GetComponentInParent<GridManager>();
+        if (roomGrid != null)
+        {
+            var avoidPlayer = enemy.GetComponent<AvoidPlayer>();
+            if (avoidPlayer != null)
+                avoidPlayer.gridManager = roomGrid;
+
+            var enemySteering = enemy.GetComponent<EnemySteering>();
+            if (enemySteering != null)
+                enemySteering.gridManager = roomGrid;
+        }
+
         var enemyDeath = enemy.GetComponent<EnemyDeath>();
         if (enemyDeath != null)
             enemyDeath.SetupSpawner(this);
     }
+
 
     public void OnEnemyDied(Transform enemy)
     {

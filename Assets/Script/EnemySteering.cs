@@ -32,6 +32,8 @@ public class EnemySteering : MonoBehaviour
     [Header("Debug")]
     public bool debugDrawRays = true;
 
+    public GridManager gridManager; // Gán khi spawn
+
     private Rigidbody2D rb;
     private Vector2 linearVelocitySmoothing;
     private Vector2 targetDir;
@@ -49,6 +51,16 @@ public class EnemySteering : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         vision = GetComponent<EnemyVision>();
         spriteHolder = GetComponentInChildren<SpriteRenderer>().transform;
+
+        if (GridManager.Current != null)
+        {
+            gridManager = GridManager.Current;
+        }
+        else
+        {
+            Debug.LogWarning("No active GridManager found!");
+        }
+
     }
 
     public void MoveTo(Vector2 targetPosition, float customSpeed)
@@ -145,8 +157,8 @@ public class EnemySteering : MonoBehaviour
         // 3. Kiểm tra node ở hướng dự kiến có hợp lệ không (GridManager)
         Vector2 projectedPos = currentPos + desiredDir * 1.5f;
         Node node;
-        if (GridManager.Instance != null &&
-            GridManager.Instance.grid.TryGetValue(Vector2Int.RoundToInt(projectedPos), out node))
+        if (gridManager != null &&
+            gridManager.grid.TryGetValue(Vector2Int.RoundToInt(projectedPos), out node))
         {
             if (!node.isWalkable)
             {

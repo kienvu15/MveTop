@@ -137,7 +137,6 @@ GameObject:
   - component: {fileID: 2250562751835371695}
   - component: {fileID: 4063763440639452005}
   - component: {fileID: 5271450685728225267}
-  - component: {fileID: 3908394347038599642}
   - component: {fileID: 1086448030113580740}
   - component: {fileID: 8685261640424596992}
   - component: {fileID: 1973148273314628520}
@@ -146,6 +145,7 @@ GameObject:
   - component: {fileID: 8792691149879927282}
   - component: {fileID: 4801706553723674291}
   - component: {fileID: 8899286759720108930}
+  - component: {fileID: -2226133915639967026}
   m_Layer: 7
   m_Name: monsters_3
   m_TagString: Enemy
@@ -319,21 +319,6 @@ MonoBehaviour:
   debugDrawRays: 1
   finalMoveDir: {x: 0, y: 0}
   loopbackOffset: 0
---- !u!114 &3908394347038599642
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7804133418582008895}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 611ecdacc7e42054fbe090b311ee9e55, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player: {fileID: 0}
-  isRetreating: 0
-  isDone: 0
 --- !u!114 &1086448030113580740
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -464,9 +449,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c704a3a68fbacbb48b60c513b75f7764, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 800
+  maxHealth: 10
   damage: 1
-  recoilHitForce: 5
+  recoilHitForce: 0.8
+  recoilForceOriginal: 0.8
   spriteRenderer: {fileID: 3911602009122279472}
   currentHealth: 0
   playerStats: {fileID: 0}
@@ -499,6 +485,26 @@ MonoBehaviour:
   isRecoiling: 0
   canMove: 1
   canAttack: 1
+--- !u!114 &-2226133915639967026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7804133418582008895}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b115b967818cf54b81242dc388c7a5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DropItem:
+  - prefab: {fileID: 4418349446991674435, guid: fe02ed74303c140439863e1ae3291bf8, type: 3}
+    dropWeight: 90
+  - prefab: {fileID: 1854399955107605364, guid: c19ebd9603abd274984b24d429de6455, type: 3}
+    dropWeight: 5
+  - prefab: {fileID: 3541671590502939099, guid: e5efd28c4983f8e44981e43a9327f99d, type: 3}
+    dropWeight: 5
+  maxDrop: 3
 --- !u!1001 &590774584957935634
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -507,6 +513,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6042772616805959286}
     m_Modifications:
+    - target: {fileID: 5323665200206779821, guid: fb163b076988e9b4e8efb5de31ae0329, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7283809964926965577, guid: fb163b076988e9b4e8efb5de31ae0329, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.17
@@ -553,7 +563,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7824079678989933495, guid: fb163b076988e9b4e8efb5de31ae0329, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

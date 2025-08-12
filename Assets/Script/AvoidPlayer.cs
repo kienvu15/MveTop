@@ -34,11 +34,23 @@ public class AvoidPlayer : MonoBehaviour
     public bool stateChanged = false;
     public float nodeStopDistance = 0.3f;
     public bool hasShot = false;
+
+    public GridManager gridManager; // Gán khi spawn
+
     void Start()
     {
         enemySteering = GetComponent<EnemySteering>();
         enemyVision = GetComponent<EnemyVision>();
         player = FindFirstObjectByType<PlayerStats>().transform;
+
+        if (GridManager.Current != null)
+        {
+            gridManager = GridManager.Current;
+        }
+        else
+        {
+            Debug.LogWarning("No active GridManager found!");
+        }
     }
 
     void Update()
@@ -71,7 +83,7 @@ public class AvoidPlayer : MonoBehaviour
                     if (Time.time >= waitAtRetreatUntil)
                     {
                         if (enemyVision.CanSeePlayer &&
-                            GridManager.Instance.HasLineOfSight(transform.position, player.position))
+                            gridManager.HasLineOfSight(transform.position, player.position))
                         {
                             TryShoot();
                         }
@@ -103,7 +115,7 @@ public class AvoidPlayer : MonoBehaviour
         {
             float distToPlayer = Vector2.Distance(transform.position, enemyVision.targetDetected.position);
             if (distToPlayer <= shotRadius &&
-                GridManager.Instance.HasLineOfSight(transform.position, player.position))
+                gridManager.HasLineOfSight(transform.position, player.position))
             {
                 TryShoot();
             }
@@ -128,7 +140,7 @@ public class AvoidPlayer : MonoBehaviour
         isRetreating = true;
         waitingToShoot = false;
 
-        retreatNode = GridManager.Instance.GetAvoidNode(transform.position, player.position, avoidRadius, shotRadius);
+        retreatNode = gridManager.GetAvoidNode(transform.position, player.position, avoidRadius, shotRadius);
         if (retreatNode == null)
         {
             ChooseCurvedRetreatDirection();
@@ -191,13 +203,13 @@ public class AvoidPlayer : MonoBehaviour
         Node best = null;
         float bestScore = float.MinValue;
 
-        foreach (var node in GridManager.Instance.grid.Values)
+        foreach (var node in gridManager.grid.Values)
         {
             if (!node.isWalkable) continue;
 
             float distToPlayer = Vector2.Distance(player.position, node.worldPosition);
             if (distToPlayer < minDist || distToPlayer > maxDist) continue;
-            if (!GridManager.Instance.HasLineOfSight(node.worldPosition, player.position)) continue;
+            if (!gridManager.HasLineOfSight(node.worldPosition, player.position)) continue;
 
             float distToTarget = Vector2.Distance(targetPos, node.worldPosition);
             float score = -distToTarget + UnityEngine.Random.Range(-0.5f, 0.5f);

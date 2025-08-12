@@ -18,7 +18,7 @@ public class MoveStage_20 : EnemyState
         if (brain.EnemyVision.CanSeePlayer && brain.EnemyVision.targetDetected != null)
         {
             if (distToPlayer <= avoidPlayer.shotRadius &&
-                GridManager.Instance.HasLineOfSight(brain.transform.position, avoidPlayer.player.position))
+                avoidPlayer.gridManager.HasLineOfSight(brain.transform.position, avoidPlayer.player.position))
             {
                 avoidPlayer.TryShoot();
             }

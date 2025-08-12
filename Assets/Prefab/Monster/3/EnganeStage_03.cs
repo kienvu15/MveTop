@@ -26,31 +26,36 @@ public class EnganeStage_03 : EnemyState
     {
         if (brain.EnemyStateController.canMove && brain.EnemyVision.targetDetected != null)
         {
-            brain.EnemySteering.MoveTo(brain.EnemyVision.targetDetected.position, 1.5f);
+            brain.EnemySteering.MoveTo(brain.EnemyVision.targetDetected.position, 2.3f);
         }
 
-        if (brain.EnemyVision.distance < 2.3f)
+        if (brain.EnemyVision.distance < 2f)
         {
             canAttack = true;
         }
 
         if(enemyAttackController.hasAttacked == true)
         {
-            Debug.Log("EnganeStage_03: Attack performed, switching to Decision stage");
-            retread.RetreatIfCloseTo(brain.EnemyVision.targetDetected, retreatThreshold: 3f, retreatDistance: 2.5f, retreatSpeed: 6f);
-
-            stateTimer += Time.deltaTime;
-            if (stateTimer >= stateDuration)
-            {
-                Debug.Log("EnganeStage_03: State duration reached, switching to Decision stage");
-                brain.ChangeState(new DecisionStage_03(brain));
-            }
+            brain.ChangeState(new RetreadStage_03(brain));
         }
 
         if(canAttack == true)
         {
             brain.EnemySteering.StopMoving();
             enemyAttackController.TryPerformAttack();
+        }
+
+        if (brain.EnemyVision.lastSeenPosition != null && brain.EnemyVision.CanSeePlayer == false)
+        {
+            Vector2 lastSeen = brain.EnemyVision.lastSeenPosition.Value;
+            brain.EnemySteering.MoveTo(lastSeen, 1f);
+
+            float dist = Vector2.Distance(brain.transform.position, lastSeen);
+            if (dist < 0.5f)
+            {
+                brain.EnemySteering.StopMoving();
+                brain.ChangeState(new PatrolStage_03(brain));
+            }
         }
     }
 

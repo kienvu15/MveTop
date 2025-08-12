@@ -169,6 +169,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerStats: {fileID: 0}
+  enemyStats: {fileID: 0}
 --- !u!1 &3410218511241769714
 GameObject:
   m_ObjectHideFlags: 0
@@ -193,6 +194,7 @@ GameObject:
   - component: {fileID: 1680460058761499849}
   - component: {fileID: 9157260434396601287}
   - component: {fileID: 984631513823264773}
+  - component: {fileID: -2102731528323841076}
   m_Layer: 7
   m_Name: monsters_48
   m_TagString: Enemy
@@ -592,9 +594,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c704a3a68fbacbb48b60c513b75f7764, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 5
+  maxHealth: 8
   damage: 2
-  recoilHitForce: 5
+  recoilHitForce: 0.8
+  recoilForceOriginal: 0.8
   spriteRenderer: {fileID: 4143721582506831501}
   currentHealth: 0
   playerStats: {fileID: 0}
@@ -627,6 +630,26 @@ MonoBehaviour:
   isRecoiling: 0
   canMove: 1
   canAttack: 1
+--- !u!114 &-2102731528323841076
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3410218511241769714}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b115b967818cf54b81242dc388c7a5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DropItem:
+  - prefab: {fileID: 4418349446991674435, guid: fe02ed74303c140439863e1ae3291bf8, type: 3}
+    dropWeight: 70
+  - prefab: {fileID: 1854399955107605364, guid: c19ebd9603abd274984b24d429de6455, type: 3}
+    dropWeight: 10
+  - prefab: {fileID: 3202906339574844630, guid: 6d35cb4638aade9429d8ecbf77037493, type: 3}
+    dropWeight: 20
+  maxDrop: 3
 --- !u!1 &8623117895508605400
 GameObject:
   m_ObjectHideFlags: 0

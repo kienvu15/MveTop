@@ -8,6 +8,7 @@ public class RoomController : MonoBehaviour
     [Header("Room Systems")]
     public RoomSpawnerController spawner;
     [SerializeField] private RoomRewardSpawner rewardSpawner;
+    public GridManager gridManager;
 
     [Header("Room Components")]
     public PolygonCollider2D confinerAreaSoft;   // Vùng rộng hơn
@@ -23,7 +24,7 @@ public class RoomController : MonoBehaviour
     private void Awake()
     {
         spawner = GetComponent<RoomSpawnerController>();
-
+        
         if (virtualCamera == null)
         {
             virtualCamera = FindFirstObjectByType<CinemachineCamera>();
@@ -82,8 +83,6 @@ public class RoomController : MonoBehaviour
         }
     }
 
-
-
     private IEnumerator SoftConfinerTransition()
     {
         SetCameraConfiner(confinerAreaSoft);
@@ -120,5 +119,10 @@ public class RoomController : MonoBehaviour
     {
         OpenDoors();
         rewardSpawner?.SpawnReward();
+        if (gridManager != null)
+        {
+            gridManager.enabled = false;
+            gridManager.gameObject.SetActive(false);
+        }
     }
 }

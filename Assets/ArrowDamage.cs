@@ -3,11 +3,9 @@ using UnityEngine;
 public class ArrowDamage : MonoBehaviour
 {
     [SerializeField] private LayerMask targetLayers;
-    public PlayerStats playerStats;
     public int damage = 1; // Damage dealt by the arrow
     void Start()
     {
-        playerStats = FindFirstObjectByType<PlayerStats>();
     }
 
     // Update is called once per frame
@@ -18,16 +16,29 @@ public class ArrowDamage : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        bool isTargetTag = collision.CompareTag("Player");
+        bool isPlayerTargetTag = collision.CompareTag("Player");
+        bool isEnemyTargetTag = collision.CompareTag("Enemy");
         bool isTargetLayer = ((1 << collision.gameObject.layer) & targetLayers) != 0;
 
-        if (isTargetTag)
+        if (isPlayerTargetTag)
         {
             Debug.Log("Player entered the trigger area, applying damage.");
+            PlayerStats playerStats = collision.GetComponent<PlayerStats>();
             playerStats.TakeDamage(damage, transform.position);
             Destroy(gameObject);
         }
-        
+
+        if (isEnemyTargetTag)
+        {
+            Debug.Log("Enemy hit by arrow, applying damage.");
+            EnemyStats enemyStats = collision.GetComponent<EnemyStats>();
+            if (enemyStats != null)
+            {
+                enemyStats.TakeDamageNoRecoil(1f);
+            }
+            Destroy(gameObject);
+        }
+
         if (isTargetLayer)
         {
             Debug.Log("Target layer wall obstacle hit");
@@ -40,7 +51,7 @@ public class ArrowDamage : MonoBehaviour
         if (collision.CompareTag("Player"))
         {
             Debug.Log("Player is still in the trigger area, applying damage.");
-            playerStats.TakeDamage(damage, transform.position);
+            PlayerStats playerStats = collision.GetComponent<PlayerStats>();
         }
     }
 }

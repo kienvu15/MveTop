@@ -44,8 +44,26 @@ public class EnemyStats : MonoBehaviour
 
         if (currentHealth <= 0f)
         {
+            OnDeath?.Invoke();
             enemyDeath.Die();
         }
+    }
+
+    public void TakeDamageNoRecoil(float damage)
+    {
+        currentHealth -= damage;
+        currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
+        OnDamaged?.Invoke(damage);
+        enemyStateController.isRecoiling = true;
+
+        ApplyNoHitedRecoil();
+
+        if (currentHealth <= 0f)
+        {
+            OnDeath?.Invoke();
+            enemyDeath.Die();
+        }
+
     }
 
     public void Heal(float amount)
@@ -105,8 +123,25 @@ public class EnemyStats : MonoBehaviour
             StopCoroutine(flashCoroutine);
         flashCoroutine = StartCoroutine(FlashWhileInvincible());
 
-        yield return new WaitForSeconds(1.2f); // tạm dừng sau khi knockback
+        yield return new WaitForSeconds(0.7f); // tạm dừng sau khi knockback
         enemyStateController.isRecoiling = false;
     }
 
+    public void ApplyNoHitedRecoil()
+    {
+        StopAllCoroutines(); // Dừng recoil cũ nếu có
+        StartCoroutine(NoRecoilTweenRoutine());
+    }
+
+    private IEnumerator NoRecoilTweenRoutine()
+    {
+        enemyStateController.isRecoiling = true;
+
+        if (flashCoroutine != null)
+            StopCoroutine(flashCoroutine);
+        flashCoroutine = StartCoroutine(FlashWhileInvincible());
+
+        yield return new WaitForSeconds(1.2f); // tạm dừng sau khi knockback
+        enemyStateController.isRecoiling = false;
+    }
 }

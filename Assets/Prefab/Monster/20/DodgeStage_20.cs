@@ -41,7 +41,7 @@ public class DodgeStage_20 : EnemyState
                     if (Time.time >= avoidPlayer.waitAtRetreatUntil)
                     {
                         if (brain.EnemyVision.CanSeePlayer &&
-                            GridManager.Instance.HasLineOfSight(avoidPlayer.transform.position, avoidPlayer.player.position))
+                            avoidPlayer.gridManager.HasLineOfSight(avoidPlayer.transform.position, avoidPlayer.player.position))
                         {
                             avoidPlayer.TryShoot();
                         }
@@ -55,14 +55,19 @@ public class DodgeStage_20 : EnemyState
             }
         }
 
-        float distToPlayer = Vector2.Distance(brain.transform.position, brain.EnemyVision.targetDetected.position);
-        if (!avoidPlayer.isDodging && distToPlayer <= avoidPlayer.avoidRadius && Time.time >= avoidPlayer.nextShootTime)
+        if (brain.EnemyVision.targetDetected.position != null)
         {
-            avoidPlayer.isDodging = true;
-            avoidPlayer.waitingToShoot = false;
-            avoidPlayer.retreatNode = null;
-            avoidPlayer.ChooseCurvedRetreatDirection();
-            avoidPlayer.nextShootTime = Time.time + avoidPlayer.cooldownAfterDodge;
+            float distToPlayer = Vector2.Distance(brain.transform.position, brain.EnemyVision.targetDetected.position);
+
+
+            if (!avoidPlayer.isDodging && distToPlayer <= avoidPlayer.avoidRadius && Time.time >= avoidPlayer.nextShootTime)
+            {
+                avoidPlayer.isDodging = true;
+                avoidPlayer.waitingToShoot = false;
+                avoidPlayer.retreatNode = null;
+                avoidPlayer.ChooseCurvedRetreatDirection();
+                avoidPlayer.nextShootTime = Time.time + avoidPlayer.cooldownAfterDodge;
+            }
         }
     }
 

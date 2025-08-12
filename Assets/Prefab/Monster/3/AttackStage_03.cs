@@ -1,5 +1,4 @@
-﻿using UnityEditor.Recorder;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class AttackStage_03 : EnemyState
 {
@@ -63,7 +62,19 @@ public class AttackStage_03 : EnemyState
             brain.ChangeState(new EnganeStage_03(brain));
         }
 
-        
+        if (brain.EnemyVision.lastSeenPosition != null && brain.EnemyVision.CanSeePlayer == false)
+        {
+            Vector2 lastSeen = brain.EnemyVision.lastSeenPosition.Value;
+            rangedEnemyController.StopDritDec();
+            brain.EnemySteering.MoveTo(lastSeen, 2f);
+
+            float dist = Vector2.Distance(brain.transform.position, lastSeen);
+            if (dist < 0.5f)
+            {
+                brain.EnemySteering.StopMoving();
+                brain.ChangeState(new PatrolStage_03(brain));
+            }
+        }
     }
 
     public override void Exit()

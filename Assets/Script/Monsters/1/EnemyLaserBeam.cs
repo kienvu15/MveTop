@@ -187,7 +187,7 @@ public class EnemyLaserBeam : MonoBehaviour
         // Nếu chưa có target thì tìm một node ngẫu nhiên gần enemy
         if (chargeMoveTarget == Vector2.zero)
         {
-            Node node = GridManager.Instance.GetRandomWalkableNodeNear(transform.position, 4f);
+            Node node = EnemySteering.gridManager.GetRandomWalkableNodeNear(transform.position, 4f);
             if (node != null)
             {
                 chargeMoveTarget = node.worldPosition;
@@ -223,7 +223,7 @@ public class EnemyLaserBeam : MonoBehaviour
         // Nếu chưa có target → chọn node giữ LOS
         if (chargeMoveTarget == Vector2.zero)
         {
-            Node node = GridManager.Instance.GetAvoid2Node(
+            Node node = EnemySteering.gridManager.GetAvoid2Node(
                 transform.position,
                 player.position,
                 avoidRadius: 2f,       // enemy sẽ không đứng quá gần

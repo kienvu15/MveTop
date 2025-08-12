@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6117457712800613142
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8930843304001745263}
+  m_Layer: 7
+  m_Name: AttackPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8930843304001745263
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6117457712800613142}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 1, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4827433753911395936}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8535474380900530121
 GameObject:
   m_ObjectHideFlags: 0
@@ -20,6 +51,8 @@ GameObject:
   - component: {fileID: 5345942866315184089}
   - component: {fileID: 4964269598214200213}
   - component: {fileID: 2089615610618150106}
+  - component: {fileID: 2942859924671142337}
+  - component: {fileID: 1374833834116643648}
   m_Layer: 7
   m_Name: monsters_20
   m_TagString: Enemy
@@ -41,6 +74,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7896615939924700319}
+  - {fileID: 8930843304001745263}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!70 &5258485665298053555
@@ -153,7 +187,7 @@ MonoBehaviour:
   vision: {fileID: 9064532026819568120}
   stopDistanceToLastSeen: 0.2
   isFacingRight: 1
-  spriteHolder: {fileID: 0}
+  spriteHolder: {fileID: 7896615939924700319}
   moveSpeed: 2
   smoothing: 5
   useFlip: 1
@@ -166,6 +200,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   debugDrawRays: 1
+  gridManager: {fileID: 0}
   finalMoveDir: {x: 0, y: 0}
   loopbackOffset: 0
 --- !u!114 &9064532026819568120
@@ -181,7 +216,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debugDrawRays: 1
-  visionRadius: 9
+  visionRadius: 15.1
   targetDetected: {fileID: 0}
   attackrange: 1
   playerLayer:
@@ -210,7 +245,7 @@ MonoBehaviour:
   cooldownBeforeNextShot: 1.7
   cooldownAfterDodge: 4.45
   arrowPrefab: {fileID: 2968505738577696993, guid: 54113829ac4641a4aa1d9b629807f256, type: 3}
-  shootPoint: {fileID: 4827433753911395936}
+  shootPoint: {fileID: 8930843304001745263}
   arrowSpeed: 8.26
   player: {fileID: 0}
   nextShootTime: 0
@@ -221,6 +256,7 @@ MonoBehaviour:
   stateChanged: 0
   nodeStopDistance: 0.3
   hasShot: 0
+  gridManager: {fileID: 0}
 --- !u!114 &4188294755971096057
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -263,9 +299,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c704a3a68fbacbb48b60c513b75f7764, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 5
+  maxHealth: 8
   damage: 1
-  recoilHitForce: 5
+  recoilHitForce: 0.8
+  recoilForceOriginal: 0.8
   spriteRenderer: {fileID: 2279152675249420981}
   currentHealth: 0
   playerStats: {fileID: 0}
@@ -298,6 +335,53 @@ MonoBehaviour:
   isRecoiling: 0
   canMove: 1
   canAttack: 1
+--- !u!114 &2942859924671142337
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8535474380900530121}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b115b967818cf54b81242dc388c7a5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DropItem:
+  - prefab: {fileID: 4418349446991674435, guid: fe02ed74303c140439863e1ae3291bf8, type: 3}
+    dropWeight: 80
+  - prefab: {fileID: 1854399955107605364, guid: c19ebd9603abd274984b24d429de6455, type: 3}
+    dropWeight: 10
+  - prefab: {fileID: 3541671590502939099, guid: e5efd28c4983f8e44981e43a9327f99d, type: 3}
+    dropWeight: 10
+  maxDrop: 3
+--- !u!114 &1374833834116643648
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8535474380900530121}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d0a532c455d1c34491cd639aa1d7215, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  EnemyVision: {fileID: 0}
+  debugDrawRays: 1
+  attackVision: 14.82
+  attackPoint: {fileID: 8930843304001745263}
+  attackRange: 1.01
+  attackRadius: 0.4
+  rotationSpeed: 2
+  moveSpeed: 2
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  playerDetected: {fileID: 0}
+  isPlayerInAttackRange: 0
+  isAttackLocked: 0
+  isSpecial: 0
 --- !u!1 &9044077113375301793
 GameObject:
   m_ObjectHideFlags: 0

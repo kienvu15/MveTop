@@ -32,6 +32,19 @@ public class PatrolStage_03 : EnemyState
                 brain.ChangeState(new DecisionStage_03(brain));
             }
         }
+
+        //if (brain.EnemyVision.lastSeenPosition != null && brain.EnemyVision.CanSeePlayer == false)
+        //{
+        //    Vector2 lastSeen = brain.EnemyVision.lastSeenPosition.Value;
+        //    brain.EnemySteering.MoveTo(lastSeen, 1f);
+
+        //    float dist = Vector2.Distance(brain.transform.position, lastSeen);
+        //    if (dist < 0.5f)
+        //    {
+        //        brain.EnemySteering.StopMoving();
+        //        brain.ChangeState(new PatrolStage_03(brain));
+        //    }
+        //}
     }
 
     public override void Exit()

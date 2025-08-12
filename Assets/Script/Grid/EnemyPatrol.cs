@@ -7,11 +7,13 @@ public class EnemyPatrol : MonoBehaviour
     public float switchDistance = 1f; // Khi đến gần node thì chọn hướng mới
 
     private Node currentTarget;
+    public EnemySteering enemySteering; // Tham chiếu đến EnemySteering nếu cần
     private Vector2 currentDirection;
 
     void Start()
     {
         PickNewDirection();
+        enemySteering = GetComponent<EnemySteering>();
     }
 
     void Update()
@@ -39,7 +41,7 @@ public class EnemyPatrol : MonoBehaviour
     }
     void PickNewDirection()
     {
-        currentTarget = GridManager.Instance.GetRandomWalkableNodeNear(transform.position, patrolRadius);
+        currentTarget = enemySteering.gridManager.GetRandomWalkableNodeNear(transform.position, patrolRadius);
 
         if (currentTarget != null)
         {

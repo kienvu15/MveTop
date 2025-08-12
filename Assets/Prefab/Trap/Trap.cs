@@ -3,6 +3,7 @@ using UnityEngine;
 public class Trap : MonoBehaviour
 {
     public PlayerStats playerStats;
+    public bool isActive = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -17,6 +18,7 @@ public class Trap : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (isActive == false) return;
         if (collision.CompareTag("Player"))
         {
             Debug.Log("Player entered the trigger area, applying damage.");
@@ -26,6 +28,7 @@ public class Trap : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
+        if (isActive == false) return;
         if (collision.CompareTag("Player"))
         {
             Debug.Log("Player is still in the trigger area, applying damage.");

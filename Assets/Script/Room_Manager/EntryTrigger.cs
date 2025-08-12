@@ -4,7 +4,7 @@ public class EntryTrigger : MonoBehaviour
 {
     public RoomController roomController;
     public RoomSpawnerController spawner;
-
+    public GridManager gridManager;
     private bool triggered = false;
 
     private void Awake()
@@ -30,12 +30,20 @@ public class EntryTrigger : MonoBehaviour
         }
     }
 
+    public void OnPlayerEnterRoom()
+    {
+        if (gridManager != null)
+            gridManager.gameObject.SetActive(true);
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
         {
             roomController.PlayerEntered();  // Giao việc cho RoomController
             Destroy(gameObject); // Mỗi trigger dùng 1 lần
+            gridManager.enabled = true; // Bật GridManager khi Player vào phòng
+            OnPlayerEnterRoom();
         }
     }
 

@@ -56,7 +56,7 @@ public class RetreadStage_41 : EnemyState
                 {
                     waitTime += Time.deltaTime;
 
-                    if (waitTime >= 0.7f) // Wait for a short time before dashing again
+                    if (waitTime >= 1.7f) // Wait for a short time before dashing again
                     {
                         enemyAttackController.isLocking = true;
                         brain.EnemyAttackVision.isAttackLocked = true;

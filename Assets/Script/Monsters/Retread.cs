@@ -34,15 +34,24 @@ public class Retread : MonoBehaviour
 
     public void RetreatIfCloseTo(Transform player, float retreatThreshold = 3f, float retreatDistance = 2.5f, float retreatSpeed = 2f)
     {
-        if (player == null) return; 
-
+        if (player == null) return;
+        isRetreating = true;
         float dist = Vector2.Distance(transform.position, player.position);
+
+        Vector2 dirFromPlayer = (transform.position - player.position).normalized;
+        Vector2 retreatTarget = (Vector2)transform.position + dirFromPlayer * retreatDistance;
+
         if (dist < retreatThreshold)
         {
-            Vector2 dirFromPlayer = (transform.position - player.position).normalized;
-            Vector2 retreatTarget = (Vector2)transform.position + dirFromPlayer * retreatDistance;
-
             steering.MoveTo(retreatTarget, retreatSpeed);
+        }
+
+        float DistanceToTarget = Vector2.Distance(transform.position, retreatTarget);
+        if (DistanceToTarget < 0.1f)
+        {
+            isDone = true;
+            steering.StopMoving();
+            isRetreating = false;
         }
     }
 
@@ -67,7 +76,7 @@ public class Retread : MonoBehaviour
             Vector2 tryPos = currentPos + retreatDir * dist;
             Vector2Int gridPos = Vector2Int.RoundToInt(tryPos);
 
-            if (GridManager.Instance.grid.TryGetValue(gridPos, out Node node) && node.isWalkable)
+            if (steering.gridManager.grid.TryGetValue(gridPos, out Node node) && node.isWalkable)
             {
                 chosenNode1 = (Vector2)gridPos;
                 break;
@@ -97,7 +106,7 @@ public class Retread : MonoBehaviour
         List<Vector2> walkableNeighbors = new List<Vector2>();
         foreach (var pos in neighbors)
         {
-            if (GridManager.Instance.grid.TryGetValue(pos, out Node node) && node.isWalkable)
+            if (steering.gridManager.grid.TryGetValue(pos, out Node node) && node.isWalkable)
             {
                 walkableNeighbors.Add((Vector2)pos);
             }

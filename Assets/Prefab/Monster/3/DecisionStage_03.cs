@@ -32,7 +32,7 @@ public class DecisionStage_03 : EnemyState
         if (brain.EnemyVision.CanSeePlayer == true && brain.EnemyStateController.canMove)
         {
             stateTimer += Time.deltaTime;
-            if (stateTimer >= stateDuration)
+            if (stateTimer >= 0.5f)
             {
                 Debug.Log("Move To Player");
                 // Move To Player
@@ -48,25 +48,25 @@ public class DecisionStage_03 : EnemyState
                 if (canCurvedMove)
                 {
                     Debug.Log("Move to player");
-                    brain.EnemySteering.MoveToWithBendSmart(brain.EnemyVision.targetDetected.position, brain.EnemySteering.chosenCurveMode, 3.5f);
+                    brain.EnemySteering.MoveToWithBendSmart(brain.EnemyVision.targetDetected.position, brain.EnemySteering.chosenCurveMode, 3.3f);
                 }
             }
         }
 
-        if (brain.EnemyVision.lastSeenPosition != null)
+        if (brain.EnemyVision.lastSeenPosition != null && brain.EnemyVision.CanSeePlayer == false)
         {
             Vector2 lastSeen = brain.EnemyVision.lastSeenPosition.Value;
-            brain.EnemySteering.MoveTo(lastSeen, 2f);
+            brain.EnemySteering.MoveTo(lastSeen, 1f);
 
             float dist = Vector2.Distance(brain.transform.position, lastSeen);
             if (dist < 0.5f)
             {
                 brain.EnemySteering.StopMoving();
                 brain.ChangeState(new PatrolStage_03(brain));
-            }   
+            }
         }
 
-        if(brain.EnemyVision.distance < 3.4f)
+        if (brain.EnemyVision.distance < 3.4f)
         {
             Debug.Log("DecisionStage_03: Close enough to attack");
 
