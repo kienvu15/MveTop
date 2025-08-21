@@ -49,6 +49,13 @@ public class PlayerUI : MonoBehaviour
         manaSlider.maxValue = max;
         manaSlider.value = current;
         manaText.text = $"{current}/{max}";
+
+        // Ẩn Fill Image khi hết mana
+        Image fillImage = manaSlider.fillRect.GetComponent<Image>();
+        if (current <= 0)
+            fillImage.enabled = false;
+        else
+            fillImage.enabled = true;
     }
 
 }

@@ -184,5 +184,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetLayers:
     serializedVersion: 2
-    m_Bits: 832
+    m_Bits: 840
   damage: 1

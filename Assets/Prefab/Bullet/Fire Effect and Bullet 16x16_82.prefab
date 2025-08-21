@@ -209,7 +209,7 @@ MonoBehaviour:
   enemyStats: {fileID: 0}
   targetLayers:
     serializedVersion: 2
-    m_Bits: 768
+    m_Bits: 776
 --- !u!114 &-8091949018956328161
 MonoBehaviour:
   m_ObjectHideFlags: 0

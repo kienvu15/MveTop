@@ -30,6 +30,7 @@ public class PortalToWin : MonoBehaviour
             //SceneManager.LoadScene(winSceneName);
             Player.position = Vector2.zero; // Đặt lại vị trí của Player về 0,0
             dungeonGenerator.ResetDungeon(); // Reset dungeon nếu cần
+            themeManager.NextStage(); // Tăng stage trong theme hiện tại
         }
     }
 

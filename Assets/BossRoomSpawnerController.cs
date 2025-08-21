@@ -46,6 +46,7 @@ public class BossRoomSpawnerController : MonoBehaviour, IEnemySpawner
             var room = GetComponentInParent<RoomBossController>();
             if (room != null)
                 room.OnRoomCleared();
+
             if (portalActivator != null)
                 portalActivator.OnBossDefeated();
 

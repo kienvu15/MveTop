@@ -27,12 +27,24 @@ public class ShopItem : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            worldUI?.Show();
+            if(isForSale == false)
+            {
+                worldUI.ShowWithoutText();
 
-            // Gán chính nó cho PlayerInteract
-            PlayerInteract interact = other.GetComponent<PlayerInteract>();
-            if (interact != null)
-                interact.SetCurrentShopItem(this);
+                // Gán chính nó cho PlayerInteract
+                PlayerInteract interact = other.GetComponent<PlayerInteract>();
+                if (interact != null)
+                    interact.SetCurrentShopItem(this);
+            }
+            else if(isForSale == true)
+            {
+                worldUI.ShowWithText();
+
+                // Gán chính nó cho PlayerInteract
+                PlayerInteract interact = other.GetComponent<PlayerInteract>();
+                if (interact != null)
+                    interact.SetCurrentShopItem(this);
+            }
         }
     }
 

@@ -24,7 +24,7 @@ public class PlayerInteract : MonoBehaviour
             TryPickupClosestItem();
         }
 
-        if (Input.GetKeyDown(buyKey))
+        if (Input.GetKeyDown(pickupKey))
         {
             TryBuyCurrentShopItem();
         }
@@ -67,8 +67,6 @@ public class PlayerInteract : MonoBehaviour
                         Debug.Log("Inventory is full, cannot pick up item.");
                     }
                 }
-
-            
         }
         else
         {
@@ -113,9 +111,6 @@ public class PlayerInteract : MonoBehaviour
             {
                 Debug.Log("Inventory đầy, không thể thêm item.");
             }
-
-            
-
         }
         else
         {

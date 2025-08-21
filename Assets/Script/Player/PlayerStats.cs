@@ -6,11 +6,17 @@ public class PlayerStats : MonoBehaviour
 {
     [Header("Health")]
     public int maxHealth = 6;
+    public int OriginalMaxHealth = 3; // Biến này có thể dùng để lưu giá trị ban đầu
     public int currentHealth;
 
     [Header("Armor")]
     public int maxArmor = 4;
     public int currentArmor;
+
+    [Header("Mana")]
+    public int maxMana = 200;
+    public int OriginalMaxMana = 200; // Biến này có thể dùng để lưu giá trị ban đầu
+    public int currentMana;
 
     [Header("Auto Armor Regen")]
     public float armorRegenInterval = 10f;  // thời gian giữa mỗi lần hồi
@@ -60,6 +66,7 @@ public class PlayerStats : MonoBehaviour
 
         currentHealth = maxHealth;
         currentArmor = maxArmor;
+        currentMana = maxMana;
 
         UpdateUI();
 
@@ -85,6 +92,7 @@ public class PlayerStats : MonoBehaviour
         {
             playerUI.SetHealth(currentHealth, maxHealth);
             playerUI.SetAmmo(currentArmor, maxArmor);
+            playerUI.SetMana(currentMana, maxMana);
         }
     }
 
@@ -125,6 +133,18 @@ public class PlayerStats : MonoBehaviour
         }
     }
 
+    public void UseMana()
+    {
+        if (currentMana > 0)
+        {
+            currentMana -= 1;
+            UpdateUI();
+        }
+        else
+        {
+            Debug.Log("Not enough mana!");
+        }
+    }
 
     public void TakeDamage(int damage, Vector2 attackPointPosition)
     {
@@ -169,6 +189,12 @@ public class PlayerStats : MonoBehaviour
     public void Heal(int amount)
     {
         currentHealth = Mathf.Min(currentHealth + amount, maxHealth);
+        UpdateUI();
+    }
+
+    public void RestoreMana(int amount)
+    {
+        currentMana = Mathf.Min(currentMana + amount, maxMana);
         UpdateUI();
     }
 

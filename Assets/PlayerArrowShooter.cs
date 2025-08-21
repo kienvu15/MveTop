@@ -108,6 +108,7 @@ public class PlayerArrowShooter : MonoBehaviour
         if (rb != null)
         {
             rb.linearVelocity = attackPoint.right * arrowSpeed;
+            playerStats.UseMana();
         }
     }
 }
