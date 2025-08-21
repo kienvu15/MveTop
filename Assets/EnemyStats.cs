@@ -78,21 +78,22 @@ public class EnemyStats : MonoBehaviour
         return currentHealth;
     }
 
-    private Coroutine flashCoroutine;
-    private IEnumerator FlashWhileInvincible()
-    {
-        float flashInterval = 0.1f;  // Thời gian giữa mỗi lần nhấp nháy
+    //private Coroutine flashCoroutine;
 
-        while (enemyStateController.isRecoiling == true)
-        {
-            spriteRenderer.enabled = false;
-            yield return new WaitForSeconds(flashInterval);
-            spriteRenderer.enabled = true;
-            yield return new WaitForSeconds(flashInterval);
-        }
+    //private IEnumerator FlashWhileInvincible()
+    //{
+    //    float flashInterval = 0.1f;  // Thời gian giữa mỗi lần nhấp nháy
 
-        spriteRenderer.enabled = true;  // Đảm bảo bật sáng trở lại khi hết bất tử
-    }
+    //    while (enemyStateController.isRecoiling == true)
+    //    {
+    //        spriteRenderer.enabled = false;
+    //        yield return new WaitForSeconds(flashInterval);
+    //        spriteRenderer.enabled = true;
+    //        yield return new WaitForSeconds(flashInterval);
+    //    }
+
+    //    spriteRenderer.enabled = true;  // Đảm bảo bật sáng trở lại khi hết bất tử
+    //}
 
     public void ApplyHitedRecoil(Vector2 attackPointPosition)
     {
@@ -119,9 +120,9 @@ public class EnemyStats : MonoBehaviour
             yield return null;
         }
 
-        if (flashCoroutine != null)
-            StopCoroutine(flashCoroutine);
-        flashCoroutine = StartCoroutine(FlashWhileInvincible());
+        //if (flashCoroutine != null)
+            //StopCoroutine(flashCoroutine);
+        //flashCoroutine = StartCoroutine(FlashWhileInvincible());
 
         yield return new WaitForSeconds(0.7f); // tạm dừng sau khi knockback
         enemyStateController.isRecoiling = false;
@@ -137,9 +138,9 @@ public class EnemyStats : MonoBehaviour
     {
         enemyStateController.isRecoiling = true;
 
-        if (flashCoroutine != null)
-            StopCoroutine(flashCoroutine);
-        flashCoroutine = StartCoroutine(FlashWhileInvincible());
+        //if (flashCoroutine != null)
+            //StopCoroutine(flashCoroutine);
+        //flashCoroutine = StartCoroutine(FlashWhileInvincible());
 
         yield return new WaitForSeconds(1.2f); // tạm dừng sau khi knockback
         enemyStateController.isRecoiling = false;

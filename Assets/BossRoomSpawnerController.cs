@@ -101,9 +101,9 @@ public class BossRoomSpawnerController : MonoBehaviour, IEnemySpawner
                 enemySteering.gridManager = roomGrid;
         }
 
-        var enemyDeath = enemy.GetComponent<EnemyDeath>();
-        if (enemyDeath != null)
-            enemyDeath.SetupSpawner(this);
+        //var enemyDeath = enemy.GetComponent<EnemyDeath>();
+        //if (enemyDeath != null)
+            //enemyDeath.SetupSpawner(this);
     }
 
 

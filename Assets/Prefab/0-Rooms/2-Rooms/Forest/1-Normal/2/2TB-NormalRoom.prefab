@@ -415,23 +415,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4191303c7caaeb4f888d5acdfda4a6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waves:
-  - waveName: w1
-    delayBeforeWave: 2
-    enemiesToSpawn:
-    - enemyType: 0
-      quantity: 5
-  - waveName: w2
-    delayBeforeWave: 2
-    enemiesToSpawn:
-    - enemyType: 1
-      quantity: 1
+  roomWaveConfig: {fileID: 11400000, guid: 4649561c956c50742b9fde9c279714e8, type: 2}
+  chosenRoomClass: 0
   spawnArea: {fileID: -3318051474422470843}
   obstacleMask:
     serializedVersion: 2
     m_Bits: 768
   minDistanceFromOtherEnemies: 4
-  enemyDatabase: {fileID: 0}
+  enemyDatabase: {fileID: 11400000, guid: d709a42b2ee2a4a4893c830ebbd2cbda, type: 2}
   themeManager: {fileID: 0}
 --- !u!61 &-3318051474422470843
 BoxCollider2D:

@@ -26,8 +26,8 @@ public class AttackStage_03 : EnemyState
 
         stateTimer = 0f;
         stateTimer02 = 0f;
-        stateDuration = Random.Range(0.8f, 1.2f); 
-        stateDuration02 = Random.Range(0.7f, 1.5f);
+        stateDuration = Random.Range(0.3f, 0.8f); 
+        stateDuration02 = Random.Range(0.2f, 0.7f);
     }
 
     public override void Update()

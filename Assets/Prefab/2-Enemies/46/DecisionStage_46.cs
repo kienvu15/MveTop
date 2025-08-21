@@ -13,7 +13,7 @@ public class DecisionStage_46 : EnemyState
         base.Enter();
         Debug.Log("DecisionStage_46: Entering decision stage");
         stateTimer = 0f;
-        stateDuration = Random.Range(0.5f, 1.4f);
+        stateDuration = Random.Range(0.5f, 1.2f);
         enemyRandomPatrolSteering = brain.GetComponent<EnemyRandomPatrolSteering>();
         eneemyLaserBeam = brain.GetComponent<EnemyLaserBeam>();
     }

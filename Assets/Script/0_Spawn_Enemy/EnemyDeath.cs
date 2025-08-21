@@ -2,8 +2,9 @@
 
 public class EnemyDeath : MonoBehaviour
 {
-    private IEnemySpawner spawner;
+    [SerializeField] public IEnemySpawner spawner;
     public int scoreValue = 100; // mặc định cộng 100 điểm khi chết
+    public GameObject father;
 
     public void SetupSpawner(IEnemySpawner controller)
     {
@@ -13,14 +14,17 @@ public class EnemyDeath : MonoBehaviour
     public void Die()
     {
         if (spawner != null)
-            spawner.OnEnemyDied(transform);
+        {
+            Debug.Log("[EnemyDeath] Gọi OnEnemyDied cho " + gameObject.name);
+            spawner.OnEnemyDied(father.transform);
+        }
         else
             Debug.LogWarning("[EnemyDeath] Spawner NULL!");
 
-        // Cộng điểm tại đây
         if (ScoreManager.Instance != null)
             ScoreManager.Instance.AddScore(scoreValue);
 
-        Destroy(gameObject);
+        Destroy(father);
     }
+
 }

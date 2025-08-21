@@ -93,7 +93,7 @@ public class AvoidPlayer : MonoBehaviour
                             isDodging = false;
                             isRetreating = false;
                             Vector2 lastSeen = enemyVision.lastSeenPosition.Value;
-                            enemySteering.MoveTo(lastSeen, 2f);
+                            enemySteering.MoveTo(lastSeen, 3f);
                             if (dist < nodeStopDistance)
                             {
                                 // Tới nơi thì dừng hoặc chuyển trạng thái
@@ -172,7 +172,6 @@ public class AvoidPlayer : MonoBehaviour
     }
 
     
-
     public void ChooseCurvedRetreatDirection()
     {
         Vector2 fromPlayer = (Vector2)transform.position - (Vector2)player.position;
@@ -227,7 +226,7 @@ public class AvoidPlayer : MonoBehaviour
     public void MoveTowardPlayer()
     {
         Vector2 dir = (player.position - transform.position).normalized;
-        enemySteering.MoveInDirection(dir);
+        enemySteering.MoveInDirection(dir, 3.5f);
     }
 
     void OnDrawGizmosSelected()

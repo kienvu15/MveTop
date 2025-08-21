@@ -44,7 +44,7 @@ public class ArcAround_46 : EnemyState
         }
         else
         {
-            stateTimer = 0f; // Reset timer if player is not seen
+            stateTimer = 0f;
         }
 
         if(bulletSwapm.isShooting == true)

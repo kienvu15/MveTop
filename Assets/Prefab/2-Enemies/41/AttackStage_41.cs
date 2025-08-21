@@ -20,7 +20,7 @@ public class AttackStage_41 : EnemyState
         randChoice = Random.value;
 
         stateTimer = 0f;
-        stateDuration = Random.Range(1f, 2f); // Random duration for the attack stage
+        stateDuration = Random.Range(1f, 2f);
         rangedEnemyController.isOrbitingPlayer = true;
     }
 
@@ -53,7 +53,7 @@ public class AttackStage_41 : EnemyState
             }
             
             stateTimer += Time.deltaTime;
-            if (stateTimer >= 1.5f)
+            if (stateTimer >= 1f)
             {
                 rangedEnemyController.isOrbitingPlayer = false;
                 enemyAttackController.isLocking = true;

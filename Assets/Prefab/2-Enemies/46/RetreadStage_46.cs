@@ -18,6 +18,7 @@ public class RetreadStage_46 : EnemyState
     public override void Update()
     {
         enemyBounceRun.HandelConditionRun();
+
         if (IsFinished)
         {
             brain.ChangeState(new ArcAround_46(brain));

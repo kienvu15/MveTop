@@ -26,10 +26,10 @@ public class EnganeStage_03 : EnemyState
     {
         if (brain.EnemyStateController.canMove && brain.EnemyVision.targetDetected != null)
         {
-            brain.EnemySteering.MoveTo(brain.EnemyVision.targetDetected.position, 2.3f);
+            brain.EnemySteering.MoveTo(brain.EnemyVision.targetDetected.position, 3.5f);
         }
 
-        if (brain.EnemyVision.distance < 2f)
+        if (brain.EnemyVision.distance < 2.1f)
         {
             canAttack = true;
         }
@@ -41,7 +41,7 @@ public class EnganeStage_03 : EnemyState
 
         if(canAttack == true)
         {
-            brain.EnemySteering.StopMoving();
+            //brain.EnemySteering.StopMoving();
             enemyAttackController.TryPerformAttack();
         }
 

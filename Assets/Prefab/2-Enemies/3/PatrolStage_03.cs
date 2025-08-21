@@ -6,13 +6,13 @@ public class PatrolStage_03 : EnemyState
 
     private EnemyRandomPatrolSteering enemyRandomPatrolSteering;
     public float stateTimer = 0.0f;
-    public float stateDuration = Random.Range(0.8f, 1.5f);
+    public float stateDuration;
     public override void Enter()
     {
         base.Enter();
         enemyRandomPatrolSteering = brain.GetComponent<EnemyRandomPatrolSteering>();
         stateTimer = 0f;
-        stateDuration = Random.Range(0.8f, 1f);
+        stateDuration = Random.Range(0.5f, 0.7f);
     }
 
     public override void Update()

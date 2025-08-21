@@ -147,7 +147,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2d08795a7416274a859340f15315ad9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chestType: 0
+  lootTable: {fileID: 11400000, guid: 9bf814465f9cf7b46a801b5038025de1, type: 2}
   openSprite: {fileID: 5456959532574919170, guid: 850abaa188c0f4d4098b5ef463b5a3d1, type: 3}
-  lootTable: {fileID: 11400000, guid: 964a208bc84909b4d9d1cc18f72af9f7, type: 2}
   dropRadius: 2.22

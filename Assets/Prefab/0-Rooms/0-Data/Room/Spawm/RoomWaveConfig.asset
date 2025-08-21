@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe968d1e99c5e15449510c7980978b05, type: 3}
+  m_Name: RoomWaveConfig
+  m_EditorClassIdentifier: 
+  roomConfigs:
+  - roomClass: 0
+    waves:
+    - waveName: w1
+      delayBeforeWave: 1
+      enemiesToSpawn:
+      - enemyType: 1
+        quantity: 3
+  - roomClass: 1
+    waves:
+    - waveName: w1
+      delayBeforeWave: 1
+      enemiesToSpawn:
+      - enemyType: 1
+        quantity: 3
+    - waveName: w2
+      delayBeforeWave: 1
+      enemiesToSpawn:
+      - enemyType: 1
+        quantity: 3
+  - roomClass: 2
+    waves:
+    - waveName: w1
+      delayBeforeWave: 1
+      enemiesToSpawn:
+      - enemyType: 1
+        quantity: 1
+  - roomClass: 1
+    waves:
+    - waveName: w1
+      delayBeforeWave: 1
+      enemiesToSpawn:
+      - enemyType: 1
+        quantity: 2

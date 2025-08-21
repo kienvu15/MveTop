@@ -4742,27 +4742,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4191303c7caaeb4f888d5acdfda4a6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waves:
-  - waveName: w1
-    delayBeforeWave: 0
-    enemiesToSpawn:
-    - enemyType: 1
-      quantity: 2
-  - waveName: w2
-    delayBeforeWave: 0
-    enemiesToSpawn:
-    - enemyType: 2
-      quantity: 2
+  roomWaveConfig: {fileID: 11400000, guid: 4649561c956c50742b9fde9c279714e8, type: 2}
+  chosenRoomClass: 0
   spawnArea: {fileID: 1020354573396257731, guid: d8a854ef43ef7ad4f9d23eabcaa4a737, type: 3}
   obstacleMask:
     serializedVersion: 2
     m_Bits: 768
   minDistanceFromOtherEnemies: 3
-  meleePrefab: {fileID: 1916565998416573420, guid: e8e1c77f14809a64695d01976019ce9a, type: 3}
-  rangedPrefab: {fileID: 7418682233964073672, guid: 5dd47f6d04256874082fdc63cbbe4578, type: 3}
-  chargerPrefab: {fileID: 3636671089228705019, guid: ec1185a5e33a0e44d85810b8f8ca8b4d, type: 3}
-  miniBossPrefab: {fileID: 6628358557250210070, guid: c0966477679a0f1418b25b712370671e, type: 3}
-  bossPrefab: {fileID: 3636671089228705019, guid: aa63c7e4ea0d33749b268b2af0fa0916, type: 3}
+  enemyDatabase: {fileID: 11400000, guid: d709a42b2ee2a4a4893c830ebbd2cbda, type: 2}
+  themeManager: {fileID: 0}
 --- !u!114 &-3327232448820487118
 MonoBehaviour:
   m_ObjectHideFlags: 0

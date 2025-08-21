@@ -12,7 +12,8 @@ public class DodgeStage_46 : EnemyState
     public AvoidPlayer avoidPlayer;
 
     private float stateTimer = 0f;
-    private float stateDuration; 
+    private float stateDuration;
+    private float random = UnityEngine.Random.value;
     public override void Enter()
     {
         base.Enter();
@@ -27,18 +28,27 @@ public class DodgeStage_46 : EnemyState
 
     public override void Update()
     {
-        if (brain.EnemyStateController.canMove)
+        if(random > 0.5f)
         {
-            rangedEnemyController.DritDec();
+            if (brain.EnemyStateController.canMove)
+            {
+                rangedEnemyController.DritDec();
+            }
+
+            stateTimer += Time.deltaTime;
+
+            if (stateTimer >= stateDuration)
+            {
+                rangedEnemyController.StopDritDec();
+                brain.ChangeState(new ArcAround_46(brain));
+            }
         }
-
-        stateTimer += Time.deltaTime;
-
-        if (stateTimer >= stateDuration)
+        else
         {
-            rangedEnemyController.StopDritDec();
-            brain.ChangeState(new ArcAround_46(brain));
+            brain.EnemySteering.StopMoving();
+            brain.ChangeState(new RetreadStage_46(brain));
         }
+        
 
         if (brain.EnemyVision.lastSeenPosition.HasValue && !brain.EnemyVision.CanSeePlayer)
         {

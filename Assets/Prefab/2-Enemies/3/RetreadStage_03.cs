@@ -8,6 +8,9 @@ public class RetreadStage_03 : EnemyState
 
     private float stateTimer;
     private float stateDuration;
+
+    private float random = Random.value;
+    private float random2 = Random.value;
     public override void Enter()
     {
         base.Enter();
@@ -16,22 +19,40 @@ public class RetreadStage_03 : EnemyState
         retread.isDone = false; // Reset the retread state
 
         stateTimer = 0f;
-        stateDuration = Random.Range(1f, 1.2f);
+        stateDuration = Random.Range(0.6f, 1f);
 
     }
     public override void Update()
     {
-        if (brain.EnemyVision.targetDetected != null)
+        if(random2 < 0.5f)
         {
-            retread.RetreatIfCloseTo(brain.EnemyVision.targetDetected, retreatThreshold: 2f, retreatDistance: 3f, retreatSpeed: 3f);
+            if (brain.EnemyVision.targetDetected != null)
+            {
+                retread.RetreatIfCloseTo(brain.EnemyVision.targetDetected, retreatThreshold: 2f, retreatDistance: 3f, retreatSpeed: 3f);
+            }
         }
+        else if(random2 > 0.5f)
+        {
+            brain.ChangeState(new EnganeStage_03(brain));
+        }
+        
 
         stateTimer += Time.deltaTime;
         if (stateTimer >= stateDuration)
         {
-            brain.EnemySteering.StopMoving();
-            Debug.Log("Retreat stage timed out, switching to Decision stage");
-            brain.ChangeState(new DecisionStage_03(brain));
+            if(random < 0.5f)
+            {
+                brain.EnemySteering.StopMoving();
+                Debug.Log("Retreat stage timed out, switching to Decision stage");
+                brain.ChangeState(new DecisionStage_03(brain));
+            }
+            else
+            {
+                brain.EnemySteering.StopMoving();
+                Debug.Log("Retreat stage timed out, switching to Engane stage");
+                brain.ChangeState(new EnganeStage_03(brain));
+            }
+            
         }
     }
     public override void Exit()

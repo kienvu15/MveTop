@@ -24,7 +24,7 @@ public class RetreadStage_41 : EnemyState
         retread = brain.GetComponent<Retread>();
 
         stateTimer = 0f;
-        stateDuration = Random.Range(1f, 1.5f); // Random duration for the retread stage
+        stateDuration = Random.Range(0.6f, 1.2f); // Random duration for the retread stage
         retreadDistance = Random.Range(1.2f, 2.5f);
         ranChoice = Random.value;
         hasDashedAgain = false;
@@ -56,7 +56,7 @@ public class RetreadStage_41 : EnemyState
                 {
                     waitTime += Time.deltaTime;
 
-                    if (waitTime >= 1.7f) // Wait for a short time before dashing again
+                    if (waitTime >= 1.7f)
                     {
                         enemyAttackController.isLocking = true;
                         brain.EnemyAttackVision.isAttackLocked = true;

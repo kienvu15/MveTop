@@ -13,10 +13,6 @@ public class DecisionStage_48 : EnemyState
     private float ShotWeight = 0.4f;
     private float originShotWieght = 0.4f;
 
-    //bool
-    private bool RunUsed = false;
-    private bool ShotUsed = false;
-
     public float stateTimer = 0f;
     public float stateDuration = 1.5f;
     public enum LastActionType { None, Run, Shot }
@@ -45,7 +41,7 @@ public class DecisionStage_48 : EnemyState
             if (rand < RunWeight)
             {
                 stateTimer += Time.deltaTime;
-                if( stateTimer >= stateDuration)
+                if( stateTimer >= 0.5f)
                 {
                     brain.ChangeState(new Monster_48_RunStage(brain, new DecisionStage_48(brain, LastActionType.Run)));
                 }
@@ -54,7 +50,7 @@ public class DecisionStage_48 : EnemyState
             else
             {
                 stateTimer += Time.deltaTime;
-                if (stateTimer >= stateDuration)
+                if (stateTimer >= 0.5f)
                 {
                     brain.ChangeState(new Monster_48_ShotStage(brain, new DecisionStage_48(brain, LastActionType.Shot)));
                 }

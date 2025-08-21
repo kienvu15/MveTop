@@ -15,6 +15,6 @@ MonoBehaviour:
   enemyName: Monster0_Data
   theme: 1
   enemyType: 1
-  prefab: {fileID: 6800808659405244020, guid: 969836bcc3484d04287596b686c9a6c2, type: 3}
+  prefab: {fileID: 5434423862613153781, guid: da313a27e960aea438ea705408ba369d, type: 3}
   minStageInTheme: 1
   maxStageInTheme: 3

@@ -47,7 +47,7 @@ public class PlayerStats : MonoBehaviour
     public float attackdashDuration = 0.2f;
 
     [Header("Invincibility")]
-    public float invincibilityDuration = 1f;   // 1 đến 2 giây
+    public float invincibilityDuration = 0.5f;   // 1 đến 2 giây
     private bool isInvincible = false;
     private float invincibilityTimer = 0f;
 
@@ -100,7 +100,7 @@ public class PlayerStats : MonoBehaviour
 
     private IEnumerator FlashWhileInvincible()
     {
-        float flashInterval = 0.1f;  // Thời gian giữa mỗi lần nhấp nháy
+        float flashInterval = 0.3f;  // Thời gian giữa mỗi lần nhấp nháy
 
         while (isInvincible)
         {

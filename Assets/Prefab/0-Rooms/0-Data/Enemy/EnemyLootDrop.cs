@@ -1,16 +1,8 @@
 ﻿using UnityEngine;
 
-[System.Serializable]
-public class DropItem
-{
-    public GameObject prefab;        // Prefab của vật phẩm
-    public float dropWeight = 1f;    // Trọng số (tỉ lệ rớt tương đối)
-}
-
 public class EnemyLootDrop : MonoBehaviour
 {
-    public DropItem[] DropItem;
-    public int maxDrop = 3; // Số lượng vật phẩm rớt
+    public EnemyLootTable lootTable;   // Gán ScriptableObject LootTable ở Inspector
 
     private EnemyStats enemyStats;
 
@@ -31,7 +23,10 @@ public class EnemyLootDrop : MonoBehaviour
 
     private void DropLoot()
     {
-        for (int i = 0; i < maxDrop; i++)
+        if (lootTable == null || lootTable.dropItems.Length == 0)
+            return;
+
+        for (int i = 0; i < lootTable.maxDrop; i++)
         {
             GameObject lootPrefab = GetRandomLoot();
             if (lootPrefab != null)
@@ -45,19 +40,19 @@ public class EnemyLootDrop : MonoBehaviour
     private GameObject GetRandomLoot()
     {
         float totalWeight = 0f;
-        foreach (var loot in DropItem)
+        foreach (var loot in lootTable.dropItems)
             totalWeight += loot.dropWeight;
 
         float randomValue = Random.value * totalWeight;
         float cumulative = 0f;
 
-        foreach (var loot in DropItem)
+        foreach (var loot in lootTable.dropItems)
         {
             cumulative += loot.dropWeight;
             if (randomValue <= cumulative)
                 return loot.prefab;
         }
 
-        return null; // Trường hợp không có gì
+        return null;
     }
 }

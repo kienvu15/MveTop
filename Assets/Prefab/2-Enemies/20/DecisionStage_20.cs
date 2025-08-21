@@ -13,7 +13,7 @@ public class DecisionStage_20 : EnemyState
         // Here you can add any initialization code for the decision stage
         eneemyLaserBeam = brain.GetComponent<EnemyLaserBeam>();
         stateTimer = 0f;
-        stateDuration = Random.Range(1f, 2f);
+        stateDuration = Random.Range(0.5f, 1f);
     }
 
     public override void Update()

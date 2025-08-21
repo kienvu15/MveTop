@@ -2234,19 +2234,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4191303c7caaeb4f888d5acdfda4a6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waves:
-  - waveName: w1
-    delayBeforeWave: 1
-    enemiesToSpawn:
-    - enemyType: 0
-      quantity: 2
-    - enemyType: 1
-      quantity: 1
-  - waveName: w2
-    delayBeforeWave: 1
-    enemiesToSpawn:
-    - enemyType: 1
-      quantity: 2
+  roomWaveConfig: {fileID: 11400000, guid: 4649561c956c50742b9fde9c279714e8, type: 2}
+  chosenRoomClass: 0
   spawnArea: {fileID: -6567642218911927344}
   obstacleMask:
     serializedVersion: 2

@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f362e09f8b4d484c9b0504dfecc660e, type: 3}
+  m_Name: EnemyLootData
+  m_EditorClassIdentifier: 
+  dropItems:
+  - prefab: {fileID: 4418349446991674435, guid: fe02ed74303c140439863e1ae3291bf8, type: 3}
+    dropWeight: 0.8
+  - prefab: {fileID: 2972097765817507276, guid: 98b45f528b8eaa24fa5b8200ff6d2f73, type: 3}
+    dropWeight: 0.7
+  maxDrop: 5

@@ -1,11 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
 
 public class RoomSpawnerController : MonoBehaviour, IEnemySpawner
 {
     [Header("Wave Config")]
-    public List<EnemyWaveConfig> waves;
+    [SerializeField] private RoomWaveConfigSO roomWaveConfig; // 🔹 Asset ScriptableObject
+    private List<EnemyWaveConfig> waves;
+
+    [Header("Room Info (hiển thị)")]
+    [SerializeField, ReadOnly(true)] private RoomClass chosenRoomClass; // 🔹 hiển thị trên Inspector
 
     [Header("Spawn Settings")]
     [SerializeField] private Collider2D spawnArea;
@@ -17,18 +22,30 @@ public class RoomSpawnerController : MonoBehaviour, IEnemySpawner
     [SerializeField] private ThemeManager themeManager;
 
     private List<Transform> activeEnemies = new List<Transform>();
-    private int currentWaveIndex = 0;
-    private bool roomCleared = false;
+    public int currentWaveIndex = 0;
+    public bool roomCleared = false;
 
     void Start()
     {
-        themeManager = FindFirstObjectByType<ThemeManager>();
+        if (themeManager == null)
+            themeManager = FindFirstObjectByType<ThemeManager>();
     }
 
     // Bắt đầu khi Player bước vào phòng
     public void StartRoom()
     {
-        Debug.Log($"[RoomSpawner] Player vào phòng, bắt đầu wave 0.");
+        if (roomWaveConfig == null || roomWaveConfig.roomConfigs.Count == 0)
+        {
+            Debug.LogError("[RoomSpawner] Không có RoomWaveConfig!");
+            return;
+        }
+
+        // 🔹 Random chọn RoomClass
+        var config = roomWaveConfig.roomConfigs[Random.Range(0, roomWaveConfig.roomConfigs.Count)];
+        chosenRoomClass = config.roomClass;
+        waves = config.waves;
+
+        Debug.Log($"[RoomSpawner] Player vào phòng, chọn class {chosenRoomClass}, bắt đầu wave 0.");
         StartNextWave();
     }
 
@@ -36,7 +53,7 @@ public class RoomSpawnerController : MonoBehaviour, IEnemySpawner
     {
         if (currentWaveIndex >= waves.Count)
         {
-            Debug.Log("[RoomSpawner] Đã hoàn thành tất cả các wave.");
+            Debug.Log("[BossRoomSpawner] Đã hoàn thành tất cả các wave Boss.");
             roomCleared = true;
 
             var room = GetComponentInParent<RoomController>();
@@ -46,27 +63,31 @@ public class RoomSpawnerController : MonoBehaviour, IEnemySpawner
             return;
         }
 
-        Debug.Log($"[RoomSpawner] Bắt đầu wave {currentWaveIndex + 1}.");
+        Debug.Log($"[BossRoomSpawner] Bắt đầu wave {currentWaveIndex + 1}.");
         StartCoroutine(SpawnWaveCoroutine(waves[currentWaveIndex]));
         currentWaveIndex++;
     }
 
+
     private IEnumerator SpawnWaveCoroutine(EnemyWaveConfig wave)
     {
+        Debug.Log($"[RoomSpawner] Starting wave {currentWaveIndex + 1} with delay {wave.delayBeforeWave}");
         yield return new WaitForSeconds(wave.delayBeforeWave);
-
         foreach (var enemyInfo in wave.enemiesToSpawn)
         {
+            Debug.Log($"[RoomSpawner] Spawning {enemyInfo.quantity} {enemyInfo.enemyType}");
             for (int i = 0; i < enemyInfo.quantity; i++)
             {
-                SpawnEnemyFromDatabase(enemyInfo.enemyType);
+                SpawnEnemy(enemyInfo.enemyType);
                 yield return new WaitForSeconds(0.1f);
             }
         }
+        Debug.Log($"[RoomSpawner] Finished spawning wave {currentWaveIndex + 1}");
     }
 
-    private void SpawnEnemyFromDatabase(EnemyClass type)
+    private void SpawnEnemy(EnemyClass type)
     {
+        // 🔹 Lấy enemy hợp theme & stage
         var enemies = enemyDatabase.GetEnemiesForThemeAndStage(
             themeManager.currentTheme,
             themeManager.stageIndexInTheme
@@ -89,7 +110,7 @@ public class RoomSpawnerController : MonoBehaviour, IEnemySpawner
         enemy.name = $"{chosenEnemy.enemyName} (Wave {currentWaveIndex})";
         activeEnemies.Add(enemy);
 
-        // 🔹 Gán GridManager cho enemy
+        // Gán GridManager cho enemy nếu có
         GridManager roomGrid = GetComponentInParent<GridManager>();
         if (roomGrid != null)
         {
@@ -102,21 +123,36 @@ public class RoomSpawnerController : MonoBehaviour, IEnemySpawner
                 enemySteering.gridManager = roomGrid;
         }
 
-        var enemyDeath = enemy.GetComponent<EnemyDeath>();
+        var enemyDeath = enemy.GetComponentInChildren<EnemyDeath>();
         if (enemyDeath != null)
+        {
+            Debug.Log($"[RoomSpawner] SetupSpawner for {enemy.name}");
             enemyDeath.SetupSpawner(this);
+        }
+        else
+        {
+            Debug.LogError($"[RoomSpawner] Enemy {enemy.name} missing EnemyDeath component!");
+        }
+
+
     }
 
     public void OnEnemyDied(Transform enemy)
     {
         activeEnemies.Remove(enemy);
+        Debug.Log($"[RoomSpawner] Removed {enemy.name}. Active enemies left: {activeEnemies.Count}");
+
 
         if (activeEnemies.Count <= 0 && !roomCleared)
         {
-            Debug.Log("[RoomSpawner] Tất cả enemy đã chết, chuyển sang wave tiếp theo.");
-            StartNextWave();
+            Debug.Log("[BossRoomSpawner] Tất cả enemy đã chết trong Boss Room.");
+            roomCleared = true;
+
+            StartNextWave(); 
         }
+
     }
+
 
     private Vector3 FindValidSpawnPosition()
     {
