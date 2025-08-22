@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1295895588823812253}
   - component: {fileID: 895179996575518893}
   m_Layer: 13
-  m_Name: SmallChest
+  m_Name: Chest-Pre
   m_TagString: Items
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -148,5 +148,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lootTable: {fileID: 11400000, guid: 9bf814465f9cf7b46a801b5038025de1, type: 2}
+  shopItemDatabase: {fileID: 11400000, guid: dea972e387186af4a902216b9e3dc623, type: 2}
+  shopItemDropChance: 0.7
   openSprite: {fileID: 5456959532574919170, guid: 850abaa188c0f4d4098b5ef463b5a3d1, type: 3}
   dropRadius: 2.22

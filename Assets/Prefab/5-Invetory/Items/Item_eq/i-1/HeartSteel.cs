@@ -33,9 +33,9 @@ public class HeartSteel : Item
     {
         playerStats.maxHealth = originalMaxHealth;
         playerStats.currentHealth = Mathf.Min(playerStats.currentHealth, originalMaxHealth);
-
+        hasAppliedEffect = false;
         playerStats.UpdateUI();
-        Debug.Log($"Messi");
+        Debug.Log($"Effect removed: {Name}, maxHealth restored to {originalMaxHealth}");
     }
 
 }
