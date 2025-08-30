@@ -206,7 +206,7 @@ public class EnemyLaserBeam : MonoBehaviour
             }
             else
             {
-                EnemySteering.MoveInDirection(toTarget.normalized, 0.8f);
+                EnemySteering.MoveInDirection(toTarget.normalized, 1f);
             }
         }
     }

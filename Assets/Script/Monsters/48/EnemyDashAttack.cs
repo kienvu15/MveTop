@@ -11,10 +11,11 @@ public class EnemyDashAttack : MonoBehaviour
     [Header("Dash")]
     private bool canDash = true;
     public bool isDashing = false;
-    [SerializeField] private float dashSpeed = 15f;
+    [SerializeField] public float dashSpeed = 15f;
     [SerializeField] private float dashDuration = 0.2f;
     [SerializeField] private float dashCooldown = 0.5f;
     [SerializeField] private TrailRenderer trailRenderer;
+    public GameObject dashDealDame;
 
     private float visionTimer = 0f;
     public float lockTime = 1f;
@@ -31,8 +32,12 @@ public class EnemyDashAttack : MonoBehaviour
 
     void Update()
     {
-        Lock();
-        ConditionDash();
+        if(isDashing == false)
+        {
+            dashSpeed = Random.Range(15f, 22f);
+        }
+
+        
     }
 
     public void ConditionDash()
@@ -76,28 +81,39 @@ public class EnemyDashAttack : MonoBehaviour
         if (trailRenderer != null)
             trailRenderer.emitting = true;
 
-        // Xác định hướng dash
         Vector2 dashDirection = (EnemyAttackVision.attackPoint.position - transform.position).normalized;
-        
-
-        // Áp dụng lực dash
-        // Normalize để đảm bảo tốc độ dash không đổi
         rb.linearVelocity = dashDirection.normalized * dashSpeed;
+        dashDealDame.SetActive(true);
 
         yield return new WaitForSeconds(dashDuration);
 
-        // Kết thúc dash
+        // ✅ Nếu object bị destroy trong lúc chờ
+        if (this == null || gameObject == null) yield break;
+
+        dashDealDame.SetActive(false);
         rb.linearVelocity = Vector2.zero;
         isDashing = false;
-        OnDashFinished?.Invoke(); Debug.Log("Dash stage finished and event invoked.");
+        OnDashFinished?.Invoke();
         EnemyAttackVision.isAttackLocked = false;
         visionTimer = 0f;
 
         if (trailRenderer != null)
             trailRenderer.emitting = false;
 
-        // Bắt đầu thời gian hồi chiêu
         yield return new WaitForSeconds(dashCooldown);
+
+        // ✅ Check tiếp 1 lần nữa sau cooldown
+        if (this == null || gameObject == null) yield break;
+
         canDash = true;
+    }
+
+
+    private void OnDestroy()
+    {
+        if (trailRenderer != null)
+            trailRenderer.emitting = false;
+
+        StopAllCoroutines();
     }
 }

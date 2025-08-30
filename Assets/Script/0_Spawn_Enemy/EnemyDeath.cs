@@ -14,17 +14,20 @@ public class EnemyDeath : MonoBehaviour
     public void Die()
     {
         if (spawner != null)
-        {
-            Debug.Log("[EnemyDeath] Gọi OnEnemyDied cho " + gameObject.name);
             spawner.OnEnemyDied(father.transform);
-        }
-        else
-            Debug.LogWarning("[EnemyDeath] Spawner NULL!");
 
         if (ScoreManager.Instance != null)
             ScoreManager.Instance.AddScore(scoreValue);
 
+        TrailRenderer trail = GetComponent<TrailRenderer>();
+        if (trail != null)
+        {
+            trail.Clear();          // Xóa hết vết đang render
+            trail.enabled = false;  // Tắt trail ngay lập tức
+        }
+
         Destroy(father);
     }
+
 
 }

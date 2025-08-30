@@ -218,6 +218,7 @@ MonoBehaviour:
   EnemyAttackVision: {fileID: 0}
   EnemySteering: {fileID: 0}
   EnemyStateController: {fileID: 0}
+  gridManager: {fileID: 0}
   playerTransform: {fileID: 0}
 --- !u!114 &1657972591818359854
 MonoBehaviour:
@@ -231,7 +232,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd8ae2f594a38224f91890ba44abd1e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 7
+  type: 10
 --- !u!114 &4083442441097490645
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -338,6 +339,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 768
   debugDrawRays: 1
+  gridManager: {fileID: 0}
   finalMoveDir: {x: 0, y: 0}
   loopbackOffset: 0
 --- !u!114 &8469644120665158102
@@ -421,6 +423,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scoreValue: 100
+  father: {fileID: 0}
 --- !u!114 &4151123153841955712
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -503,14 +506,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b115b967818cf54b81242dc388c7a5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DropItem:
-  - prefab: {fileID: 4418349446991674435, guid: fe02ed74303c140439863e1ae3291bf8, type: 3}
-    dropWeight: 90
-  - prefab: {fileID: 1854399955107605364, guid: c19ebd9603abd274984b24d429de6455, type: 3}
-    dropWeight: 5
-  - prefab: {fileID: 3541671590502939099, guid: e5efd28c4983f8e44981e43a9327f99d, type: 3}
-    dropWeight: 5
-  maxDrop: 3
+  lootTable: {fileID: 0}
 --- !u!1 &7360408407503567363
 GameObject:
   m_ObjectHideFlags: 0

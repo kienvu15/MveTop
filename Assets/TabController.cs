@@ -5,6 +5,8 @@ public class TabController : MonoBehaviour
 {
     public Image[] tabImages; // Array of images for each tab
     public GameObject[] pages;
+
+    public AudioClip clickSound;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -13,7 +15,9 @@ public class TabController : MonoBehaviour
 
     public void ActiveTab(int tabNo)
     {
-        for(int i = 0; i < pages.Length; i++)
+        SFXManager.Instance.PlaySFX(clickSound);
+
+        for (int i = 0; i < pages.Length; i++)
         {
             pages[i].SetActive(false);
             tabImages[i].color = Color.grey;

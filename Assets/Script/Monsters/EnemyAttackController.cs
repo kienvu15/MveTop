@@ -5,17 +5,22 @@ public class EnemyAttackController : MonoBehaviour
 {
     [Header("Slash VFX")]
     public GameObject[] slashVFXs;
+    public GameObject dashVFX;
     public LayerMask playerLayers; // Lớp của các enemy để tấn công
 
     [Header("Attack Settings")]
     public float attackCooldown = 1.5f;   // Thời gian hồi giữa 2 lần tấn công
     private float attackCooldownTimer = 0f;
 
+    [Header("Dash Attack Settings")]
+    public float dashAttackCooldown = 3f;   
+    private float dashAttackCooldownTimer = 0f;
+
     [Header("Dash Settings")]
-    public float dashSpeed = 5f;         // Tốc độ dash
-    public float dashDuration = 0.5f;    // Thời gian giữ dash
-    public float lockDelay = 3f; // Thời gian chờ trước khi khóa tấn công
-    public GameObject dashEffect; // Hiệu ứng khi dash
+    public float dashSpeed = 5f; 
+    public float dashDuration = 0.5f; 
+    public float lockDelay = 3f;
+    public TrailRenderer trailRenderer; 
     private bool isDashing = false;
     
     public bool isLocking = false;
@@ -49,7 +54,64 @@ public class EnemyAttackController : MonoBehaviour
         // Tuỳ ý: có thể reset trạng thái đã tấn công sau khi hồi cooldown
         if (attackCooldownTimer <= 0f)
             hasAttacked = false;
+
+        //if(enemyAttackVision.isPlayerInAttackRange && !isDashing)
+        //{
+        //    DashAttack();
+        //}
+
+        if (attackCooldownTimer > 0f)
+            attackCooldownTimer -= Time.deltaTime;
+
+        if (attackCooldownTimer <= 0f)
+            hasAttacked = false;
+
+        // ✅ giảm timer dash attack
+        if (dashAttackCooldownTimer > 0f)
+            dashAttackCooldownTimer -= Time.deltaTime;
+
     }
+
+    public void DashAttack()
+    {
+        if (isDashing) return; // nếu đang dash thì không dash nữa
+        if (dashAttackCooldownTimer > 0f) return; // đang hồi chiêu
+
+        enemyAttackVision.isAttackLocked = true;
+        // 2. Xác định hướng dash (dựa vào attackPoint.right)
+        Vector2 dashDirection = enemyAttackVision.attackPoint.right;
+        // 3. Di chuyển enemy theo hướng đó
+        rb.linearVelocity = dashDirection * dashSpeed;
+        // 1. Bật slash VFX
+        ActivateSlashVFX();
+
+        // 4. Bật hiệu ứng dash (nếu có)
+        if (trailRenderer != null)
+            trailRenderer.emitting = true;
+
+        isDashing = true;
+        isDashDone = false;
+
+        // 5. Đặt cooldown
+        dashAttackCooldownTimer = dashAttackCooldown;
+
+        // 6. Dừng dash sau dashDuration
+        Invoke(nameof(StopDashAttack), dashDuration);
+    }
+
+
+    private void StopDashAttack()
+    {
+        rb.linearVelocity = Vector2.zero;
+        enemyAttackVision.isAttackLocked = false;
+        dashVFX.SetActive(false);
+        if (trailRenderer != null)
+            trailRenderer.emitting = false;
+
+        isDashing = false;
+        isDashDone = true;
+    }
+
 
     public void LockIN()
     {
@@ -73,7 +135,8 @@ public class EnemyAttackController : MonoBehaviour
         Vector2 dashDirection = enemyAttackVision.attackPoint.right;
         rb.linearVelocity = dashDirection * dashSpeed;   // Dash bằng tốc độ
 
-        dashEffect.SetActive(true); // Kích hoạt hiệu ứng dash
+        if (trailRenderer != null)
+            trailRenderer.emitting = true;
         isDashing = true;
         hasDashed = true;
         isDashDone = false;
@@ -83,7 +146,8 @@ public class EnemyAttackController : MonoBehaviour
 
     private void StopDash()
     {
-        dashEffect.SetActive(false); // Tắt hiệu ứng dash
+        if (trailRenderer != null)
+            trailRenderer.emitting = false;
         rb.linearVelocity = Vector2.zero;
         enemyAttackVision.isAttackLocked = false;
         isDashing = false;

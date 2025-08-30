@@ -17,7 +17,7 @@ public class PlayerInputHandler : MonoBehaviour
             return;
         }
 
-        MoveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        MoveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
         DashPressed = Input.GetKeyDown(KeyCode.Space);
         AttackPressed = Input.GetKeyDown(KeyCode.V);
     }

@@ -217,6 +217,10 @@ PrefabInstance:
       propertyPath: attackCooldown
       value: 0.2
       objectReference: {fileID: 0}
+    - target: {fileID: 4801706553723674291, guid: 1597238e517b3b34d9f38bc3e0d2f1b9, type: 3}
+      propertyPath: father
+      value: 
+      objectReference: {fileID: 6046689188035682192}
     - target: {fileID: 7804133418582008895, guid: 1597238e517b3b34d9f38bc3e0d2f1b9, type: 3}
       propertyPath: m_Name
       value: monsters_3

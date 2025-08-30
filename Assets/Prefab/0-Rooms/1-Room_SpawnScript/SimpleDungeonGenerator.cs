@@ -11,11 +11,13 @@ public class SimpleDungeonGenerator : MonoBehaviour
     [HideInInspector] public List<RoomPrefabData> blessingRooms;
     [HideInInspector] public List<RoomPrefabData> specialRooms;
     [HideInInspector] public List<RoomPrefabData> miniBossRooms;
+    [HideInInspector] public List<RoomPrefabData> finalRooms; // Thêm finalRooms
     [HideInInspector] public List<RoomPrefabData> bossRooms;
 
     [SerializeField] public bool isGeneratingDone = false;
 
     [SerializeField] private RoomDatabase roomDatabase;
+    [SerializeField] private RoadPrefabDatabase roadDatabase;
     [SerializeField] private ThemeManager themeManager;
 
     [SerializeField] private Transform gridTransform;
@@ -39,9 +41,44 @@ public class SimpleDungeonGenerator : MonoBehaviour
 
     private bool generationComplete = false;
     private List<Transform> blockedDoorPoints = new List<Transform>();
-    private HashSet<Vector3> reservedPositions = new HashSet<Vector3>();
+
+    // FIX: dùng List + so sánh gần đúng để tránh sai số float khi check vị trí đã reserve
+    private List<Vector3> reservedPositions = new List<Vector3>();
+    private const float RESERVED_TOLERANCE = 0.05f;
 
     private EndPointValidator endpointValidator;
+
+    // ===================== Helpers (FIXED / NEW) =====================
+    private bool ContainsReserved(Vector3 pos)
+    {
+        for (int i = 0; i < reservedPositions.Count; i++)
+        {
+            if ((reservedPositions[i] - pos).sqrMagnitude <= RESERVED_TOLERANCE * RESERVED_TOLERANCE)
+                return true;
+        }
+        return false;
+    }
+    private void AddReserved(Vector3 pos)
+    {
+        if (!ContainsReserved(pos)) reservedPositions.Add(pos);
+    }
+
+    private int SnapAngleToRightAngle(float z)
+    {
+        float angle = z % 360f; if (angle < 0f) angle += 360f;
+        int snapped = Mathf.RoundToInt(angle / 90f) * 90;
+        snapped %= 360; if (snapped < 0) snapped += 360;
+        return snapped; // 0, 90, 180, 270
+    }
+
+    private bool HasChildWithTag(Transform parent, string tag)
+    {
+        foreach (Transform t in parent)
+        {
+            if (t.CompareTag(tag)) return true;
+        }
+        return false;
+    }
 
     // Helper: convert GameObject list -> RoomPrefabData list
     private List<RoomPrefabData> ConvertPrefabsToRoomPrefabData(List<GameObject> prefabs, RoomType type)
@@ -53,7 +90,6 @@ public class SimpleDungeonGenerator : MonoBehaviour
         {
             if (pf == null) continue;
             RoomPrefabData data = new RoomPrefabData();
-            // giả định RoomPrefabData có public fields: prefab (GameObject) và type (RoomType)
             data.prefab = pf;
             data.type = type;
             list.Add(data);
@@ -64,10 +100,9 @@ public class SimpleDungeonGenerator : MonoBehaviour
     // Cập nhật tất cả các room lists từ RoomDatabase theo theme hiện tại
     private void UpdateRoomListsForCurrentTheme()
     {
-        if (roomDatabase == null || themeManager == null)
+        if (roomDatabase == null || themeManager == null || roadDatabase == null)
         {
-            // nếu chưa gán DB / ThemeManager thì giữ nguyên các list cũ (fallback)
-            Debug.LogWarning("[SimpleDungeonGenerator] RoomDatabase hoặc ThemeManager chưa gán — dùng lists cũ (fallback).");
+            Debug.LogWarning("[SimpleDungeonGenerator] RoomDatabase, RoadPrefabDatabase hoặc ThemeManager chưa gán — dùng lists cũ (fallback).");
             return;
         }
 
@@ -79,12 +114,9 @@ public class SimpleDungeonGenerator : MonoBehaviour
         blessingRooms = ConvertPrefabsToRoomPrefabData(roomDatabase.GetRooms(theme, RoomType.Blessing), RoomType.Blessing);
         specialRooms = ConvertPrefabsToRoomPrefabData(roomDatabase.GetRooms(theme, RoomType.Special), RoomType.Special);
         miniBossRooms = ConvertPrefabsToRoomPrefabData(roomDatabase.GetRooms(theme, RoomType.MiniBoss), RoomType.MiniBoss);
+        finalRooms = ConvertPrefabsToRoomPrefabData(roomDatabase.GetRooms(theme, RoomType.Final), RoomType.Final);
         bossRooms = ConvertPrefabsToRoomPrefabData(roomDatabase.GetRooms(theme, RoomType.Boss), RoomType.Boss);
     }
-
-    // Because your RoomType enum spelled "Blessing" not "Blessing"? adjust names exactly
-    // (If RoomDatabase.GetRooms returns empty list, Convert returns empty list.)
-
 
     void Start()
     {
@@ -102,44 +134,38 @@ public class SimpleDungeonGenerator : MonoBehaviour
     void CheckAndSpawnMissingRoads()
     {
         Debug.Log("<color=orange>🔍 Kiểm tra và spawn missing roads sau generation...</color>");
-
-        foreach (GameObject room in spawnedObjects)
+        var objectsCopy = new List<GameObject>(spawnedObjects);
+        foreach (GameObject room in objectsCopy)
         {
-            if (room == null || room.tag != "Room") continue; // Giả sử rooms có tag "Room", hoặc chỉnh theo prefab
+            if (room == null || room.tag != "Room") continue;
 
             foreach (Transform child in room.GetComponentsInChildren<Transform>())
             {
-                if (!child.CompareTag("DoorPoint")) continue;
+                if (!child.CompareTag("BlockPoint")) continue;
 
-                // Kiểm tra nếu doorPoint đang "mở": Không có blocker child, không trong blockedDoorPoints
-                bool hasBlocker = false;
-                foreach (Transform blocker in child)
-                {
-                    if (blocker.CompareTag("Blocker")) // Giả sử blocker có tag "Blocker"
-                    {
-                        hasBlocker = true;
-                        break;
-                    }
-                }
-
+                bool hasBlocker = HasChildWithTag(child, "Blocker");
                 if (hasBlocker || blockedDoorPoints.Contains(child)) continue;
 
-                // Kiểm tra nếu đã có road (raycast để xem có collider road tại hướng doorPoint)
-                RaycastHit2D hit = Physics2D.Raycast(child.position, child.right, 1f); // Giả sử road cách 1 unit
-                if (hit.collider != null && hit.collider.CompareTag("Road")) continue; // Đã có road, bỏ qua
+                // Ray hai hướng để tránh spawn road trùng
+                RaycastHit2D hitForward = Physics2D.Raycast(child.position, child.right, 5f);
+                RaycastHit2D hitBackward = Physics2D.Raycast(child.position, -child.right, 5f);
+                if ((hitForward.collider != null && hitForward.collider.CompareTag("Road")) ||
+                    (hitBackward.collider != null && hitBackward.collider.CompareTag("Road")))
+                {
+                    // Đã có road kết nối từ phía bên kia
+                    continue;
+                }
 
-                // Đủ điều kiện: roomsSpawned < maxRooms, vị trí free
+                // Tôn trọng maxRooms
                 if (roomsSpawned >= maxRooms)
                 {
                     BlockUnusedDoor(child);
                     continue;
                 }
 
-                // Spawn road
                 GameObject road = Instantiate(roadPrefab, child.position, child.rotation, gridTransform);
                 spawnedObjects.Add(road);
 
-                // Align road
                 Transform startPoint = null, endPoint = null;
                 foreach (Transform t in road.GetComponentsInChildren<Transform>())
                 {
@@ -156,7 +182,13 @@ public class SimpleDungeonGenerator : MonoBehaviour
                 Vector3 offset = startPoint.position - road.transform.position;
                 road.transform.position -= offset;
 
-                // Kiểm tra validator
+                if (Vector3.Dot((endPoint.position - startPoint.position).normalized, child.right.normalized) < 0.95f)
+                {
+                    road.transform.rotation *= Quaternion.Euler(0, 0, 180);
+                    offset = startPoint.position - road.transform.position;
+                    road.transform.position -= offset;
+                }
+
                 if (endpointValidator != null)
                 {
                     endpointValidator.CheckIntersectionAndReturnInactiveMarkers();
@@ -169,49 +201,70 @@ public class SimpleDungeonGenerator : MonoBehaviour
                     }
                 }
 
-                // Kiểm tra vị trí occupied cho endPoint
                 Vector3 targetPos = endPoint.position;
-                if (IsPositionOccupied(targetPos) || reservedPositions.Contains(targetPos))
+                if (IsPositionOccupied(targetPos) || ContainsReserved(targetPos))
                 {
                     Destroy(road);
                     BlockUnusedDoor(child);
                     continue;
                 }
 
-                // Spawn room tại endPoint nếu có thể
                 TrySpawnRoomAt(endPoint);
-
-                Debug.Log($"<color=green>🛤️ Spawned missing road tại doorPoint: {child.name}</color>");
             }
         }
     }
 
     IEnumerator GenerateUntilBossRoom()
     {
+        int maxAttempts = 10; // Giới hạn lặp để tránh vòng lặp vô hạn nếu lỗi
+        int attempts = 0;
+
         while (true)
         {
+            attempts++;
+            if (attempts > maxAttempts)
+            {
+                Debug.LogError("❌ Đạt giới hạn lặp, có thể có lỗi trong generate BossRoom.");
+                break;
+            }
+
             isGeneratingDone = false;
-            ResetDungeon();
+            ResetDungeon(); // FIX: Reset an toàn (dừng coroutine cũ và Destroy đúng cách)
             GenerateDungeon();
 
-            yield return null;
+            // Chờ end-of-frame để các Destroy() xảy ra hoàn toàn
+            yield return new WaitForEndOfFrame();
 
             if (bossSpawned)
             {
-                Debug.Log("<color=green>✔️ Đã có BossRoom, kết thúc gen.</color>");
+                Debug.Log("<color=green>✔️ Đã có BossRoom, kết thúc gen sau " + attempts + " lần thử.</color>");
                 break;
             }
             else
             {
-                Debug.LogWarning("❌ Không có BossRoom. Reset toàn bộ và gen lại...");
+                Debug.LogWarning("❌ Không có BossRoom. Reset và thử lại...");
+                yield return new WaitForSeconds(0.1f);
             }
         }
     }
 
     public void ResetDungeon()
     {
+        // FIX: dừng toàn bộ coroutine cũ để tránh race conditions
+        StopAllCoroutines();
+
         foreach (var obj in spawnedObjects)
-            Destroy(obj);
+        {
+            if (obj != null)
+            {
+#if UNITY_EDITOR
+                if (!Application.isPlaying) DestroyImmediate(obj);
+                else Destroy(obj);
+#else
+                Destroy(obj);
+#endif
+            }
+        }
 
         spawnedObjects.Clear();
         doorQueue.Clear();
@@ -226,18 +279,37 @@ public class SimpleDungeonGenerator : MonoBehaviour
         bossSpawned = false;
         generationComplete = false;
 
-        // Clear AllMarkers to avoid leftover EndPointMarkers
         EndPointMarker.AllMarkers.Clear();
+
+        // Xoá rác còn sót trong scene
+        GameObject[] leftoverRooms = GameObject.FindGameObjectsWithTag("Room");
+        foreach (var room in leftoverRooms)
+        {
+#if UNITY_EDITOR
+            if (!Application.isPlaying) DestroyImmediate(room);
+            else Destroy(room);
+#else
+            Destroy(room);
+#endif
+        }
+        GameObject[] leftoverRoads = GameObject.FindGameObjectsWithTag("Road");
+        foreach (var road in leftoverRoads)
+        {
+#if UNITY_EDITOR
+            if (!Application.isPlaying) DestroyImmediate(road);
+            else Destroy(road);
+#else
+            Destroy(road);
+#endif
+        }
 
         Debug.Log("<color=yellow>Đã reset dungeon.</color>");
     }
 
     void GenerateDungeon()
     {
-        // cập nhật các list room theo theme hiện tại (quan trọng)
         UpdateRoomListsForCurrentTheme();
 
-        // nếu sau cập nhật starterRooms rỗng -> fallback xử lý
         if (starterRooms == null || starterRooms.Count == 0)
         {
             Debug.LogError("[SimpleDungeonGenerator] Không có starterRooms cho theme hiện tại!");
@@ -246,7 +318,6 @@ public class SimpleDungeonGenerator : MonoBehaviour
 
         RoomPrefabData startRoomData = starterRooms[Random.Range(0, starterRooms.Count)];
         GameObject startRoom = Instantiate(startRoomData.prefab, Vector3.zero, Quaternion.identity, gridTransform);
-
 
         spawnedObjects.Add(startRoom);
         occupiedPositions.Add(Vector3.zero);
@@ -277,34 +348,28 @@ public class SimpleDungeonGenerator : MonoBehaviour
         }
     }
 
-
     IEnumerator TryExpandFromDoorQueue()
     {
         while (doorQueue.Count > 0 && roomsSpawned < maxRooms)
         {
             Transform doorPoint = doorQueue.Dequeue();
 
-            // Kiểm tra tính hợp lệ của doorPoint trước khi spawn road
             if (endpointValidator != null)
             {
-                // Chạy validator để cập nhật isValid của các markers
                 List<EndPointMarker> invalidMarkers = endpointValidator.CheckIntersectionAndReturnInactiveMarkers();
-
-                // Tìm EndPointMarker trên doorPoint
                 EndPointMarker doorMarker = doorPoint.GetComponent<EndPointMarker>();
                 if (doorMarker != null && !doorMarker.isValid)
                 {
                     Debug.LogWarning("🚫 DoorPoint không hợp lệ, bỏ qua: " + doorPoint.name);
-                    BlockUnusedDoor(doorPoint); // Block ngay nếu không hợp lệ
+                    BlockUnusedDoor(doorPoint);
                     continue;
                 }
             }
 
-            // 1. Instantiate road
+            // Spawn road với rotation của doorPoint
             GameObject road = Instantiate(roadPrefab, doorPoint.position, doorPoint.rotation, gridTransform);
             spawnedObjects.Add(road);
 
-            // 2. Tìm Start & EndPoint
             Transform startPoint = null, endPoint = null;
             foreach (Transform t in road.GetComponentsInChildren<Transform>())
             {
@@ -312,24 +377,34 @@ public class SimpleDungeonGenerator : MonoBehaviour
                 if (t.CompareTag("EndPoint")) endPoint = t;
             }
 
-            // 3. Align road về đúng vị trí
             if (startPoint == null || endPoint == null)
             {
                 Debug.LogError("Road Prefab thiếu StartPoint hoặc EndPoint.");
+                Destroy(road);
                 continue;
             }
 
-            Vector3 offset = startPoint.position - road.transform.position;
+            // Điều chỉnh offset để StartPoint trùng DoorPoint, và kiểm tra hướng
+            Vector3 offset = startPoint.position - doorPoint.position;
             road.transform.position -= offset;
 
-            // 4. Kiểm tra validator sau khi align
+            // Kiểm tra nếu EndPoint hướng đúng (dùng Dot để kiểm tra hướng so với DoorPoint.right)
+            if (Vector3.Dot((endPoint.position - startPoint.position).normalized, doorPoint.right.normalized) < 0.95f)
+            {
+                Debug.LogWarning("⚠️ Road bị ngược hướng tại DoorPoint: " + doorPoint.name);
+                // Fix ngược: Lật rotation 180 độ nếu sai hướng
+                road.transform.rotation *= Quaternion.Euler(0, 0, 180);
+                // Cập nhật lại offset sau lật
+                offset = startPoint.position - doorPoint.position;
+                road.transform.position -= offset;
+            }
+
             if (endpointValidator != null)
                 endpointValidator.CheckIntersectionAndReturnInactiveMarkers();
 
-            // 5. Tiếp tục spawn
             TrySpawnRoomAt(endPoint);
 
-            yield return new WaitForSeconds(0.05f);
+            yield return null; // Giảm tải bằng cách yield mỗi frame
         }
 
         if (!bossSpawned)
@@ -341,13 +416,13 @@ public class SimpleDungeonGenerator : MonoBehaviour
         doorQueue.Clear();
         StartCoroutine(WaitAndCleanUpAfterGeneration());
     }
+
     IEnumerator WaitAndCleanUpAfterGeneration()
     {
-        // Đợi tất cả các Road và Marker thực sự đã Update ít nhất 1 frame
         yield return new WaitForEndOfFrame();
-        yield return new WaitForEndOfFrame(); // Đảm bảo collider & raycast ổn định
+        yield return new WaitForEndOfFrame();
 
-        yield return new WaitForSeconds(0.5f); // Đợi thêm một chút nữa cho chắc chắn
+        yield return new WaitForSeconds(0.1f);
 
         Debug.Log("<color=orange>🧹 Đang kiểm tra & vô hiệu hóa các Road không dùng...</color>");
         CleanUpUnusedRoads();
@@ -355,14 +430,136 @@ public class SimpleDungeonGenerator : MonoBehaviour
 
         CheckAndSpawnMissingRoads();
 
+        // FIX: chỉ replace khi thực sự đã spawn boss và stage < 3
+        if (generationComplete && themeManager != null && bossSpawned && themeManager.stageIndexInTheme < 3)
+        {
+            ReplaceBossWithFinalRoom();
+        }
+
         isGeneratingDone = true;
+        yield return new WaitForSeconds(0.5f);
+        StartCoroutine(UpdateRoadsWithThemeOptimized());
     }
 
+    private void ReplaceBossWithFinalRoom()
+    {
+        if (finalRooms == null || finalRooms.Count == 0)
+        {
+            Debug.LogWarning("[Debug] finalRooms rỗng!");
+            return;
+        }
 
+        GameObject bossRoomToReplace = null;
+        int bossLayer = LayerMask.NameToLayer("BossRoom");
+        foreach (GameObject obj in spawnedObjects)
+        {
+            if (obj != null && obj.layer == bossLayer)
+            {
+                bossRoomToReplace = obj;
+                break; // Chỉ thay phòng Boss đầu tiên
+            }
+        }
+
+        if (bossRoomToReplace == null)
+        {
+            // Không cảnh báo ồn ào nữa: ở stage < 3 thường không có boss
+            return;
+        }
+
+        RoomPrefabData finalRoomData = finalRooms[Random.Range(0, finalRooms.Count)];
+        GameObject newFinalRoom = Instantiate(finalRoomData.prefab, bossRoomToReplace.transform.position, bossRoomToReplace.transform.rotation, gridTransform);
+
+        RoomController newRoomController = newFinalRoom.AddComponent<RoomController>();
+        newRoomController.roomData = finalRoomData;
+
+        spawnedObjects.Add(newFinalRoom);
+        occupiedPositions.Add(newFinalRoom.transform.position);
+        spawnedObjects.Remove(bossRoomToReplace);
+        Destroy(bossRoomToReplace);
+        bossSpawned = false;
+        Debug.Log("<color=green>🔄 Đã thay thế BossRoom bằng FinalRoom.</color>");
+    }
+
+    IEnumerator UpdateRoadsWithThemeOptimized()
+    {
+        if (roadDatabase == null || themeManager == null)
+        {
+            Debug.LogWarning("[SimpleDungeonGenerator] RoadPrefabDatabase hoặc ThemeManager chưa gán.");
+            yield break;
+        }
+
+        ThemeType theme = themeManager.currentTheme;
+        var objectsCopy = new List<GameObject>(spawnedObjects);
+        List<GameObject> roadsToReplace = new List<GameObject>();
+
+        // Thu thập tất cả road cần thay thế
+        foreach (GameObject obj in objectsCopy)
+        {
+            if (obj != null && obj.tag == "Road")
+                roadsToReplace.Add(obj);
+        }
+
+        const int maxReplacementsPerFrame = 5;
+        for (int i = 0; i < roadsToReplace.Count; i += maxReplacementsPerFrame)
+        {
+            int endIndex = Mathf.Min(i + maxReplacementsPerFrame, roadsToReplace.Count);
+            for (int j = i; j < endIndex; j++)
+            {
+                GameObject obj = roadsToReplace[j];
+                if (obj == null) continue;
+
+                Vector3 originalPosition = obj.transform.position;
+                Quaternion originalRotation = obj.transform.rotation;
+
+                Transform startPoint = null, endPoint = null;
+                foreach (Transform t in obj.GetComponentsInChildren<Transform>())
+                {
+                    if (t.CompareTag("StartPoint")) startPoint = t;
+                    if (t.CompareTag("EndPoint")) endPoint = t;
+                }
+
+                if (startPoint == null || endPoint == null)
+                {
+                    Destroy(obj);
+                    continue;
+                }
+
+                GameObject newRoad = null;
+                int snapped = SnapAngleToRightAngle(originalRotation.eulerAngles.z);
+                if (snapped == 0)
+                {
+                    newRoad = Instantiate(roadDatabase.GetRoadPrefab(theme, RoadDirection.Right), originalPosition, originalRotation, gridTransform);
+                }
+                else if (snapped == 270)
+                {
+                    newRoad = Instantiate(roadDatabase.GetRoadPrefab(theme, RoadDirection.Down), originalPosition, originalRotation, gridTransform);
+                }
+                else if (snapped == 90)
+                {
+                    newRoad = Instantiate(roadDatabase.GetRoadPrefab(theme, RoadDirection.Up), originalPosition, originalRotation, gridTransform);
+                }
+                else if (snapped == 180)
+                {
+                    newRoad = Instantiate(roadDatabase.GetRoadPrefab(theme, RoadDirection.Left), originalPosition, originalRotation, gridTransform);
+                }
+
+                if (newRoad != null)
+                {
+                    spawnedObjects.Add(newRoad);
+                    spawnedObjects.Remove(obj);
+                    Destroy(obj);
+                }
+                else
+                {
+                    Debug.LogWarning($"Không tìm thấy prefab cho rotation {originalRotation.eulerAngles.z} (snapped {snapped}) trong theme {theme}");
+                }
+            }
+            yield return null; // Chờ đến frame tiếp theo để giảm tải
+        }
+    }
 
     void CleanUpUnusedRoads()
     {
-        // Sao chép danh sách để tránh lỗi sửa khi lặp
         var objectsCopy = new List<GameObject>(spawnedObjects);
 
         foreach (GameObject obj in objectsCopy)
@@ -375,85 +572,49 @@ public class SimpleDungeonGenerator : MonoBehaviour
                 marker.CheckIfInUse();
                 if (!marker.inUse)
                 {
-                    Debug.Log($"🧱 Vô hiệu hoá Road vì không dùng: {obj.name}");
-
-                    // 👉 Tìm DoorPoint gốc để đặt blocker
                     Transform startPoint = null;
                     foreach (Transform t in obj.GetComponentsInChildren<Transform>())
                     {
-                        if (t.CompareTag("StartPoint"))
-                        {
-                            startPoint = t;
-                            break;
-                        }
+                        if (t.CompareTag("StartPoint")) { startPoint = t; break; }
                     }
 
                     if (startPoint != null)
                     {
-                        RaycastHit2D[] hits = Physics2D.RaycastAll(startPoint.position, startPoint.right, 10f);
-                        Debug.DrawRay(startPoint.position, startPoint.right * 10f, Color.red, 2f); // Vẽ ray debug
-
-                        bool foundAny = false;
-                        foreach (var hit in hits)
+                        RaycastHit2D hit = Physics2D.Raycast(startPoint.position, startPoint.right, 10f);
+                        if (hit.collider != null && hit.collider.CompareTag("BlockPoint"))
                         {
-                            if (hit.collider != null && hit.collider.CompareTag("DoorPoint"))
-                            {
-                                Transform doorPoint = hit.collider.transform;
-                                BlockUnusedDoor(doorPoint);
-                                Debug.Log($"🚧 Gắn blocker tại DoorPoint gốc: {doorPoint.name}");
-                                foundAny = true;
-                            }
-                        }
-
-                        if (!foundAny)
-                        {
-                            Debug.LogWarning("⚠️ Không tìm thấy DoorPoint gốc nào cho road: " + obj.name);
+                            Transform doorPoint = hit.collider.transform;
+                            BlockUnusedDoor(doorPoint);
                         }
                     }
 
-                    // ❗ Tắt road sau khi dùng xong
-                    obj.SetActive(false); // <-- dòng này vẫn an toàn nhờ objectsCopy
+                    spawnedObjects.Remove(obj);
+                    Destroy(obj); // Xóa road không dùng
                 }
             }
         }
     }
 
-
-
-
     void TrySpawnRoomAt(Transform endPoint)
     {
+        // FIX: Tôn trọng maxRooms ở mọi entry point, đặc biệt khi được gọi từ CheckAndSpawnMissingRoads
         if (roomsSpawned >= maxRooms)
         {
-            Debug.Log("🚫 Đã đạt maxRooms, huỷ road và thêm blocker tại: " + endPoint.name);
+            Debug.Log("🚫 Đạt maxRooms, huỷ road và gắn blocker tại endpoint: " + endPoint.name);
 
-            // Xử lý khi đã spawn road nhưng không được phép spawn room
             if (doorBlockerPrefab != null)
             {
                 Instantiate(doorBlockerPrefab, endPoint.position, endPoint.rotation, gridTransform);
-                Debug.Log("🚧 Đặt blocker tại: " + endPoint.position);
-            }
-            else
-            {
-                Debug.LogWarning("❌ Không có prefab blocker được gán trong Inspector!");
             }
 
-
+            // Xoá road parent nếu có
             Transform road = endPoint.parent;
             if (road != null)
             {
-                Debug.Log("🧹 Xoá road: " + road.name);
                 Destroy(road.gameObject);
             }
-            else
-            {
-                Debug.LogWarning("⚠️ Không tìm thấy parent (road) của endpoint: " + endPoint.name);
-            }
-
-
             return;
         }
-
 
         var marker = endPoint.GetComponent<EndPointMarker>();
         if (marker != null && !marker.isValid)
@@ -517,14 +678,35 @@ public class SimpleDungeonGenerator : MonoBehaviour
             Vector3 offset = actualDoor.position - newRoom.transform.position;
             Vector3 targetPos = endPoint.position - offset;
 
-            if (reservedPositions.Contains(targetPos) || IsPositionOccupied(targetPos))
+            if (ContainsReserved(targetPos) || IsPositionOccupied(targetPos))
             {
                 Destroy(newRoom);
                 continue;
             }
 
             newRoom.transform.position = targetPos;
-            reservedPositions.Add(targetPos);
+            AddReserved(targetPos);
+
+            // Thêm RoomController và gán roomData
+            RoomController roomController = newRoom.AddComponent<RoomController>();
+            roomController.roomData = roomData;
+
+            // Gán layer "BossRoom" nếu là bossRooms
+            // Nếu là BossRoom
+            if (roomList == bossRooms)
+            {
+                newRoom.layer = LayerMask.NameToLayer("BossRoom");
+                bossSpawned = true;
+                Debug.Log("<color=red>⚔️ Đã spawn BossRoom!</color>");
+            }
+            // Nếu là FinalRoom
+            else if (roomList == finalRooms)
+            {
+                newRoom.layer = LayerMask.NameToLayer("FinalRoom");
+                bossSpawned = true; // dùng lại flag này để biết "end room đã spawn"
+                Debug.Log("<color=magenta>🏁 Đã spawn FinalRoom!</color>");
+            }
+
 
             spawnedObjects.Add(newRoom);
             occupiedPositions.Add(newRoom.transform.position);
@@ -533,21 +715,42 @@ public class SimpleDungeonGenerator : MonoBehaviour
 
             Debug.Log($"<color=cyan>Spawned Room {roomsSpawned}/{maxRooms}: {newRoom.name}</color>");
 
-            if (roomList == bossRooms)
-            {
-                bossSpawned = true;
-                Debug.Log("<color=red>⚔️ Đã spawn BossRoom!</color>");
-            }
-
+            // Kiểm tra và spawn Blocker tại các BlockPoint nếu đạt maxRooms
             foreach (Transform child in newRoom.GetComponentsInChildren<Transform>())
             {
-                if (child.CompareTag("DoorPoint") && child != actualDoor)
+                if (child.CompareTag("BlockPoint") && roomsSpawned >= maxRooms)
                 {
-                    if (roomsSpawned >= maxRooms)
-                        BlockUnusedDoor(child);
-                    else
-                        doorQueue.Enqueue(child);
+                    if (!HasChildWithTag(child, "Blocker") && doorBlockerPrefab != null)
+                    {
+                        GameObject blocker = Instantiate(doorBlockerPrefab, child.position, child.rotation, child);
+                        blocker.transform.SetParent(child);
+                        spawnedObjects.Add(blocker);
+                    }
+                }
+                else if (child.CompareTag("DoorPoint") && child != actualDoor)
+                {
+                    // Kiểm tra nếu đã có road kết nối (Raycast hai hướng)
+                    RaycastHit2D hitForward = Physics2D.Raycast(child.position, child.right, 5f);
+                    RaycastHit2D hitBackward = Physics2D.Raycast(child.position, -child.right, 5f);
+                    if ((hitForward.collider != null && hitForward.collider.CompareTag("Road")) ||
+                        (hitBackward.collider != null && hitBackward.collider.CompareTag("Road")))
+                    {
+                        continue; // Không enqueue nếu đã kết nối từ bên kia
+                    }
 
+                    if (roomsSpawned >= maxRooms)
+                    {
+                        if (!HasChildWithTag(child, "Blocker") && doorBlockerPrefab != null)
+                        {
+                            GameObject blocker = Instantiate(doorBlockerPrefab, child.position, child.rotation, child);
+                            blocker.transform.SetParent(child);
+                            spawnedObjects.Add(blocker);
+                        }
+                    }
+                    else
+                    {
+                        doorQueue.Enqueue(child);
+                    }
                 }
             }
 
@@ -583,10 +786,8 @@ public class SimpleDungeonGenerator : MonoBehaviour
 
             if (startPoint != null && endPoint != null)
             {
-                Vector3 offset = startPoint.position - road.transform.position;
+                Vector3 offset = startPoint.position - blockedDoor.position;
                 road.transform.position -= offset;
-
-
 
                 if (TrySpawnFromRoomList(bossRooms, endPoint))
                 {
@@ -605,7 +806,17 @@ public class SimpleDungeonGenerator : MonoBehaviour
         int minRoomsBeforeBoss = Mathf.FloorToInt(maxRooms * bossRoomThreshold);
 
         if (!bossSpawned && roomsSpawned >= minRoomsBeforeBoss)
-            return bossRooms;
+        {
+            if (themeManager != null && themeManager.stageIndexInTheme == 3)
+            {
+                return bossRooms; // Stage cuối → BossRoom
+            }
+            else
+            {
+                return finalRooms; // Stage < 3 → FinalRoom
+            }
+        }
+
 
         if (!shopSpawned && Random.value < 0.1f)
         {
@@ -634,11 +845,19 @@ public class SimpleDungeonGenerator : MonoBehaviour
         return normalRooms;
     }
 
+
     void BlockUnusedDoor(Transform doorPoint)
     {
-        GameObject blocker = Instantiate(doorBlockerPrefab, doorPoint.position, doorPoint.rotation);
-        blocker.transform.SetParent(doorPoint);
-        spawnedObjects.Add(blocker);
+        // FIX: tránh double-block
+        if (blockedDoorPoints.Contains(doorPoint)) return;
+        if (HasChildWithTag(doorPoint, "Blocker")) return;
+
+        if (doorBlockerPrefab != null)
+        {
+            GameObject blocker = Instantiate(doorBlockerPrefab, doorPoint.position, doorPoint.rotation);
+            blocker.transform.SetParent(doorPoint);
+            spawnedObjects.Add(blocker);
+        }
 
         blockedDoorPoints.Add(doorPoint);
     }

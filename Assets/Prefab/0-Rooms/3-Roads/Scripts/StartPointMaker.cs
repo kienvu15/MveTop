@@ -7,7 +7,7 @@ public class StartPointMaker : MonoBehaviour
     public GameObject blockPrefab;
 
     public bool isDone = false;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    
     void Start()
     {
         simpleDungeonGenerator = FindFirstObjectByType<SimpleDungeonGenerator>();
@@ -21,14 +21,18 @@ public class StartPointMaker : MonoBehaviour
 
     public void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("DoorPoint"))
+        if (collision.CompareTag("BlockPoint"))
         {
             if(endPointMarker.isWall == true)
             {
-                Transform spawnPoint = collision.GetComponent<spawnPoint>().transform;
-                GameObject obj = Instantiate(blockPrefab, spawnPoint.position, spawnPoint.rotation);
-                obj.transform.SetParent(spawnPoint); // Set làm con của spawnPoint
-                isDone = true;
+                BlockPoint blockPoint = collision.GetComponent<BlockPoint>();
+                if (blockPoint != null)
+                {
+                    Transform spawnPoint = blockPoint.transform;
+                    GameObject obj = Instantiate(blockPrefab, spawnPoint.position, spawnPoint.rotation);
+                    obj.transform.SetParent(spawnPoint);
+                    isDone = true;
+                }
             } 
         }
 
@@ -48,14 +52,18 @@ public class StartPointMaker : MonoBehaviour
 
     public void OnTriggerStay2D(Collider2D collision)
     {
-        if (collision.CompareTag("DoorPoint"))
+        if (collision.CompareTag("BlockPoint"))
         {
             if(endPointMarker.isWall == true)
             {
-                Transform spawnPoint = collision.GetComponent<spawnPoint>().transform;
-                GameObject obj = Instantiate(blockPrefab, spawnPoint.position, spawnPoint.rotation);
-                obj.transform.SetParent(spawnPoint); // Set làm con của spawnPoint
-                isDone = true;
+                BlockPoint blockPoint = collision.GetComponent<BlockPoint>();
+                if (blockPoint != null)
+                {
+                    Transform spawnPoint = blockPoint.transform;
+                    GameObject obj = Instantiate(blockPrefab, spawnPoint.position, spawnPoint.rotation);
+                    obj.transform.SetParent(spawnPoint);
+                    isDone = true;
+                }
             }
         }
 

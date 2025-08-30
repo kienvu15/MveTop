@@ -53,7 +53,7 @@ public class RoomSpawnerController : MonoBehaviour, IEnemySpawner
     {
         if (currentWaveIndex >= waves.Count)
         {
-            Debug.Log("[BossRoomSpawner] Đã hoàn thành tất cả các wave Boss.");
+            Debug.Log("[RoomSpawner] Đã hoàn thành tất cả các wave.");
             roomCleared = true;
 
             var room = GetComponentInParent<RoomController>();
@@ -142,16 +142,26 @@ public class RoomSpawnerController : MonoBehaviour, IEnemySpawner
         activeEnemies.Remove(enemy);
         Debug.Log($"[RoomSpawner] Removed {enemy.name}. Active enemies left: {activeEnemies.Count}");
 
-
-        if (activeEnemies.Count <= 0 && !roomCleared)
+        if (activeEnemies.Count <= 0)
         {
-            Debug.Log("[BossRoomSpawner] Tất cả enemy đã chết trong Boss Room.");
-            roomCleared = true;
+            if (currentWaveIndex < waves.Count)
+            {
+                // còn wave -> spawn tiếp
+                StartNextWave();
+            }
+            else
+            {
+                // hết wave -> cleared
+                Debug.Log("[RoomSpawner] Room Cleared!");
+                roomCleared = true;
 
-            StartNextWave(); 
+                var room = GetComponentInParent<RoomController>();
+                if (room != null)
+                    room.OnRoomCleared();
+            }
         }
-
     }
+
 
 
     private Vector3 FindValidSpawnPosition()

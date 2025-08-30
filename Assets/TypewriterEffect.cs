@@ -28,11 +28,29 @@ public class TypewriterEffect : MonoBehaviour
     {
         isTyping = true;
         dialogueText.text = "";
-        foreach (char c in message)
+
+        int i = 0;
+        while (i < message.Length)
         {
-            dialogueText.text += c;
+            // Nếu gặp tag mở <...>
+            if (message[i] == '<')
+            {
+                int closingIndex = message.IndexOf('>', i);
+                if (closingIndex != -1)
+                {
+                    string tag = message.Substring(i, closingIndex - i + 1);
+                    dialogueText.text += tag;   // Thêm nguyên tag ngay lập tức
+                    i = closingIndex + 1;       // Nhảy qua tag
+                    continue;
+                }
+            }
+
+            // Nếu là ký tự thường -> type bình thường
+            dialogueText.text += message[i];
+            i++;
             yield return new WaitForSeconds(delay);
         }
+
         isTyping = false;
     }
 
@@ -41,7 +59,7 @@ public class TypewriterEffect : MonoBehaviour
         if (isTyping)
         {
             StopCoroutine(typeCoroutine);
-            dialogueText.text = fullText;
+            dialogueText.text = fullText;  // Hiện full luôn (cả rich text)
             isTyping = false;
         }
     }

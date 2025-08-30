@@ -16,15 +16,27 @@ MonoBehaviour:
   - chestType: 0
     lootItems:
     - itemPrefab: {fileID: 2972097765817507276, guid: 98b45f528b8eaa24fa5b8200ff6d2f73, type: 3}
+      dropChance: 0.751
+      minQuantity: 3
+      maxQuantity: 5
+    - itemPrefab: {fileID: 4418349446991674435, guid: fe02ed74303c140439863e1ae3291bf8, type: 3}
       dropChance: 0.938
       minQuantity: 3
       maxQuantity: 5
   - chestType: 1
     lootItems:
     - itemPrefab: {fileID: 4418349446991674435, guid: fe02ed74303c140439863e1ae3291bf8, type: 3}
-      dropChance: 0.901
-      minQuantity: 3
+      dropChance: 0.789
+      minQuantity: 1
       maxQuantity: 6
+    - itemPrefab: {fileID: 2972097765817507276, guid: 98b45f528b8eaa24fa5b8200ff6d2f73, type: 3}
+      dropChance: 0.599
+      minQuantity: 0
+      maxQuantity: 2
+    - itemPrefab: {fileID: 1854399955107605364, guid: c19ebd9603abd274984b24d429de6455, type: 3}
+      dropChance: 0.664
+      minQuantity: 0
+      maxQuantity: 2
   - chestType: 2
     lootItems:
     - itemPrefab: {fileID: 3541671590502939099, guid: e5efd28c4983f8e44981e43a9327f99d, type: 3}
@@ -33,13 +45,13 @@ MonoBehaviour:
       maxQuantity: 2
     - itemPrefab: {fileID: 2972097765817507276, guid: 98b45f528b8eaa24fa5b8200ff6d2f73, type: 3}
       dropChance: 0.938
-      minQuantity: 3
-      maxQuantity: 5
+      minQuantity: 2
+      maxQuantity: 3
     - itemPrefab: {fileID: 1854399955107605364, guid: c19ebd9603abd274984b24d429de6455, type: 3}
       dropChance: 0.459
+      minQuantity: 0
+      maxQuantity: 1
+    - itemPrefab: {fileID: 4418349446991674435, guid: fe02ed74303c140439863e1ae3291bf8, type: 3}
+      dropChance: 0.734
       minQuantity: 2
-      maxQuantity: 3
-    - itemPrefab: {fileID: 1854399955107605364, guid: c19ebd9603abd274984b24d429de6455, type: 3}
-      dropChance: 0.66
-      minQuantity: 2
-      maxQuantity: 3
+      maxQuantity: 5

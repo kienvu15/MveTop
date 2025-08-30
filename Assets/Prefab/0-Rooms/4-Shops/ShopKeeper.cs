@@ -57,6 +57,20 @@ public class ShopKeeper : MonoBehaviour
         }
     }
 
+    //private void OnTriggerEnter2D(Collider2D collision)
+    //{
+    //    if (collision.gameObject.CompareTag("Player"))
+    //    {
+    //        // Khi người chơi va chạm với ShopKeeper, có thể hiển thị thông báo hoặc làm gì đó
+    //        Debug.Log("Player entered shop area.");
+    //        speak.enabled = true; // Hiển thị canvas thông báo
+
+    //        if (Input.GetKeyDown(refreshKey))
+    //        {
+    //            RefeshItem();
+    //        }
+    //    }
+    //}
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if(collision.gameObject.CompareTag("Player"))

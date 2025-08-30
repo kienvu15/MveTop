@@ -209,6 +209,10 @@ PrefabInstance:
       propertyPath: visionRadius
       value: 11.63
       objectReference: {fileID: 0}
+    - target: {fileID: 3450272226787897986, guid: 969836bcc3484d04287596b686c9a6c2, type: 3}
+      propertyPath: father
+      value: 
+      objectReference: {fileID: 5434423862613153781}
     - target: {fileID: 3811613614144119618, guid: 969836bcc3484d04287596b686c9a6c2, type: 3}
       propertyPath: waitTimeRange.x
       value: 0.2

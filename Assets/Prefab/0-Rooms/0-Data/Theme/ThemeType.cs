@@ -1,7 +1,9 @@
 public enum ThemeType
 {
     None,
-    Forest,
+    //Forest,
     BlueDungeon,
     Brick,
+    Mud,
+    Rock,
 }

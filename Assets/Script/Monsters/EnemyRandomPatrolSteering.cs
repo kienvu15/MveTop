@@ -16,13 +16,14 @@ public class EnemyRandomPatrolSteering : MonoBehaviour
     void Start()
     {
         steering = GetComponent<EnemySteering>();
-        steering.useFlip = false;
+        //steering.useFlip = false;
         DecideNextAction();
     }
 
     void Update()
     {
-        
+        // gọi điều kiện tuần tra
+        PatrolCondition();
     }
 
     public void PatrolCondition()
@@ -33,6 +34,7 @@ public class EnemyRandomPatrolSteering : MonoBehaviour
         {
             case State.Moving:
                 steering.MoveInDirection(currentPatrolDir, moveSpeed);
+                //HandleFlip(currentPatrolDir);
                 if (timer <= 0f)
                     DecideNextAction();
                 break;
@@ -84,5 +86,16 @@ public class EnemyRandomPatrolSteering : MonoBehaviour
         enabled = false;  // Ngắt Update
     }
 
-
+    // 🔹 Hàm flip theo hướng di chuyển
+    //void HandleFlip(Vector2 dir)
+    //{
+    //    if (dir.x > 0.05f)
+    //    {
+    //        transform.localScale = new Vector3(1f, 1f, 1f);
+    //    }
+    //    else if (dir.x < -0.05f)
+    //    {
+    //        transform.localScale = new Vector3(-1f, 1f, 1f);
+    //    }
+    //}
 }

@@ -16,20 +16,29 @@ public class HomingBullet : MonoBehaviour
 
     private float currentSpeed;
     private float lifeTimer;
-    private Vector2 currentDirection;
+    public Vector2 currentDirection;
     public Rigidbody2D rb;
 
+    public bool player = false;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
 
         // Lấy hướng ban đầu: nếu có target → hướng về target, không thì dùng transform.right
-        if (target != null)
-            currentDirection = ((Vector2)target.position - (Vector2)transform.position).normalized;
-        else
-            currentDirection = transform.right;
+        if (currentDirection == Vector2.zero)
+        {
+            if (target != null)
+                currentDirection = ((Vector2)target.position - (Vector2)transform.position).normalized;
+            else
+                currentDirection = transform.right;
+        }
 
         currentSpeed = startSpeed;
+
+        if(player == true)
+        {
+            target = GameObject.FindWithTag("Enemy").transform;
+        }
     }
 
     void FixedUpdate()

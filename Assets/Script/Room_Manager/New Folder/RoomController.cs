@@ -6,6 +6,7 @@ using UnityEngine;
 public class RoomController : MonoBehaviour
 {
     [Header("Room Systems")]
+    public RoomPrefabData roomData;
     public RoomSpawnerController spawner;
     [SerializeField] private RoomRewardSpawner rewardSpawner;
     public GridManager gridManager;

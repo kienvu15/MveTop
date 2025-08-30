@@ -6,5 +6,6 @@ public enum RoomType
     MiniBoss,
     Special,
     Blessing,
+    Final,
     Boss,
 }

@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba6d1abd7a6cf0845afc507021ae20c2, type: 3}
+  m_Name: RoadPrefabDatabase
+  m_EditorClassIdentifier: 
+  themeRoads:
+  - theme: 2
+    roadPrefabs:
+    - direction: 0
+      prefab: {fileID: 8014026142768993432, guid: 6dbe24e396969124d95e3765b002a27d, type: 3}
+    - direction: 1
+      prefab: {fileID: 8014026142768993432, guid: eb84c7527b50f1142ba43ffc0a513b38, type: 3}
+    - direction: 2
+      prefab: {fileID: 8014026142768993432, guid: 5e4a9f7c0bc841041b46c9592ad7b695, type: 3}
+    - direction: 3
+      prefab: {fileID: 8014026142768993432, guid: 04fa5459ce25ec84a9432c95b919ddf0, type: 3}
+  - theme: 1
+    roadPrefabs:
+    - direction: 0
+      prefab: {fileID: 8014026142768993432, guid: effd7f14b4ebefb4db5a808ae3d1b09e, type: 3}
+    - direction: 1
+      prefab: {fileID: 8014026142768993432, guid: ac69a160f5949bb4f83da67646aab69b, type: 3}
+    - direction: 2
+      prefab: {fileID: 8014026142768993432, guid: b59c3d4d3d3da424b9ae536b09fc15b4, type: 3}
+    - direction: 3
+      prefab: {fileID: 8014026142768993432, guid: 8ec4888a2dcf66048a47d097f8acdbb0, type: 3}
+  - theme: 3
+    roadPrefabs:
+    - direction: 0
+      prefab: {fileID: 8014026142768993432, guid: ccbd80ae9a4f2e541bfa89384ce41b8d, type: 3}
+    - direction: 1
+      prefab: {fileID: 8014026142768993432, guid: c8b7f545a2cdfac458bdb846abaccf85, type: 3}
+    - direction: 2
+      prefab: {fileID: 8014026142768993432, guid: 453a1bce230e8dd43b8f2c26306d00f7, type: 3}
+    - direction: 3
+      prefab: {fileID: 8014026142768993432, guid: 33c5ea97d9a3d0a4493acc9373c3e1bb, type: 3}
+  - theme: 4
+    roadPrefabs:
+    - direction: 0
+      prefab: {fileID: 8014026142768993432, guid: 41ea3300fa45853429fba06280f10285, type: 3}
+    - direction: 1
+      prefab: {fileID: 8014026142768993432, guid: a13c59c7ae1d17142ac40761d021121d, type: 3}
+    - direction: 2
+      prefab: {fileID: 8014026142768993432, guid: c5920d9a5287ff34c9a5d52e4a21d43e, type: 3}
+    - direction: 3
+      prefab: {fileID: 8014026142768993432, guid: 01ae79b2ea5515d4e8c11095479b4512, type: 3}

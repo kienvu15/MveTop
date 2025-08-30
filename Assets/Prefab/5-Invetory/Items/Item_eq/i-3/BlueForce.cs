@@ -3,11 +3,11 @@ using UnityEngine;
 
 public class BlueForce : MonoBehaviour
 {
-    public PlayerStateController playerStateController;
+    //public PlayerStateController playerStateController;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        playerStateController = FindFirstObjectByType<PlayerStateController>();
+      //  playerStateController = FindFirstObjectByType<PlayerStateController>();
     }
 
     // Update is called once per frame
@@ -25,7 +25,12 @@ public class BlueForce : MonoBehaviour
     public void DestoyOnLastFrame()
     {
         gameObject.SetActive(false);
-        playerStateController.hurt = false;
+        //playerStateController.hurt = false;
+    }
+
+    public void ĐeDestroy()
+    {
+        Destroy(gameObject);
     }
 
     public void OnTriggerEnter2D(Collider2D collision)

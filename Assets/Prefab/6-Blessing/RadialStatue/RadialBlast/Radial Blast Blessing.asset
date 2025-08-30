@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3dccc4fcb0393b4fa74f988badd63a2, type: 3}
+  m_Name: Radial Blast Blessing
+  m_EditorClassIdentifier: 
+  blastPrefab: {fileID: 8932434281901552245, guid: 7bfc1a083c20a884d93771ea88dc2a72, type: 3}
+  blastSpeed: 10

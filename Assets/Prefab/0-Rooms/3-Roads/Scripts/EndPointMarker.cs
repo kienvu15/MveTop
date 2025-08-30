@@ -9,8 +9,8 @@ public class EndPointMarker : MonoBehaviour
     public float checkLength = 3f;
     public bool isValid = true;
     public bool inUse = false;
-    public bool isBlock = false; // ✅ Mới thêm
-    public Collider2D blockerCollider; // ✅ Nếu có va chạm với blocker thì giữ lại tham chiếu
+    public bool isBlock = false; 
+    public Collider2D blockerCollider; 
 
     public LayerMask groundLayer;
     public GameObject Road;
@@ -51,15 +51,18 @@ public class EndPointMarker : MonoBehaviour
             blockerCollider = other;
             Debug.Log($"🧱 EndPoint bị Blocker chặn: {other.name}");
         }
-        else if (((1 << other.gameObject.layer) & targetLayers) != 0 && !other.CompareTag("Room"))
+        else if (((1 << other.gameObject.layer) & targetLayers) != 0 ) //&& !other.CompareTag("Room"))
         {
             isWall = true;
             if (startPointMaker.isDone == true)
             {
-                Road.SetActive(false);
+                //Road.SetActive(false);
+                Destroy(Road);
             }
             Debug.Log($"🚫 EndPointMarker {name} bị chặn bởi layer {other.gameObject.layer}");
         }
+
+        
     }
 
     public void OnTriggerStay2D(Collider2D collision)

@@ -9,6 +9,7 @@ public class MenuController : MonoBehaviour
     public Button Pause;
     public Button Resume;
 
+    public AudioClip clickSound;
     private void Awake()
     {
         DontDestroyOnLoad(gameObject);
@@ -23,6 +24,8 @@ public class MenuController : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Tab))
         {
+            SFXManager.Instance.PlaySFX(clickSound);
+
             menuCanvas.SetActive(!menuCanvas.activeSelf);
             PlayerStatsUI.SetActive(!PlayerStatsUI.activeSelf);
             Pause.gameObject.SetActive(!Pause.gameObject.activeSelf);
@@ -32,6 +35,8 @@ public class MenuController : MonoBehaviour
 
     public void ToggleMenu()
     {
+        SFXManager.Instance.PlaySFX(clickSound);
+
         menuCanvas.SetActive(!menuCanvas.activeSelf);
         PlayerStatsUI.SetActive(!PlayerStatsUI.activeSelf);
         Pause.gameObject.SetActive(!Pause.gameObject.activeSelf);

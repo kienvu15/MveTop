@@ -24,6 +24,8 @@ TagManager:
   - Persistent
   - Items
   - PivotPlayer
+  - BlockPoint
+  - FeetPlayer
   layers:
   - Default
   - TransparentFX
@@ -39,8 +41,8 @@ TagManager:
   - EndPoint
   - Ground
   - Items
-  - 
-  - 
+  - BossRoom
+  - FinalRoom
   - 
   - 
   - 

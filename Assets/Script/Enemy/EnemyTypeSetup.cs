@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class EnemyTypeSetup : MonoBehaviour
 {
-    public enum EnemyType { Type00 ,Type01, Type02, Type03, Type06, Type20, Type41, Type46,Type48 }
+    public enum EnemyType { Type00 ,Type01, Type02, Type03, Type06, Type20, Type23, Type24, Type29,Type41, Type46, Type48 }
 
     public EnemyType type;
 
@@ -35,6 +35,18 @@ public class EnemyTypeSetup : MonoBehaviour
 
             case EnemyType.Type20:
                 brain.GetDecisionStageFunc = () => new DecisionStage_20(brain);
+                break;
+
+            case EnemyType.Type23:
+                brain.GetDecisionStageFunc = () => new DecisionStage_23(brain);
+                break;
+
+            case EnemyType.Type24:
+                brain.GetDecisionStageFunc = () => new DecisionStage_24(brain);
+                break;
+
+            case EnemyType.Type29:
+                brain.GetDecisionStageFunc = () => new DecisionStage_29(brain);
                 break;
 
             case EnemyType.Type41:
